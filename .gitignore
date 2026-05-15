@@ -134,3 +134,9 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+public/hot
+public/storage
+storage/app/public
+vendor/
+vendor
