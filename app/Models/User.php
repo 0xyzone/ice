@@ -40,7 +40,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         if ($panel->getId() === 'app') {
             return true;
         } elseif ($panel->getId() === 'mukhiyas') {
-            return str_ends_with($this->email, '@suminshrestha.com.np') || str_ends_with($this->email, '@admin.com');
+            return str_ends_with($this->email, '@suminshrestha.com.np') || str_ends_with($this->email, '@admin.com') || str_ends_with($this->email, '@vidantaca.com.np');
         }
         return false;
     }
