@@ -33,7 +33,7 @@ class AppPanelProvider extends PanelProvider
             ])
             ->font('Poppins')
             ->login()
-            ->registration()
+            // ->registration()
             ->passwordReset()
             ->emailVerification()
             ->discoverResources(in: app_path('Filament/App/Resources'), for: 'App\Filament\App\Resources')
