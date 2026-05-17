@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
@@ -58,11 +59,18 @@ class AdminResource extends Resource
         ];
     }
 
-    public static function can(string|UnitEnum $action, ?Model $record = null): bool
+    public static function getAuthorizationResponse(string|UnitEnum $action, ?Model $record = null): Response
     {
         $actionName = $action instanceof UnitEnum ? $action->name : $action;
         $permission = ucfirst($actionName).':'.class_basename(static::class);
 
-        return auth()->user()?->can($permission) ?? false;
+        return filament()->auth()->user()?->can($permission)
+            ? Response::allow()
+            : Response::deny();
+    }
+
+    public static function can(string|UnitEnum $action, ?Model $record = null): bool
+    {
+        return static::getAuthorizationResponse($action, $record)->allowed();
     }
 }
