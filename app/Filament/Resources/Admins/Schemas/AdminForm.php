@@ -36,6 +36,7 @@ class AdminForm
                 TextInput::make('password')
                     ->password()
                     ->required()
+                    ->revealable()
                     ->maxLength(255)
                     ->hiddenOn('edit'),
             ])->columns(3);
