@@ -1,23 +1,22 @@
 <?php
 
-namespace App\Filament\Resources\Users\Tables;
+namespace App\Filament\Resources\Admins\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
-class UsersTable
+class AdminsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->modifyQueryUsing(function (Builder $query) {
                 return $query->with('roles')->whereHas('roles', function (Builder $query) {
-                    $query->where('name', 'player');
+                    $query->where('name', 'admin');
                 });
             })
             ->columns([
@@ -31,7 +30,7 @@ class UsersTable
                     ->sortable(),
                 TextColumn::make('roles.name')
                     ->badge()
-                    ->formatStateUsing(fn ($state) => ucfirst($state))
+                    ->formatStateUsing(fn($state) => ucfirst($state))
                     ->color(fn($state) => $state == 'admin' ? 'success' : 'gray'),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -46,7 +45,6 @@ class UsersTable
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([

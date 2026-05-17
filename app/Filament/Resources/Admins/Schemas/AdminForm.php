@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Users\Schemas;
+namespace App\Filament\Resources\Admins\Schemas;
 
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\TextInput;
@@ -9,7 +9,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Enums\GridDirection;
 use Illuminate\Database\Eloquent\Builder;
 
-class UserForm
+class AdminForm
 {
     public static function configure(Schema $schema): Schema
     {
