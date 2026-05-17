@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class AdminResource extends Resource
@@ -20,8 +21,10 @@ class AdminResource extends Resource
     protected static ?string $model = User::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserCircle;
+
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::UserCircle;
-    protected static UnitEnum|string|null $navigationGroup = "User Management";
+
+    protected static UnitEnum|string|null $navigationGroup = 'User Management';
 
     protected static ?string $modelLabel = 'Admin';
 
@@ -53,5 +56,13 @@ class AdminResource extends Resource
             'create' => CreateAdmin::route('/create'),
             'edit' => EditAdmin::route('/{record}/edit'),
         ];
+    }
+
+    public static function can(string|UnitEnum $action, ?Model $record = null): bool
+    {
+        $actionName = $action instanceof UnitEnum ? $action->name : $action;
+        $permission = ucfirst($actionName).':'.class_basename(static::class);
+
+        return auth()->user()?->can($permission) ?? false;
     }
 }

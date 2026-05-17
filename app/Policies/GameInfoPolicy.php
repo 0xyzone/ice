@@ -4,72 +4,71 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\GameInfo;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Foundation\Auth\User as AuthUser;
 
 class GameInfoPolicy
 {
     use HandlesAuthorization;
-    
+
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ViewAny:GameInfo');
+        return $authUser->can('ViewAny:GameInfoResource');
     }
 
     public function view(AuthUser $authUser, GameInfo $gameInfo): bool
     {
-        return $authUser->can('View:GameInfo');
+        return $authUser->can('View:GameInfoResource');
     }
 
     public function create(AuthUser $authUser): bool
     {
-        return $authUser->can('Create:GameInfo');
+        return $authUser->can('Create:GameInfoResource');
     }
 
     public function update(AuthUser $authUser, GameInfo $gameInfo): bool
     {
-        return $authUser->can('Update:GameInfo');
+        return $authUser->can('Update:GameInfoResource');
     }
 
     public function delete(AuthUser $authUser, GameInfo $gameInfo): bool
     {
-        return $authUser->can('Delete:GameInfo');
+        return $authUser->can('Delete:GameInfoResource');
     }
 
     public function deleteAny(AuthUser $authUser): bool
     {
-        return $authUser->can('DeleteAny:GameInfo');
+        return $authUser->can('DeleteAny:GameInfoResource');
     }
 
     public function restore(AuthUser $authUser, GameInfo $gameInfo): bool
     {
-        return $authUser->can('Restore:GameInfo');
+        return $authUser->can('Restore:GameInfoResource');
     }
 
     public function forceDelete(AuthUser $authUser, GameInfo $gameInfo): bool
     {
-        return $authUser->can('ForceDelete:GameInfo');
+        return $authUser->can('ForceDelete:GameInfoResource');
     }
 
     public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ForceDeleteAny:GameInfo');
+        return $authUser->can('ForceDeleteAny:GameInfoResource');
     }
 
     public function restoreAny(AuthUser $authUser): bool
     {
-        return $authUser->can('RestoreAny:GameInfo');
+        return $authUser->can('RestoreAny:GameInfoResource');
     }
 
     public function replicate(AuthUser $authUser, GameInfo $gameInfo): bool
     {
-        return $authUser->can('Replicate:GameInfo');
+        return $authUser->can('Replicate:GameInfoResource');
     }
 
     public function reorder(AuthUser $authUser): bool
     {
-        return $authUser->can('Reorder:GameInfo');
+        return $authUser->can('Reorder:GameInfoResource');
     }
-
 }

@@ -87,7 +87,7 @@ return [
     */
 
     'panel_user' => [
-        'enabled' => true,
+        'enabled' => false,
         'name' => 'panel_user',
     ],
 
@@ -167,7 +167,7 @@ return [
     */
 
     'resources' => [
-        'subject' => 'model',
+        'subject' => 'resource',
         'manage' => [
             RoleResource::class => [
                 'viewAny',
