@@ -30,6 +30,7 @@ class AdminForm
                 TextInput::make('email')
                     ->email()
                     ->required()
+                    ->unique(ignoreRecord: true)
                     ->maxLength(255)
                     ->hiddenOn('edit'),
                 TextInput::make('password')
@@ -37,14 +38,6 @@ class AdminForm
                     ->required()
                     ->maxLength(255)
                     ->hiddenOn('edit'),
-                CheckboxList::make('roles')
-                    ->relationship(name: 'roles', titleAttribute: 'name', modifyQueryUsing: function (Builder $query) {
-                        $query->where('name', "!=", 'super_admin');
-                    })
-                    ->getOptionLabelFromRecordUsing(fn($record) => ucfirst($record->name))
-                    ->columns(3)
-                    ->required()
-                    ->gridDirection(GridDirection::Row),
             ])->columns(3);
     }
 }
