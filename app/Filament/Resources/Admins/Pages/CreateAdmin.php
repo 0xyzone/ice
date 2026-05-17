@@ -12,5 +12,7 @@ class CreateAdmin extends CreateRecord
     protected function afterCreate()
     {
         $this->record->assignRole('admin');
+        $this->record->email_verified_at = now();
+        $this->record->save();
     }
 }
