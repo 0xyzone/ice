@@ -717,76 +717,6 @@
             </style>
 
             <script>
-                function copyDiscordToClipboard(username, element, event) {
-                    if (!username) return;
-
-                    function showCopiedFeedback() {
-                        // 1. Create global floating badge appended to body (bypasses clip-path mask)
-                        const badge = document.createElement('div');
-                        badge.className = 'fixed bg-pink-500 text-black font-orbitron font-black text-[10px] px-3 py-1.5 rounded shadow-[0_0_15px_rgba(236,72,153,0.6)] animate-bounce z-[9999] uppercase tracking-widest pointer-events-none';
-                        badge.innerText = 'Copied!';
-                        
-                        // Align horizontal center, vertical slightly above pointer click
-                        const x = event ? event.clientX : window.innerWidth / 2;
-                        const y = event ? event.clientY : window.innerHeight / 2;
-                        badge.style.left = `${x}px`;
-                        badge.style.top = `${y - 20}px`;
-                        badge.style.transform = 'translate(-50%, -100%)';
-                        
-                        document.body.appendChild(badge);
-
-                        // 2. Also trigger internal card text transition
-                        const textSpan = element.querySelector('.font-outfit');
-                        let originalText, originalClass;
-                        if (textSpan && textSpan.innerText !== 'COPIED!') {
-                            originalText = textSpan.innerText;
-                            originalClass = textSpan.className;
-                            textSpan.innerText = 'COPIED!';
-                            textSpan.className = 'text-xs text-pink-500 font-orbitron font-black uppercase mt-1 max-w-[120px] truncate transition-all duration-300 scale-105';
-                        }
-
-                        setTimeout(() => {
-                            badge.remove();
-                            if (textSpan && originalText) {
-                                textSpan.innerText = originalText;
-                                textSpan.className = originalClass;
-                            }
-                        }, 1200);
-                    }
-
-                    if (navigator.clipboard && navigator.clipboard.writeText) {
-                        navigator.clipboard.writeText(username).then(() => {
-                            showCopiedFeedback();
-                        }).catch(err => {
-                            fallbackCopy(username);
-                        });
-                    } else {
-                        fallbackCopy(username);
-                    }
-
-                    function fallbackCopy(text) {
-                        const textArea = document.createElement("textarea");
-                        textArea.value = text;
-                        textArea.style.position = "fixed"; // Avoid scrolling to bottom
-                        textArea.style.left = "-9999px";
-                        textArea.style.top = "-9999px";
-                        document.body.appendChild(textArea);
-                        textArea.focus();
-                        textArea.select();
-                        try {
-                            const successful = document.execCommand('copy');
-                            if (successful) {
-                                showCopiedFeedback();
-                            } else {
-                                console.error('Fallback copy failed');
-                            }
-                        } catch (err) {
-                            console.error('Fallback copy error', err);
-                        }
-                        document.body.removeChild(textArea);
-                    }
-                }
-
                 document.addEventListener('DOMContentLoaded', () => {
                     const container = document.getElementById('gallery-container');
                     const viewButtons = document.querySelectorAll('.view-toggle-btn');
@@ -1055,6 +985,80 @@
                         }
                     });
                 });
+            </script>
+        @endif
+
+        @if($player->socials)
+            <script>
+                function copyDiscordToClipboard(username, element, event) {
+                    if (!username) return;
+
+                    function showCopiedFeedback() {
+                        // 1. Create global floating badge appended to body (bypasses clip-path mask)
+                        const badge = document.createElement('div');
+                        badge.className = 'fixed bg-pink-500 text-black font-orbitron font-black text-[10px] px-3 py-1.5 rounded shadow-[0_0_15px_rgba(236,72,153,0.6)] animate-bounce z-[9999] uppercase tracking-widest pointer-events-none';
+                        badge.innerText = 'Copied!';
+                        
+                        // Align horizontal center, vertical slightly above pointer click
+                        const x = event ? event.clientX : window.innerWidth / 2;
+                        const y = event ? event.clientY : window.innerHeight / 2;
+                        badge.style.left = `${x}px`;
+                        badge.style.top = `${y - 20}px`;
+                        badge.style.transform = 'translate(-50%, -100%)';
+                        
+                        document.body.appendChild(badge);
+
+                        // 2. Also trigger internal card text transition
+                        const textSpan = element.querySelector('.font-outfit');
+                        let originalText, originalClass;
+                        if (textSpan && textSpan.innerText !== 'COPIED!') {
+                            originalText = textSpan.innerText;
+                            originalClass = textSpan.className;
+                            textSpan.innerText = 'COPIED!';
+                            textSpan.className = 'text-xs text-pink-500 font-orbitron font-black uppercase mt-1 max-w-[120px] truncate transition-all duration-300 scale-105';
+                        }
+
+                        setTimeout(() => {
+                            badge.remove();
+                            if (textSpan && originalText) {
+                                textSpan.innerText = originalText;
+                                textSpan.className = originalClass;
+                            }
+                        }, 1200);
+                    }
+
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(username).then(() => {
+                            showCopiedFeedback();
+                        }).catch(err => {
+                            fallbackCopy(username);
+                        });
+                    } else {
+                        fallbackCopy(username);
+                    }
+
+                    function fallbackCopy(text) {
+                        const textArea = document.createElement("textarea");
+                        textArea.value = text;
+                        textArea.style.position = "fixed"; // Avoid scrolling to bottom
+                        textArea.style.left = "-9999px";
+                        textArea.style.top = "-9999px";
+                        document.body.appendChild(textArea);
+                        textArea.focus();
+                        textArea.select();
+                        try {
+                            const successful = document.execCommand('copy');
+                            if (successful) {
+                                showCopiedFeedback();
+                            } else {
+                                console.error('Fallback copy failed');
+                            }
+                        } catch (err) {
+                            console.error('Fallback copy error', err);
+                        }
+                        document.body.removeChild(textArea);
+                    }
+                }
             </script>
         @endif
         
