@@ -210,7 +210,7 @@
 
                             <a href="{{ $isDiscordUsername ? 'javascript:void(0)' : $socialUrl }}" 
                                @if($isDiscordUsername)
-                                 onclick="copyDiscordToClipboard('{{ e($player->socials->discord) }}', this)"
+                                 onclick="copyDiscordToClipboard('{{ e($player->socials->discord) }}', this, event)"
                                @else
                                  target="_blank" 
                                @endif
@@ -717,29 +717,46 @@
             </style>
 
             <script>
-                function copyDiscordToClipboard(username, element) {
+                function copyDiscordToClipboard(username, element, event) {
                     if (!username) return;
 
-                    function showCopiedState() {
+                    function showCopiedFeedback() {
+                        // 1. Create global floating badge appended to body (bypasses clip-path mask)
+                        const badge = document.createElement('div');
+                        badge.className = 'fixed bg-pink-500 text-black font-orbitron font-black text-[10px] px-3 py-1.5 rounded shadow-[0_0_15px_rgba(236,72,153,0.6)] animate-bounce z-[9999] uppercase tracking-widest pointer-events-none';
+                        badge.innerText = 'Copied!';
+                        
+                        // Align horizontal center, vertical slightly above pointer click
+                        const x = event ? event.clientX : window.innerWidth / 2;
+                        const y = event ? event.clientY : window.innerHeight / 2;
+                        badge.style.left = `${x}px`;
+                        badge.style.top = `${y - 20}px`;
+                        badge.style.transform = 'translate(-50%, -100%)';
+                        
+                        document.body.appendChild(badge);
+
+                        // 2. Also trigger internal card text transition
                         const textSpan = element.querySelector('.font-outfit');
-                        if (!textSpan || textSpan.innerText === 'COPIED!') return;
-
-                        const originalText = textSpan.innerText;
-                        const originalClass = textSpan.className;
-
-                        // Temporarily change to a glowing, uppercase "COPIED!" text
-                        textSpan.innerText = 'COPIED!';
-                        textSpan.className = 'text-xs text-pink-500 font-orbitron font-black uppercase mt-1 max-w-[120px] truncate transition-all duration-300 scale-105';
+                        let originalText, originalClass;
+                        if (textSpan && textSpan.innerText !== 'COPIED!') {
+                            originalText = textSpan.innerText;
+                            originalClass = textSpan.className;
+                            textSpan.innerText = 'COPIED!';
+                            textSpan.className = 'text-xs text-pink-500 font-orbitron font-black uppercase mt-1 max-w-[120px] truncate transition-all duration-300 scale-105';
+                        }
 
                         setTimeout(() => {
-                            textSpan.innerText = originalText;
-                            textSpan.className = originalClass;
-                        }, 1500);
+                            badge.remove();
+                            if (textSpan && originalText) {
+                                textSpan.innerText = originalText;
+                                textSpan.className = originalClass;
+                            }
+                        }, 1200);
                     }
 
                     if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText(username).then(() => {
-                            showCopiedState();
+                            showCopiedFeedback();
                         }).catch(err => {
                             fallbackCopy(username);
                         });
@@ -759,7 +776,7 @@
                         try {
                             const successful = document.execCommand('copy');
                             if (successful) {
-                                showCopiedState();
+                                showCopiedFeedback();
                             } else {
                                 console.error('Fallback copy failed');
                             }
