@@ -76,7 +76,7 @@
     "src": "_orbitron-900-normal-DrIi7unX.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-B41x_Q0u.css",
+    "file": "assets/app-41ryX0r7.css",
     "name": "app",
     "names": [
       "app.css"
@@ -85,7 +85,7 @@
     "isEntry": true
   },
   "resources/css/filament/app/theme.css": {
-    "file": "assets/theme-C4tqYnUr.css",
+    "file": "assets/theme-Wz-n5SSl.css",
     "name": "theme",
     "names": [
       "theme.css"
@@ -94,7 +94,7 @@
     "isEntry": true
   },
   "resources/css/filament/mukhiyas/theme.css": {
-    "file": "assets/theme-CjKoqVZy.css",
+    "file": "assets/theme-CfC7STuK.css",
     "name": "theme",
     "names": [
       "theme.css"

@@ -8,7 +8,6 @@ use App\Models\UserSocial;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
-use Filament\Schemas\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -18,6 +17,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
@@ -197,6 +197,10 @@ class ManageProfile extends Page
                                 ->reorderable()
                                 ->appendFiles()
                                 ->directory('galleries')
+                                ->previewable()
+                                ->openable()
+                                ->downloadable()
+                                ->extraAttributes(['class' => 'compact-file-upload'])
                                 ->columnSpanFull(),
                         ]),
 
@@ -434,7 +438,7 @@ class ManageProfile extends Page
 
         // Save Player Details
         $record = $this->getRecord();
-        if (!$record) {
+        if (! $record) {
             $record = new PlayerDetail;
             $record->user_id = auth()->user()->id;
         }
@@ -443,7 +447,7 @@ class ManageProfile extends Page
 
         // Save Socials
         $socials = auth()->user()->socials;
-        if (!$socials) {
+        if (! $socials) {
             $socials = new UserSocial;
             $socials->user_id = auth()->user()->id;
         }
@@ -452,7 +456,7 @@ class ManageProfile extends Page
 
         // Save Legal Info
         $legalInfo = auth()->user()->legalInfo;
-        if (!$legalInfo) {
+        if (! $legalInfo) {
             $legalInfo = new UserLegalInfo;
             $legalInfo->user_id = auth()->user()->id;
         }
@@ -476,7 +480,7 @@ class ManageProfile extends Page
 
         $user->galleries()->delete();
         foreach ($galleriesData as $path) {
-            if (!empty($path) && is_string($path)) {
+            if (! empty($path) && is_string($path)) {
                 $user->galleries()->create([
                     'image_path' => $path,
                     'caption' => null,

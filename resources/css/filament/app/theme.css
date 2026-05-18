@@ -2,3 +2,26 @@
 
 @source '../../../../app/Filament/App/**/*';
 @source '../../../../resources/views/filament/app/**/*';
+
+/* Compact File Upload Previews for Photoshoot Gallery */
+.compact-file-upload .filepond--item {
+    width: calc(20% - 0.5em) !important;
+}
+
+@media (max-width: 1024px) {
+    .compact-file-upload .filepond--item {
+        width: calc(25% - 0.5em) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .compact-file-upload .filepond--item {
+        width: calc(33.33% - 0.5em) !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .compact-file-upload .filepond--item {
+        width: calc(50% - 0.5em) !important;
+    }
+}

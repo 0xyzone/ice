@@ -394,6 +394,7 @@
         <!-- PHOTOSHOOT GALLERY SHOWCASE -->
         @if($player->galleries->isNotEmpty())
             <section class="mt-12 flex flex-col gap-6">
+                <!-- Section Header -->
                 <div class="flex items-center justify-between border-b border-white/10 pb-3">
                     <h2 class="text-2xl font-orbitron font-extrabold text-white uppercase tracking-wider flex items-center gap-3">
                         <span class="w-2.5 h-6 bg-pink-500 shadow-[0_0_12px_#ec4899] block"></span>
@@ -404,19 +405,506 @@
                     </span>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <!-- Gallery Controls Bar -->
+                <div class="cyber-card p-4 bg-[#120f1a]/80 border border-white/5 flex flex-col md:flex-row gap-4 items-center justify-between rounded">
+                    <!-- Actions -->
+                    <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                        <button id="btn-select-all" class="px-4 py-2 border border-pink-500/20 hover:border-pink-500/80 text-pink-400 hover:text-white font-orbitron font-bold text-xs uppercase tracking-widest rounded transition-all duration-300 flex items-center gap-2">
+                            Select All
+                        </button>
+                        <button id="btn-deselect-all" class="px-4 py-2 border border-white/10 hover:border-white/30 text-gray-400 font-orbitron font-bold text-xs uppercase tracking-widest rounded transition-all duration-300 hidden">
+                            Clear Selection
+                        </button>
+                        <button id="btn-download-selected" disabled class="px-4 py-2 bg-gradient-to-r from-pink-500 to-red-500 text-black disabled:from-gray-800 disabled:to-gray-800 disabled:text-gray-500 font-orbitron font-black text-xs uppercase tracking-widest rounded cursor-not-allowed opacity-50 transition-all duration-300 shadow-[0_0_15px_rgba(236,72,153,0.3)] disabled:shadow-none flex items-center gap-2">
+                            Download Selected (0)
+                        </button>
+                    </div>
+                    <!-- View Mode Toggle -->
+                    <div class="flex items-center bg-[#0d0915] border border-white/10 rounded p-1 gap-1 w-full md:w-auto justify-center md:justify-start">
+                        <button data-view="list" class="view-toggle-btn px-3 py-1.5 rounded font-orbitron text-[10px] uppercase tracking-wider text-gray-500 hover:text-white transition-all duration-300 flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                            List
+                        </button>
+                        <button data-view="grid" class="view-toggle-btn px-3 py-1.5 rounded font-orbitron text-[10px] uppercase tracking-wider text-gray-500 hover:text-white transition-all duration-300 flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h8M4 12h8M4 18h8M16 6h4M16 12h4M16 18h4" />
+                            </svg>
+                            Grid
+                        </button>
+                        <button data-view="bento" class="view-toggle-btn px-3 py-1.5 rounded font-orbitron text-[10px] uppercase tracking-wider text-gray-500 hover:text-white transition-all duration-300 flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+                            </svg>
+                            Bento
+                        </button>
+                    </div>
+                </div>
+
+                <!-- List View Table Header (Only shown in List View) -->
+                <div id="gallery-table-header" class="hidden font-orbitron text-xs text-pink-500 uppercase tracking-wider border-b border-pink-500/20 pb-2 px-4 mb-2">
+                    <div class="grid grid-cols-[50px_80px_1fr_180px_100px] gap-4 items-center">
+                        <div class="text-center">Select</div>
+                        <div class="text-center">Preview</div>
+                        <div class="pl-2">Filename</div>
+                        <div class="pl-2">Uploaded On</div>
+                        <div class="text-right pr-4">Download</div>
+                    </div>
+                </div>
+
+                <!-- Gallery Container -->
+                <div id="gallery-container" class="gallery-container view-grid">
                     @foreach($player->galleries as $image)
-                        <div class="cyber-card p-3 flex flex-col gap-3 overflow-hidden group/gallery relative">
+                        <div class="gallery-item cyber-card p-3 flex flex-col gap-3 overflow-hidden group/gallery relative transition-all duration-500">
                             <!-- Subtle pink hover indicator border -->
                             <div class="absolute inset-0 border border-pink-500/0 group-hover/gallery:border-pink-500/40 rounded transition-all duration-300 pointer-events-none"></div>
 
-                            <div class="relative w-full aspect-[4/5] rounded overflow-hidden bg-[#0a0812] border border-white/5">
+                            <!-- Custom Checkbox (Multi-select) -->
+                            <div class="checkbox-container absolute top-4 right-4 z-20 transition-all duration-300">
+                                <input type="checkbox" id="gallery-chk-{{ $image->id }}" class="gallery-checkbox opacity-0 absolute pointer-events-none" data-url="{{ asset('storage/' . $image->image_path) }}">
+                                <label for="gallery-chk-{{ $image->id }}" class="gallery-label relative flex items-center justify-center w-7 h-7 rounded-full border-2 border-pink-500/40 bg-[#0d0915]/90 cursor-pointer select-none hover:border-pink-500 transition-all duration-300 shadow-[0_0_10px_rgba(0,0,0,0.8)]">
+                                    <!-- Tick Icon -->
+                                    <svg class="w-3.5 h-3.5 text-pink-500 opacity-0 transition-opacity duration-200 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </label>
+                            </div>
+
+                            <div class="gallery-image-wrapper relative w-full aspect-[4/5] rounded overflow-hidden bg-[#0a0812] border border-white/5 cursor-pointer">
                                 <img src="{{ asset('storage/' . $image->image_path) }}" alt="Photoshoot Image" class="w-full h-full object-cover transform group-hover/gallery:scale-105 transition-transform duration-500">
+                                
+                                <!-- Hover search/preview overlay -->
+                                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover/gallery:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none group-hover/gallery:pointer-events-auto">
+                                    <button class="btn-gallery-preview p-3 bg-pink-500 hover:bg-pink-400 text-black rounded-full hover:scale-110 transition-all duration-200 shadow-[0_0_15px_rgba(236,72,153,0.5)]">
+                                        <svg class="w-5 h-5 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Card Metadata Info (Grid/Bento Cards) -->
+                            <div class="gallery-info-container flex flex-col gap-1 mt-auto">
+                                <span class="text-white font-orbitron text-[11px] font-bold truncate tracking-wide" title="{{ basename($image->image_path) }}">{{ basename($image->image_path) }}</span>
+                                <div class="flex items-center justify-between text-[9px] text-gray-500">
+                                    <span>Uploaded: {{ $image->created_at->format('M d, Y') }}</span>
+                                    <span class="px-1.5 py-0.5 bg-white/5 rounded text-[8px] tracking-wide">{{ strtoupper(pathinfo($image->image_path, PATHINFO_EXTENSION)) }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Dedicated List Columns (Only visible/active in List view) -->
+                            <div class="list-meta-filename hidden text-white font-orbitron text-xs font-bold truncate tracking-wide pl-2">
+                                {{ basename($image->image_path) }}
+                            </div>
+                            <div class="list-meta-date hidden text-gray-400 font-orbitron text-xs pl-2">
+                                {{ $image->created_at->format('M d, Y') }}
+                            </div>
+                            <div class="list-meta-actions hidden flex items-center justify-end pr-4">
+                                <a href="{{ asset('storage/' . $image->image_path) }}" download class="p-2 bg-[#25111c] border border-pink-500/20 text-pink-400 hover:bg-pink-500 hover:text-black rounded transition-all duration-200">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                </a>
                             </div>
                         </div>
                     @endforeach
                 </div>
             </section>
+
+            <!-- Fullscreen Lightbox Modal (Popup Carousel) -->
+            <div id="gallery-lightbox" class="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md hidden items-center justify-center transition-all duration-300">
+                <!-- Close Button -->
+                <button id="lightbox-close" class="absolute top-6 right-6 p-3 text-white/70 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-all duration-200">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <!-- Prev Button -->
+                <button id="lightbox-prev" class="absolute left-6 p-4 text-white/70 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-all duration-200">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+
+                <!-- Next Button -->
+                <button id="lightbox-next" class="absolute right-6 p-4 text-white/70 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-all duration-200">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+
+                <!-- Main Content Area -->
+                <div class="flex flex-col items-center max-w-[85vw] max-h-[80vh] gap-4">
+                    <div class="relative group/modal overflow-hidden rounded border border-white/10 bg-[#0d0915]">
+                        <img id="lightbox-img" src="" alt="Preview Image" class="max-w-full max-h-[70vh] object-contain">
+                        
+                        <!-- Download Single from Lightbox -->
+                        <a id="lightbox-download" href="" download class="absolute bottom-4 right-4 p-3 bg-pink-500 text-black hover:bg-pink-400 rounded-full shadow-lg transition-all duration-200 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="text-center font-orbitron">
+                        <p id="lightbox-filename" class="text-white text-sm font-bold tracking-wide"></p>
+                        <p id="lightbox-counter" class="text-pink-400 text-xs mt-1 uppercase tracking-widest font-black"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STYLING & PERSISTENT JS FOR PHOTOSHOOT -->
+            <style>
+                /* Default Hidden state for List Columns */
+                .list-meta-filename,
+                .list-meta-date,
+                .list-meta-actions {
+                    display: none;
+                }
+
+                /* List View (Table layout) styling */
+                .gallery-container.view-list {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    gap: 0.5rem !important;
+                    max-w: 100% !important;
+                    margin: 0 !important;
+                }
+                .gallery-container.view-list .gallery-item {
+                    display: grid !important;
+                    grid-template-columns: 50px 80px 1fr 180px 100px !important;
+                    gap: 1rem !important;
+                    align-items: center !important;
+                    padding: 0.5rem 1rem !important;
+                    width: 100% !important;
+                    border-radius: 4px !important;
+                    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+                    background: rgba(18, 15, 26, 0.6) !important;
+                    flex-direction: row !important;
+                }
+                .gallery-container.view-list .gallery-item:hover {
+                    background: rgba(236, 72, 153, 0.05) !important;
+                    border-color: rgba(236, 72, 153, 0.2) !important;
+                }
+                .gallery-container.view-list .gallery-item .checkbox-container {
+                    position: static !important;
+                    display: flex !important;
+                    justify-content: center !important;
+                    align-items: center !important;
+                    margin: 0 !important;
+                }
+                .gallery-container.view-list .gallery-item .gallery-image-wrapper {
+                    width: 50px !important;
+                    height: 50px !important;
+                    aspect-ratio: 1/1 !important;
+                    margin: 0 auto !important;
+                }
+                .gallery-container.view-list .gallery-item .gallery-info-container {
+                    display: none !important;
+                }
+                .gallery-container.view-list .gallery-item .list-meta-filename {
+                    display: block !important;
+                }
+                .gallery-container.view-list .gallery-item .list-meta-date {
+                    display: block !important;
+                }
+                .gallery-container.view-list .gallery-item .list-meta-actions {
+                    display: flex !important;
+                }
+
+                /* Grid View */
+                .gallery-container.view-grid {
+                    display: grid !important;
+                    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+                    gap: 1.5rem !important;
+                }
+                @media (min-width: 640px) {
+                    .gallery-container.view-grid {
+                        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                    }
+                }
+                @media (min-width: 768px) {
+                    .gallery-container.view-grid {
+                        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+                    }
+                }
+                .gallery-container.view-grid .gallery-image-wrapper {
+                    aspect-ratio: 4/5 !important;
+                }
+
+                /* Bento View */
+                .gallery-container.view-bento {
+                    display: grid !important;
+                    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+                    gap: 1.5rem !important;
+                }
+                @media (min-width: 640px) {
+                    .gallery-container.view-bento {
+                        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                    }
+                }
+                @media (min-width: 768px) {
+                    .gallery-container.view-bento {
+                        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+                        grid-auto-rows: 280px !important;
+                    }
+                    
+                    /* Elegant Bento pattern */
+                    .gallery-container.view-bento .gallery-item:nth-child(5n+1) {
+                        grid-column: span 2 !important;
+                        grid-row: span 2 !important;
+                    }
+                    .gallery-container.view-bento .gallery-item:nth-child(5n+3) {
+                        grid-row: span 2 !important;
+                    }
+                    .gallery-container.view-bento .gallery-item:nth-child(5n+4) {
+                        grid-column: span 2 !important;
+                    }
+                }
+                .gallery-container.view-bento .gallery-item {
+                    height: 100% !important;
+                }
+                .gallery-container.view-bento .gallery-image-wrapper {
+                    width: 100% !important;
+                    height: 100% !important;
+                    aspect-ratio: auto !important;
+                }
+                
+                /* Selection styles */
+                .gallery-label.checked {
+                    border-color: #ec4899 !important;
+                    background-color: rgba(236, 72, 153, 0.2) !important;
+                    box-shadow: 0 0 12px rgba(236, 72, 153, 0.6) !important;
+                }
+                .gallery-label.checked svg {
+                    opacity: 1 !important;
+                }
+                
+                /* Control styling for active state */
+                .view-toggle-btn.active {
+                    background-color: #ec4899 !important;
+                    color: #000000 !important;
+                    font-weight: 900 !important;
+                    box-shadow: 0 0 10px rgba(236, 72, 153, 0.4) !important;
+                }
+            </style>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const container = document.getElementById('gallery-container');
+                    const viewButtons = document.querySelectorAll('.view-toggle-btn');
+                    const checkboxes = document.querySelectorAll('.gallery-checkbox');
+                    const selectAllBtn = document.getElementById('btn-select-all');
+                    const deselectAllBtn = document.getElementById('btn-deselect-all');
+                    const downloadBtn = document.getElementById('btn-download-selected');
+                    const tableHeader = document.getElementById('gallery-table-header');
+
+                    // --- PERSISTENT VIEW LOGIC ---
+                    const savedView = localStorage.getItem('gallery_view') || 'grid';
+                    setView(savedView);
+
+                    viewButtons.forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            const targetView = btn.dataset.view;
+                            setView(targetView);
+                            localStorage.setItem('gallery_view', targetView);
+                        });
+                    });
+
+                    function setView(viewName) {
+                        if (!container) return;
+                        container.classList.remove('view-list', 'view-grid', 'view-bento');
+                        container.classList.add(`view-${viewName}`);
+
+                        // Toggle Table Header Row for List View
+                        if (tableHeader) {
+                            if (viewName === 'list') {
+                                tableHeader.classList.remove('hidden');
+                            } else {
+                                tableHeader.classList.add('hidden');
+                            }
+                        }
+
+                        viewButtons.forEach(btn => {
+                            if (btn.dataset.view === viewName) {
+                                btn.classList.add('active');
+                            } else {
+                                btn.classList.remove('active');
+                            }
+                        });
+                    }
+
+                    // --- MULTI-SELECT & DOWNLOAD LOGIC ---
+                    checkboxes.forEach(chk => {
+                        const label = document.querySelector(`label[for="${chk.id}"]`);
+                        if (!label) return;
+                        
+                        // Handle change on checkbox clicks
+                        chk.addEventListener('change', () => {
+                            if (chk.checked) {
+                                label.classList.add('checked');
+                            } else {
+                                label.classList.remove('checked');
+                            }
+                            updateControls();
+                        });
+                    });
+
+                    if (selectAllBtn) {
+                        selectAllBtn.addEventListener('click', () => {
+                            checkboxes.forEach(chk => {
+                                chk.checked = true;
+                                const label = document.querySelector(`label[for="${chk.id}"]`);
+                                if (label) label.classList.add('checked');
+                            });
+                            updateControls();
+                        });
+                    }
+
+                    if (deselectAllBtn) {
+                        deselectAllBtn.addEventListener('click', () => {
+                            checkboxes.forEach(chk => {
+                                chk.checked = false;
+                                const label = document.querySelector(`label[for="${chk.id}"]`);
+                                if (label) label.classList.remove('checked');
+                            });
+                            updateControls();
+                        });
+                    }
+
+                    function updateControls() {
+                        const checkedCount = Array.from(checkboxes).filter(chk => chk.checked).length;
+                        
+                        if (downloadBtn) {
+                            downloadBtn.textContent = `Download Selected (${checkedCount})`;
+                            
+                            if (checkedCount > 0) {
+                                downloadBtn.removeAttribute('disabled');
+                                downloadBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                                if (deselectAllBtn) deselectAllBtn.classList.remove('hidden');
+                            } else {
+                                downloadBtn.setAttribute('disabled', 'true');
+                                downloadBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                                if (deselectAllBtn) deselectAllBtn.classList.add('hidden');
+                            }
+                        }
+                    }
+
+                    if (downloadBtn) {
+                        downloadBtn.addEventListener('click', () => {
+                            const urls = Array.from(checkboxes)
+                                .filter(chk => chk.checked)
+                                .map(chk => chk.dataset.url);
+
+                            if (urls.length === 0) return;
+
+                            // Trigger sequential downloads with short intervals to prevent browser pop-up blocking
+                            urls.forEach((url, index) => {
+                                setTimeout(() => {
+                                    const a = document.createElement('a');
+                                    a.href = url;
+                                    const filename = url.substring(url.lastIndexOf('/') + 1);
+                                    a.download = filename;
+                                    document.body.appendChild(a);
+                                    a.click();
+                                    document.body.removeChild(a);
+                                }, index * 200);
+                            });
+                        });
+                    }
+
+                    // --- LIGHTBOX modal / preview carousel ---
+                    const imagesData = Array.from(checkboxes).map((chk, index) => {
+                        return {
+                            url: chk.dataset.url,
+                            filename: chk.dataset.url.substring(chk.dataset.url.lastIndexOf('/') + 1),
+                            index: index
+                        };
+                    });
+
+                    let currentPreviewIndex = 0;
+
+                    function openLightbox(index) {
+                        currentPreviewIndex = index;
+                        const img = imagesData[index];
+                        if (!img) return;
+
+                        const modalImg = document.getElementById('lightbox-img');
+                        const downloadLink = document.getElementById('lightbox-download');
+                        const filenameText = document.getElementById('lightbox-filename');
+                        const counterText = document.getElementById('lightbox-counter');
+
+                        if (modalImg) modalImg.src = img.url;
+                        if (downloadLink) downloadLink.href = img.url;
+                        if (filenameText) filenameText.textContent = img.filename;
+                        if (counterText) counterText.textContent = `IMAGE ${index + 1} OF ${imagesData.length}`;
+
+                        const lightbox = document.getElementById('gallery-lightbox');
+                        if (lightbox) {
+                            lightbox.classList.remove('hidden');
+                            lightbox.classList.add('flex');
+                        }
+                        document.body.classList.add('overflow-hidden');
+                    }
+
+                    function closeLightbox() {
+                        const lightbox = document.getElementById('gallery-lightbox');
+                        if (lightbox) {
+                            lightbox.classList.add('hidden');
+                            lightbox.classList.remove('flex');
+                        }
+                        document.body.classList.remove('overflow-hidden');
+                    }
+
+                    function nextImage() {
+                        if (imagesData.length === 0) return;
+                        currentPreviewIndex = (currentPreviewIndex + 1) % imagesData.length;
+                        openLightbox(currentPreviewIndex);
+                    }
+
+                    function prevImage() {
+                        if (imagesData.length === 0) return;
+                        currentPreviewIndex = (currentPreviewIndex - 1 + imagesData.length) % imagesData.length;
+                        openLightbox(currentPreviewIndex);
+                    }
+
+                    // Attach click handler on image wrappers
+                    document.querySelectorAll('.gallery-image-wrapper').forEach((wrapper, index) => {
+                        wrapper.addEventListener('click', (e) => {
+                            if (e.target.closest('a') || e.target.closest('button')) return;
+                            openLightbox(index);
+                        });
+                    });
+
+                    const closeBtn = document.getElementById('lightbox-close');
+                    const prevBtn = document.getElementById('lightbox-prev');
+                    const nextBtn = document.getElementById('lightbox-next');
+
+                    if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+                    if (prevBtn) prevBtn.addEventListener('click', prevImage);
+                    if (nextBtn) nextBtn.addEventListener('click', nextImage);
+
+                    // Close when clicking empty space
+                    const lightboxEl = document.getElementById('gallery-lightbox');
+                    if (lightboxEl) {
+                        lightboxEl.addEventListener('click', (e) => {
+                            if (e.target === lightboxEl) {
+                                closeLightbox();
+                            }
+                        });
+                    }
+
+                    // Keyboard navigation
+                    document.addEventListener('keydown', (e) => {
+                        if (lightboxEl && !lightboxEl.classList.contains('hidden')) {
+                            if (e.key === 'Escape') closeLightbox();
+                            if (e.key === 'ArrowRight') nextImage();
+                            if (e.key === 'ArrowLeft') prevImage();
+                        }
+                    });
+                });
+            </script>
         @endif
         
         <!-- FOOTER BRANDING -->
