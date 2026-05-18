@@ -123,8 +123,6 @@
                     <div class="relative w-36 h-36 md:w-40 md:h-40 rounded-full bg-[#120f1a] border-4 border-red-500/80 flex items-center justify-center overflow-hidden">
                         @if($player->avatar_url)
                             <img src="{{ asset('storage/' . $player->avatar_url) }}" alt="{{ $player->name }}" class="w-full h-full object-cover">
-                        @elseif($player->gameInfos->first()?->profile_image)
-                            <img src="{{ asset('storage/' . $player->gameInfos->first()->profile_image) }}" alt="{{ $player->name }}" class="w-full h-full object-cover">
                         @else
                             <div class="text-transparent bg-clip-text bg-gradient-to-tr from-red-500 to-pink-500 font-orbitron font-black text-5xl tracking-widest select-none">
                                 {{ strtoupper(substr($player->name, 0, 2)) }}
