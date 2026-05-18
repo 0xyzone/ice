@@ -13,4 +13,9 @@ class CreateUser extends CreateRecord
     {
         $this->record->assignRole('player');
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

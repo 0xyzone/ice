@@ -15,4 +15,9 @@ class CreateAdmin extends CreateRecord
         $this->record->email_verified_at = now();
         $this->record->save();
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

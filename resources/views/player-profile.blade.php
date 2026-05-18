@@ -137,9 +137,16 @@
                         <span class="px-3 py-1 bg-red-500 text-black text-[10px] font-orbitron font-black uppercase tracking-widest rounded-sm transform -skew-x-12">
                             PRO PLAYER
                         </span>
-                        <span class="px-3 py-1 bg-[#1d152b] border border-violet-500/30 text-violet-300 text-[10px] font-orbitron font-bold uppercase tracking-widest rounded-sm">
-                            LEVEL SSS
-                        </span>
+                        @if($player->player?->gender)
+                            <span class="px-3 py-1 bg-[#1d152b] border border-violet-500/30 text-violet-300 text-[10px] font-orbitron font-bold uppercase tracking-widest rounded-sm">
+                                {{ strtoupper($player->player->gender) }}
+                            </span>
+                        @endif
+                        @if($player->player?->date_of_birth)
+                            <span class="px-3 py-1 bg-[#2b1522] border border-pink-500/30 text-pink-300 text-[10px] font-orbitron font-bold uppercase tracking-widest rounded-sm">
+                                AGE: {{ \Carbon\Carbon::parse($player->player->date_of_birth)->age }}
+                            </span>
+                        @endif
                     </div>
                     
                     <h1 class="text-4xl md:text-6xl font-orbitron font-black tracking-tight text-white uppercase drop-shadow-[0_2px_15px_rgba(239,68,68,0.4)]">

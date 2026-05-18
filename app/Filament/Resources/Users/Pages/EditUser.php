@@ -4,6 +4,8 @@ namespace App\Filament\Resources\Users\Pages;
 
 use App\Filament\Resources\Users\UserResource;
 use App\Models\PlayerDetail;
+use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
@@ -15,7 +17,18 @@ class EditUser extends EditRecord
     {
         return [
             DeleteAction::make(),
+            Action::make('view_public_profile')
+                ->label('View Public Profile')
+                ->icon('heroicon-o-eye')
+                ->color('info')
+                ->url(fn (User $user) => route('player.profile', $user))
+                ->openUrlInNewTab(),
         ];
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 
     /**

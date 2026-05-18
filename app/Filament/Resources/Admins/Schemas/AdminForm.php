@@ -15,7 +15,8 @@ class AdminForm
                 Section::make('Admin Credentials')
                     ->description('Manage administrator credentials and system access details.')
                     ->icon('heroicon-m-shield-check')
-                    ->columns(2)
+                    ->columns(3)
+                    ->columnSpanFull()
                     ->schema([
                         TextInput::make('name')
                             ->prefixIcon('heroicon-m-user')
