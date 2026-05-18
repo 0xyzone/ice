@@ -186,9 +186,32 @@
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                     @foreach(['facebook', 'instagram', 'snapchat', 'discord', 'linkedin'] as $social)
                         @if($player->socials->$social)
-                            <a href="{{ str_contains($player->socials->$social, 'http') ? $player->socials->$social : '#' }}" 
-                               target="_blank" 
-                               class="cyber-card p-4 flex flex-col items-center justify-center text-center group">
+                            @php
+                                $socialUrl = $player->socials->$social;
+                                $isDiscordUsername = false;
+                                
+                                if (!str_starts_with($socialUrl, 'http://') && !str_starts_with($socialUrl, 'https://')) {
+                                    if ($social === 'facebook') {
+                                        $socialUrl = 'https://facebook.com/' . ltrim($socialUrl, '/');
+                                    } elseif ($social === 'instagram') {
+                                        $socialUrl = 'https://instagram.com/' . ltrim($socialUrl, '/');
+                                    } elseif ($social === 'snapchat') {
+                                        $socialUrl = 'https://snapchat.com/add/' . ltrim($socialUrl, '/');
+                                    } elseif ($social === 'linkedin') {
+                                        $socialUrl = 'https://linkedin.com/in/' . ltrim($socialUrl, '/');
+                                    } elseif ($social === 'discord') {
+                                        $isDiscordUsername = true;
+                                    }
+                                }
+                            @endphp
+
+                            <a href="{{ $isDiscordUsername ? 'javascript:void(0)' : $socialUrl }}" 
+                               @if($isDiscordUsername)
+                                 onclick="copyDiscordToClipboard('{{ e($player->socials->discord) }}', this)"
+                               @else
+                                 target="_blank" 
+                               @endif
+                               class="cyber-card p-4 flex flex-col items-center justify-center text-center group relative">
                                 
                                 <!-- Icon Selection with vibrant gradients -->
                                 <div class="w-10 h-10 rounded-lg bg-[#181223] flex items-center justify-center border border-white/5 group-hover:border-red-500/50 group-hover:bg-red-500/10 transition-colors">
@@ -210,7 +233,7 @@
                                 </span>
                                 
                                 <span class="text-xs text-gray-400 font-outfit mt-1 max-w-[120px] truncate">
-                                    {{ str_contains($player->socials->$social, 'http') ? explode('/', rtrim($player->socials->$social, '/'))[count(explode('/', rtrim($player->socials->$social, '/')))-1] : $player->socials->$social }}
+                                    {{ $isDiscordUsername ? $player->socials->$social : (str_contains($player->socials->$social, 'http') ? explode('/', rtrim($player->socials->$social, '/'))[count(explode('/', rtrim($player->socials->$social, '/')))-1] : $player->socials->$social) }}
                                 </span>
                             </a>
                         @endif
@@ -691,6 +714,20 @@
             </style>
 
             <script>
+                function copyDiscordToClipboard(username, element) {
+                    if (!username) return;
+                    navigator.clipboard.writeText(username).then(() => {
+                        // Create floating badge
+                        const badge = document.createElement('div');
+                        badge.className = 'absolute -top-10 left-1/2 -translate-x-1/2 bg-pink-500 text-black font-orbitron font-black text-[10px] px-3 py-1.5 rounded shadow-[0_0_15px_rgba(236,72,153,0.5)] animate-bounce z-50 uppercase tracking-widest pointer-events-none';
+                        badge.innerText = 'Copied!';
+                        element.appendChild(badge);
+                        setTimeout(() => { badge.remove(); }, 1500);
+                    }).catch(err => {
+                        console.error('Failed to copy text: ', err);
+                    });
+                }
+
                 document.addEventListener('DOMContentLoaded', () => {
                     const container = document.getElementById('gallery-container');
                     const viewButtons = document.querySelectorAll('.view-toggle-btn');
