@@ -18,6 +18,25 @@ class PlayerProfileController extends Controller
             'galleries',
         ])->findOrFail($id);
 
+        return $this->renderProfile($player);
+    }
+
+    public function showByUsername(string $username): View
+    {
+        $player = User::with([
+            'socials',
+            'player',
+            'teamMemberships.team.game',
+            'teamMemberships.team.tournaments',
+            'gameInfos.game',
+            'galleries',
+        ])->where('username', $username)->firstOrFail();
+
+        return $this->renderProfile($player);
+    }
+
+    private function renderProfile(User $player): View
+    {
         // Calculate dynamic player stats from tournament records of participating teams
         $totalPlayed = 0;
         $totalWon = 0;

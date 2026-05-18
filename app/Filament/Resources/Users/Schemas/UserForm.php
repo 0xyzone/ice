@@ -24,6 +24,13 @@ class UserForm
                             ->disabledOn('edit')
                             ->maxLength(255),
 
+                        TextInput::make('username')
+                            ->prefixIcon('heroicon-m-at-symbol')
+                            ->required()
+                            ->alphaDash()
+                            ->unique(ignoreRecord: true)
+                            ->maxLength(255),
+
                         TextInput::make('email')
                             ->prefixIcon('heroicon-m-envelope')
                             ->email()

@@ -51,12 +51,13 @@ class ManageProfile extends Page
         $socials = auth()->user()->socials?->attributesToArray() ?? [];
         $user = auth()->user();
         $userAvatar = ['avatar_url' => $user->avatar_url];
+        $username = ['username' => $user->username];
 
         $legalInfo = $user->legalInfo?->attributesToArray() ?? [];
 
         $galleries = $user->galleries()->pluck('image_path')->toArray();
 
-        $this->form->fill(array_merge($playerDetail, $socials, $userAvatar, $legalInfo, ['galleries' => $galleries]));
+        $this->form->fill(array_merge($playerDetail, $socials, $userAvatar, $username, $legalInfo, ['galleries' => $galleries]));
     }
 
     public function form(Schema $schema): Schema
@@ -101,6 +102,12 @@ class ManageProfile extends Page
                                         ->directory('avatars')
                                         ->columnSpanFull()
                                         ->alignCenter(),
+                                    TextInput::make('username')
+                                        ->label('Username')
+                                        ->prefixIcon('heroicon-m-at-symbol')
+                                        ->required()
+                                        ->alphaDash()
+                                        ->unique('users', 'username', ignorable: auth()->user()),
                                     Select::make('gender')
                                         ->prefixIcon('heroicon-m-user')
                                         ->options([
@@ -116,11 +123,77 @@ class ManageProfile extends Page
                                         ->native(false),
                                     TextInput::make('personal_contact_number')
                                         ->prefixIcon('heroicon-m-phone')
-                                        ->required(),
+                                        ->required()
+                                        ->rules([
+                                            function ($get) {
+                                                return function (string $attribute, $value, \Closure $fail) use ($get) {
+                                                    if (empty($value)) {
+                                                        return;
+                                                    }
+
+                                                    $otherFields = [
+                                                        $get('alt_personal_contact_number'),
+                                                        $get('emergency_contact_number'),
+                                                    ];
+                                                    if (in_array($value, array_filter($otherFields))) {
+                                                        $fail('This contact number must not be identical to your other contact numbers.');
+
+                                                        return;
+                                                    }
+
+                                                    $userId = auth()->id();
+                                                    $exists = PlayerDetail::query()
+                                                        ->where('user_id', '!=', $userId)
+                                                        ->where(function ($query) use ($value) {
+                                                            $query->where('personal_contact_number', $value)
+                                                                ->orWhere('alt_personal_contact_number', $value)
+                                                                ->orWhere('emergency_contact_number', $value);
+                                                        })
+                                                        ->exists();
+
+                                                    if ($exists) {
+                                                        $fail('This contact number has already been taken by another player.');
+                                                    }
+                                                };
+                                            },
+                                        ]),
                                     TextInput::make('alt_personal_contact_number')
                                         ->prefixIcon('heroicon-m-device-phone-mobile')
                                         ->label('Alternative Contact')
-                                        ->hint('(Optional)'),
+                                        ->hint('(Optional)')
+                                        ->rules([
+                                            function ($get) {
+                                                return function (string $attribute, $value, \Closure $fail) use ($get) {
+                                                    if (empty($value)) {
+                                                        return;
+                                                    }
+
+                                                    $otherFields = [
+                                                        $get('personal_contact_number'),
+                                                        $get('emergency_contact_number'),
+                                                    ];
+                                                    if (in_array($value, array_filter($otherFields))) {
+                                                        $fail('This contact number must not be identical to your other contact numbers.');
+
+                                                        return;
+                                                    }
+
+                                                    $userId = auth()->id();
+                                                    $exists = PlayerDetail::query()
+                                                        ->where('user_id', '!=', $userId)
+                                                        ->where(function ($query) use ($value) {
+                                                            $query->where('personal_contact_number', $value)
+                                                                ->orWhere('alt_personal_contact_number', $value)
+                                                                ->orWhere('emergency_contact_number', $value);
+                                                        })
+                                                        ->exists();
+
+                                                    if ($exists) {
+                                                        $fail('This contact number has already been taken by another player.');
+                                                    }
+                                                };
+                                            },
+                                        ]),
                                     Textarea::make('bio')
                                         ->maxLength(300)
                                         ->rows(3)
@@ -141,7 +214,40 @@ class ManageProfile extends Page
                                         ->schema([
                                             TextInput::make('emergency_contact_number')
                                                 ->prefixIcon('heroicon-m-phone-arrow-up-right')
-                                                ->required(),
+                                                ->required()
+                                                ->rules([
+                                                    function ($get) {
+                                                        return function (string $attribute, $value, \Closure $fail) use ($get) {
+                                                            if (empty($value)) {
+                                                                return;
+                                                            }
+
+                                                            $otherFields = [
+                                                                $get('personal_contact_number'),
+                                                                $get('alt_personal_contact_number'),
+                                                            ];
+                                                            if (in_array($value, array_filter($otherFields))) {
+                                                                $fail('This contact number must not be identical to your other contact numbers.');
+
+                                                                return;
+                                                            }
+
+                                                            $userId = auth()->id();
+                                                            $exists = PlayerDetail::query()
+                                                                ->where('user_id', '!=', $userId)
+                                                                ->where(function ($query) use ($value) {
+                                                                    $query->where('personal_contact_number', $value)
+                                                                        ->orWhere('alt_personal_contact_number', $value)
+                                                                        ->orWhere('emergency_contact_number', $value);
+                                                                })
+                                                                ->exists();
+
+                                                            if ($exists) {
+                                                                $fail('This contact number has already been taken by another player.');
+                                                            }
+                                                        };
+                                                    },
+                                                ]),
                                             Select::make('emergency_contact_relationship')
                                                 ->prefixIcon('heroicon-m-users')
                                                 ->options([
@@ -463,8 +569,9 @@ class ManageProfile extends Page
         $legalInfo->fill($legalData);
         $legalInfo->save();
 
-        // Save User Avatar
+        // Save User details (Avatar and Username)
         $user = auth()->user();
+        $user->username = $data['username'] ?? null;
         $user->avatar_url = $data['avatar_url'] ?? null;
         $user->save();
 

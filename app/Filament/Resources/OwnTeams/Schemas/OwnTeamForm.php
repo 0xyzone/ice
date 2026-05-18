@@ -8,10 +8,12 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Set;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
 
 class OwnTeamForm
 {
@@ -46,7 +48,14 @@ class OwnTeamForm
                                             ->nullable(),
                                         TextInput::make('name')
                                             ->required()
-                                            ->maxLength(255),
+                                            ->maxLength(255)
+                                            ->live(onBlur: true)
+                                            ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                                        TextInput::make('slug')
+                                            ->required()
+                                            ->unique(table: OwnTeam::class, column: 'slug', ignoreRecord: true)
+                                            ->maxLength(255)
+                                            ->alphaDash(),
                                         TextInput::make('short_name')
                                             ->label('Short Name')
                                             ->maxLength(50),

@@ -18,6 +18,25 @@ class TeamProfileController extends Controller
             'tournaments',
         ])->findOrFail($id);
 
+        return $this->renderTeam($team);
+    }
+
+    public function showBySlug(string $slug): View
+    {
+        $team = OwnTeam::with([
+            'game',
+            'members' => function ($query) {
+                $query->where('status', true); // Only active roster members
+            },
+            'members.user.player',
+            'tournaments',
+        ])->where('slug', $slug)->firstOrFail();
+
+        return $this->renderTeam($team);
+    }
+
+    private function renderTeam(OwnTeam $team): View
+    {
         // Aggregate dynamic tournament metrics
         $totalPlayed = $team->tournaments->sum('pivot.matches_played');
         $totalWon = $team->tournaments->sum('pivot.matches_won');
