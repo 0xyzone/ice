@@ -134,9 +134,6 @@
                 <!-- Info Block -->
                 <div class="flex-grow text-center md:text-left">
                     <div class="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-3">
-                        <span class="px-3 py-1 bg-red-500 text-black text-[10px] font-orbitron font-black uppercase tracking-widest rounded-sm transform -skew-x-12">
-                            PRO PLAYER
-                        </span>
                         @if($player->player?->gender)
                             <span class="px-3 py-1 bg-[#1d152b] border border-violet-500/30 text-violet-300 text-[10px] font-orbitron font-bold uppercase tracking-widest rounded-sm">
                                 {{ strtoupper($player->player->gender) }}
