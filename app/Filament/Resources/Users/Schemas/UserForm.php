@@ -15,7 +15,7 @@ class UserForm
                 Section::make('Account Credentials')
                     ->description('Manage user credentials and basic account information.')
                     ->icon('heroicon-m-user-circle')
-                    ->columns(3)
+                    ->columns(4)
                     ->columnSpanFull()
                     ->schema([
                         TextInput::make('name')
