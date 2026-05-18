@@ -32,6 +32,9 @@ class MukhiyasPanelProvider extends PanelProvider
             ->default()
             ->id('mukhiyas')
             ->path('mukhiyas')
+            ->brandLogo(fn () => view('filament.components.brand-logo'))
+            ->brandLogoHeight('2.8rem')
+            ->favicon(asset('favicon.ico').'?v='.filemtime(public_path('favicon.ico')))
             ->viteTheme('resources/css/filament/mukhiyas/theme.css')
             ->colors([
                 'primary' => Color::Violet,
