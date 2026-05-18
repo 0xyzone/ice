@@ -15,6 +15,7 @@ class PlayerProfileController extends Controller
             'teamMemberships.team.game',
             'teamMemberships.team.tournaments',
             'gameInfos.game',
+            'galleries',
         ])->findOrFail($id);
 
         // Calculate dynamic player stats from tournament records of participating teams

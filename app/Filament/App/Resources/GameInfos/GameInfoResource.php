@@ -13,12 +13,14 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class GameInfoResource extends Resource
 {
     protected static ?string $model = GameInfo::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPuzzlePiece;
+
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::PuzzlePiece;
 
     protected static ?string $recordTitleAttribute = 'in_game_id';
@@ -47,5 +49,10 @@ class GameInfoResource extends Resource
             'create' => CreateGameInfo::route('/create'),
             'edit' => EditGameInfo::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('user_id', auth()->id());
     }
 }

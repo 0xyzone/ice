@@ -6,9 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class OwnTeam extends Model
 {
+    protected static function booted(): void
+    {
+        static::deleted(function (OwnTeam $ownTeam) {
+            if ($ownTeam->logo_image) {
+                Storage::disk('public')->delete($ownTeam->logo_image);
+            }
+        });
+
+        static::updated(function (OwnTeam $ownTeam) {
+            if ($ownTeam->isDirty('logo_image') && $ownTeam->getOriginal('logo_image')) {
+                Storage::disk('public')->delete($ownTeam->getOriginal('logo_image'));
+            }
+        });
+    }
+
     public function game(): BelongsTo
     {
         return $this->belongsTo(Game::class);

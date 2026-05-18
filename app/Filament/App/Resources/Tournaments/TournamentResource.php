@@ -14,6 +14,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class TournamentResource extends Resource
 {
@@ -55,5 +56,12 @@ class TournamentResource extends Resource
             'index' => ListTournaments::route('/'),
             'view' => ViewTournament::route('/{record}'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->whereHas('teams.members', function ($query) {
+            $query->where('user_id', auth()->id());
+        });
     }
 }

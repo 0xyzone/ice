@@ -121,7 +121,9 @@
                     <!-- Spinning glowing gradient ring -->
                     <div class="absolute -inset-2 bg-gradient-to-r from-red-500 via-pink-500 to-violet-600 rounded-full blur-md opacity-80 group-hover:opacity-100 group-hover:animate-spin transition duration-1000" style="animation-duration: 8s;"></div>
                     <div class="relative w-36 h-36 md:w-40 md:h-40 rounded-full bg-[#120f1a] border-4 border-red-500/80 flex items-center justify-center overflow-hidden">
-                        @if($player->gameInfos->first()?->profile_image)
+                        @if($player->avatar_url)
+                            <img src="{{ asset('storage/' . $player->avatar_url) }}" alt="{{ $player->name }}" class="w-full h-full object-cover">
+                        @elseif($player->gameInfos->first()?->profile_image)
                             <img src="{{ asset('storage/' . $player->gameInfos->first()->profile_image) }}" alt="{{ $player->name }}" class="w-full h-full object-cover">
                         @else
                             <div class="text-transparent bg-clip-text bg-gradient-to-tr from-red-500 to-pink-500 font-orbitron font-black text-5xl tracking-widest select-none">
@@ -393,6 +395,34 @@
             </section>
 
         </main>
+        
+        <!-- PHOTOSHOOT GALLERY SHOWCASE -->
+        @if($player->galleries->isNotEmpty())
+            <section class="mt-12 flex flex-col gap-6">
+                <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                    <h2 class="text-2xl font-orbitron font-extrabold text-white uppercase tracking-wider flex items-center gap-3">
+                        <span class="w-2.5 h-6 bg-pink-500 shadow-[0_0_12px_#ec4899] block"></span>
+                        Photoshoot Gallery
+                    </h2>
+                    <span class="text-xs font-orbitron text-pink-400 font-black px-2 py-0.5 bg-[#25111c] border border-pink-500/20 rounded">
+                        {{ $player->galleries->count() }} PHOTOS
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    @foreach($player->galleries as $image)
+                        <div class="cyber-card p-3 flex flex-col gap-3 overflow-hidden group/gallery relative">
+                            <!-- Subtle pink hover indicator border -->
+                            <div class="absolute inset-0 border border-pink-500/0 group-hover/gallery:border-pink-500/40 rounded transition-all duration-300 pointer-events-none"></div>
+
+                            <div class="relative w-full aspect-[4/5] rounded overflow-hidden bg-[#0a0812] border border-white/5">
+                                <img src="{{ asset('storage/' . $image->image_path) }}" alt="Photoshoot Image" class="w-full h-full object-cover transform group-hover/gallery:scale-105 transition-transform duration-500">
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+        @endif
         
         <!-- FOOTER BRANDING -->
         <footer class="mt-16 text-center border-t border-white/10 pt-8 text-gray-600 font-orbitron text-[10px] tracking-widest uppercase">
