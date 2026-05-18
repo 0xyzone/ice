@@ -51,7 +51,7 @@ class RecentPlayersWidget extends BaseWidget
                     ->label('View Profile')
                     ->icon('heroicon-o-eye')
                     ->color('danger')
-                    ->url(fn (User $record) => route('player.profile', $record))
+                    ->url(fn (User $record) => $record->username ? route('player.profile.username', $record->username) : route('player.profile', $record->id))
                     ->openUrlInNewTab(),
             ]);
     }

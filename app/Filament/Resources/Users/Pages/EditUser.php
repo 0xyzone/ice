@@ -21,7 +21,7 @@ class EditUser extends EditRecord
                 ->label('View Public Profile')
                 ->icon('heroicon-o-eye')
                 ->color('info')
-                ->url(fn (User $user) => route('player.profile', $user))
+                ->url(fn (User $user) => $user->username ? route('player.profile.username', $user->username) : route('player.profile', $user->id))
                 ->openUrlInNewTab(),
         ];
     }

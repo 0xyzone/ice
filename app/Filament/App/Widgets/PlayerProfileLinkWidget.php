@@ -45,7 +45,7 @@ class PlayerProfileLinkWidget extends Widget
             'totalWon' => $totalWon,
             'totalLost' => $totalLost,
             'winRate' => $winRate,
-            'profileUrl' => route('player.profile', $user),
+            'profileUrl' => $user->username ? route('player.profile.username', $user->username) : route('player.profile', $user->id),
         ];
     }
 }
