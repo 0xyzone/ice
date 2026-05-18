@@ -17,9 +17,7 @@ class OwnTeamsTable
     {
         return $table
             ->columns([
-                TextColumn::make('game_id')
-                    ->numeric()
-                    ->sortable(),
+                TextColumn::make('game.name'),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('email')

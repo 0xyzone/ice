@@ -5,6 +5,7 @@ namespace App\Filament\Resources\OwnTeams;
 use App\Filament\Resources\OwnTeams\Pages\CreateOwnTeam;
 use App\Filament\Resources\OwnTeams\Pages\EditOwnTeam;
 use App\Filament\Resources\OwnTeams\Pages\ListOwnTeams;
+use App\Filament\Resources\OwnTeams\RelationManagers\MembersRelationManager;
 use App\Filament\Resources\OwnTeams\Schemas\OwnTeamForm;
 use App\Filament\Resources\OwnTeams\Tables\OwnTeamsTable;
 use App\Models\OwnTeam;
@@ -19,6 +20,7 @@ class OwnTeamResource extends Resource
     protected static ?string $model = OwnTeam::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTrophy;
+
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::Trophy;
 
     protected static ?string $recordTitleAttribute = 'name';
@@ -36,7 +38,7 @@ class OwnTeamResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            MembersRelationManager::class,
         ];
     }
 
