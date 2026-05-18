@@ -9,8 +9,8 @@ use App\Filament\App\Widgets\PlayerTimelineWidget;
 use App\Filament\App\Widgets\PlayerTournamentsWidget;
 use App\Filament\App\Widgets\PlayerWinsLossesChart;
 use App\Filament\Pages\Auth\Login;
+use App\Http\Middleware\Authenticate;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -32,7 +32,7 @@ class AppPanelProvider extends PanelProvider
     {
         return $panel
             ->id('app')
-            ->path('/')
+            ->path('app')
             ->brandLogo(fn () => view('filament.components.brand-logo'))
             ->brandLogoHeight('2.8rem')
             ->favicon(asset('favicon.ico').'?v='.filemtime(public_path('favicon.ico')))
