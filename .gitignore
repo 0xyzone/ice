@@ -140,3 +140,4 @@ public/storage
 storage/app/public
 vendor/
 vendor
+/public/build
