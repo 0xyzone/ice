@@ -25,7 +25,8 @@ class OwnTeamsTable
                     ->searchable(),
                 TextColumn::make('short_name')
                     ->searchable(),
-                HoverImageColumn::make('logo_image'),
+                HoverImageColumn::make('logo_image')
+                ->disk('public'),
                 TextColumn::make('gender')
                     ->searchable(),
                 IconColumn::make('status')
