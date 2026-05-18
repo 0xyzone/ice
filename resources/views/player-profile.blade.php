@@ -716,16 +716,47 @@
             <script>
                 function copyDiscordToClipboard(username, element) {
                     if (!username) return;
-                    navigator.clipboard.writeText(username).then(() => {
+
+                    function showCopiedBadge() {
                         // Create floating badge
                         const badge = document.createElement('div');
                         badge.className = 'absolute -top-10 left-1/2 -translate-x-1/2 bg-pink-500 text-black font-orbitron font-black text-[10px] px-3 py-1.5 rounded shadow-[0_0_15px_rgba(236,72,153,0.5)] animate-bounce z-50 uppercase tracking-widest pointer-events-none';
                         badge.innerText = 'Copied!';
                         element.appendChild(badge);
                         setTimeout(() => { badge.remove(); }, 1500);
-                    }).catch(err => {
-                        console.error('Failed to copy text: ', err);
-                    });
+                    }
+
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(username).then(() => {
+                            showCopiedBadge();
+                        }).catch(err => {
+                            fallbackCopy(username);
+                        });
+                    } else {
+                        fallbackCopy(username);
+                    }
+
+                    function fallbackCopy(text) {
+                        const textArea = document.createElement("textarea");
+                        textArea.value = text;
+                        textArea.style.position = "fixed"; // Avoid scrolling to bottom
+                        textArea.style.left = "-9999px";
+                        textArea.style.top = "-9999px";
+                        document.body.appendChild(textArea);
+                        textArea.focus();
+                        textArea.select();
+                        try {
+                            const successful = document.execCommand('copy');
+                            if (successful) {
+                                showCopiedBadge();
+                            } else {
+                                console.error('Fallback copy failed');
+                            }
+                        } catch (err) {
+                            console.error('Fallback copy error', err);
+                        }
+                        document.body.removeChild(textArea);
+                    }
                 }
 
                 document.addEventListener('DOMContentLoaded', () => {
