@@ -7,6 +7,7 @@ use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Filament\Resources\Users\RelationManagers\GameInfoRelationManager;
 use App\Filament\Resources\Users\RelationManagers\PlayerRelationManager;
+use App\Filament\Resources\Users\RelationManagers\SocialsRelationManager;
 use App\Filament\Resources\Users\Schemas\UserForm;
 use App\Filament\Resources\Users\Tables\UsersTable;
 use App\Models\User;
@@ -52,6 +53,7 @@ class UserResource extends Resource
         return [
             'player' => PlayerRelationManager::class,
             'gameInfos' => GameInfoRelationManager::class,
+            'socials' => SocialsRelationManager::class,
         ];
     }
 

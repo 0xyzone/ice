@@ -54,4 +54,9 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     {
         return $this->hasOne(PlayerDetail::class);
     }
+
+    public function socials(): HasOne
+    {
+        return $this->hasOne(UserSocial::class);
+    }
 }
