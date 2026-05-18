@@ -31,6 +31,16 @@ class UserForm
                             ->required()
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
+
+                        TextInput::make('password')
+                            ->prefixIcon('heroicon-m-key')
+                            ->password()
+                            ->revealable()
+                            ->required(fn (string $context): bool => $context === 'create')
+                            ->dehydrated(fn ($state) => filled($state))
+                            ->maxLength(255)
+                            ->helperText(fn (string $context): string => $context === 'edit' ? 'Leave blank to keep current password.' : ''),
+
                         TextInput::make('id')
                             ->disabled()
                             ->copyable(),
