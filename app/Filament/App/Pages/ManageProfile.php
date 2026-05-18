@@ -9,6 +9,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
@@ -100,6 +101,12 @@ class ManageProfile extends Page
                                         ->prefixIcon('heroicon-m-device-phone-mobile')
                                         ->label('Alternative Contact')
                                         ->hint('(Optional)'),
+                                    Textarea::make('bio')
+                                        ->maxLength(300)
+                                        ->rows(3)
+                                        ->placeholder('Tell us about yourself, your gaming style, custom tactics...')
+                                        ->hint('Max 300 characters')
+                                        ->columnSpanFull(),
                                 ]),
 
                             Section::make('Emergency Contact')
@@ -177,6 +184,7 @@ class ManageProfile extends Page
         $playerDetailKeys = [
             'gender', 'date_of_birth', 'personal_contact_number', 'alt_personal_contact_number',
             'emergency_contact_name', 'emergency_contact_number', 'emergency_contact_relationship',
+            'bio',
         ];
         $playerDetailData = Arr::only($data, $playerDetailKeys);
 

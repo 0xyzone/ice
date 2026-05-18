@@ -78,7 +78,9 @@ class OwnTeamForm
                                             ->image()
                                             ->optimize('webp')
                                             ->downloadable()
+                                            ->disk('public')
                                             ->directory('own_teams/logos')
+                                            ->visibility('public')
                                             ->previewable()
                                             ->maxSize(2048),
                                     ]),

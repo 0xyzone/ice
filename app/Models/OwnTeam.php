@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OwnTeam extends Model
@@ -16,5 +17,18 @@ class OwnTeam extends Model
     public function members(): HasMany
     {
         return $this->hasMany(TeamMember::class, 'own_team_id');
+    }
+
+    public function tournaments(): BelongsToMany
+    {
+        return $this->belongsToMany(Tournament::class, 'tournament_team')
+            ->withPivot([
+                'matches_played',
+                'matches_won',
+                'matches_lost',
+                'points',
+                'rank',
+            ])
+            ->withTimestamps();
     }
 }

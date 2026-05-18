@@ -8,10 +8,8 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\Card;
 use Filament\Infolists\Components\ImageEntry;
@@ -19,7 +17,6 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use TinusG\FilamentHoverImageColumn\HoverImageColumn;
@@ -45,6 +42,9 @@ class GameInfoRelationManager extends RelationManager
                     ->image()
                     ->optimize('webp')
                     ->downloadable()
+                    ->disk('public')
+                    ->directory('game-infos/profile')
+                    ->visibility('public')
                     ->previewable(),
                 // status boolean toggle could be added here if needed
             ]);
@@ -71,7 +71,7 @@ class GameInfoRelationManager extends RelationManager
                         TextEntry::make('status')
                             ->label('Active')
                             ->badge()
-                            ->color(fn($state) => $state ? 'success' : 'danger'),
+                            ->color(fn ($state) => $state ? 'success' : 'danger'),
                     ]),
             ]);
     }
@@ -87,7 +87,7 @@ class GameInfoRelationManager extends RelationManager
                 HoverImageColumn::make('profile_image'),
                 TextColumn::make('status')
                     ->badge()
-                    ->color(fn($state) => $state ? 'success' : 'danger'),
+                    ->color(fn ($state) => $state ? 'success' : 'danger'),
             ])
             ->headerActions([
                 // CreateAction::make(),
