@@ -57,9 +57,9 @@ class LoginController extends Controller
     protected function redirectUser($user): RedirectResponse
     {
         if ($user->hasRole(['admin', 'super_admin'])) {
-            return redirect()->intended('/mukhiyas');
+            return redirect('/mukhiyas');
         }
 
-        return redirect()->intended('/app');
+        return redirect('/app');
     }
 }

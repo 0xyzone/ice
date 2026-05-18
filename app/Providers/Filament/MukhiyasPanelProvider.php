@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\Auth\Login;
 use App\Filament\Widgets\MukhiyasStatsOverview;
 use App\Filament\Widgets\PlayersRegistrationChart;
 use App\Filament\Widgets\RecentPlayersWidget;
@@ -41,7 +40,7 @@ class MukhiyasPanelProvider extends PanelProvider
                 'primary' => Color::Violet,
             ])
             ->font('Poppins')
-            ->login(Login::class)
+
             ->passwordReset()
             ->emailVerification()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')

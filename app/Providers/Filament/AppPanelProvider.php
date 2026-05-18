@@ -8,7 +8,6 @@ use App\Filament\App\Widgets\PlayerTeamsWidget;
 use App\Filament\App\Widgets\PlayerTimelineWidget;
 use App\Filament\App\Widgets\PlayerTournamentsWidget;
 use App\Filament\App\Widgets\PlayerWinsLossesChart;
-use App\Filament\Pages\Auth\Login;
 use App\Http\Middleware\Authenticate;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -41,7 +40,7 @@ class AppPanelProvider extends PanelProvider
                 'primary' => Color::Violet,
             ])
             ->font('Poppins')
-            ->login(Login::class)
+
             // ->registration()
             ->profile()
             ->passwordReset()
