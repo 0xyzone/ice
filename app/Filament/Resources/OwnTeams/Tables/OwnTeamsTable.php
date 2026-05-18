@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\OwnTeams\Tables;
 
+use App\Models\OwnTeam;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -26,7 +28,7 @@ class OwnTeamsTable
                 TextColumn::make('short_name')
                     ->searchable(),
                 HoverImageColumn::make('logo_image')
-                ->disk('public'),
+                    ->disk('public'),
                 TextColumn::make('gender')
                     ->searchable(),
                 IconColumn::make('status')
@@ -45,11 +47,17 @@ class OwnTeamsTable
             ])
             ->recordActions([
                 EditAction::make(),
+                Action::make('view_team_profile ')
+                    ->label('View Public Profile')
+                    ->icon('heroicon-o-eye')
+                    ->color('info')
+                    ->url(fn(OwnTeam $team) => route('team.profile', $team))
+                    ->openUrlInNewTab(),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                // BulkActionGroup::make([
+                //     DeleteBulkAction::make(),
+                // ]),
             ]);
     }
 }
