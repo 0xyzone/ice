@@ -13,6 +13,9 @@
     <!-- Vite Assets (compiled with Tailwind CSS v4) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <!-- JSZip Library for multi-select compression downloads -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
     <style>
         body {
             background-color: #07060a;
@@ -717,18 +720,26 @@
                 function copyDiscordToClipboard(username, element) {
                     if (!username) return;
 
-                    function showCopiedBadge() {
-                        // Create floating badge
-                        const badge = document.createElement('div');
-                        badge.className = 'absolute -top-10 left-1/2 -translate-x-1/2 bg-pink-500 text-black font-orbitron font-black text-[10px] px-3 py-1.5 rounded shadow-[0_0_15px_rgba(236,72,153,0.5)] animate-bounce z-50 uppercase tracking-widest pointer-events-none';
-                        badge.innerText = 'Copied!';
-                        element.appendChild(badge);
-                        setTimeout(() => { badge.remove(); }, 1500);
+                    function showCopiedState() {
+                        const textSpan = element.querySelector('.font-outfit');
+                        if (!textSpan || textSpan.innerText === 'COPIED!') return;
+
+                        const originalText = textSpan.innerText;
+                        const originalClass = textSpan.className;
+
+                        // Temporarily change to a glowing, uppercase "COPIED!" text
+                        textSpan.innerText = 'COPIED!';
+                        textSpan.className = 'text-xs text-pink-500 font-orbitron font-black uppercase mt-1 max-w-[120px] truncate transition-all duration-300 scale-105';
+
+                        setTimeout(() => {
+                            textSpan.innerText = originalText;
+                            textSpan.className = originalClass;
+                        }, 1500);
                     }
 
                     if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText(username).then(() => {
-                            showCopiedBadge();
+                            showCopiedState();
                         }).catch(err => {
                             fallbackCopy(username);
                         });
@@ -748,7 +759,7 @@
                         try {
                             const successful = document.execCommand('copy');
                             if (successful) {
-                                showCopiedBadge();
+                                showCopiedState();
                             } else {
                                 console.error('Fallback copy failed');
                             }
@@ -860,25 +871,80 @@
                     }
 
                     if (downloadBtn) {
-                        downloadBtn.addEventListener('click', () => {
-                            const urls = Array.from(checkboxes)
-                                .filter(chk => chk.checked)
-                                .map(chk => chk.dataset.url);
+                        downloadBtn.addEventListener('click', async () => {
+                            const selectedCheckboxes = Array.from(checkboxes).filter(chk => chk.checked);
+                            const urls = selectedCheckboxes.map(chk => chk.dataset.url);
 
                             if (urls.length === 0) return;
 
-                            // Trigger sequential downloads with short intervals to prevent browser pop-up blocking
-                            urls.forEach((url, index) => {
-                                setTimeout(() => {
-                                    const a = document.createElement('a');
-                                    a.href = url;
-                                    const filename = url.substring(url.lastIndexOf('/') + 1);
-                                    a.download = filename;
-                                    document.body.appendChild(a);
-                                    a.click();
-                                    document.body.removeChild(a);
-                                }, index * 200);
-                            });
+                            // Update UI button to loading state
+                            const originalBtnText = downloadBtn.innerHTML;
+                            downloadBtn.setAttribute('disabled', 'true');
+                            downloadBtn.classList.add('opacity-75', 'cursor-wait');
+                            downloadBtn.innerHTML = `
+                                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-black inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Zipping... (0/${urls.length})
+                            `;
+
+                            try {
+                                const zip = new JSZip();
+                                let processed = 0;
+
+                                // Fetch blobs concurrently
+                                const fetchPromises = urls.map(async (url) => {
+                                    try {
+                                        const response = await fetch(url);
+                                        const blob = await response.blob();
+                                        const filename = url.substring(url.lastIndexOf('/') + 1) || 'image.jpg';
+                                        zip.file(filename, blob);
+                                        processed++;
+                                        downloadBtn.innerHTML = `
+                                            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-black inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                            Zipping... (${processed}/${urls.length})
+                                        `;
+                                    } catch (err) {
+                                        console.error(`Failed to fetch file: ${url}`, err);
+                                    }
+                                });
+
+                                await Promise.all(fetchPromises);
+
+                                downloadBtn.innerHTML = `
+                                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-black inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Compiling...
+                                `;
+
+                                // Generate zip blob
+                                const contentBlob = await zip.generateAsync({ type: 'blob' });
+                                
+                                // Download zip file
+                                const a = document.createElement('a');
+                                a.href = URL.createObjectURL(contentBlob);
+                                const playerSlug = "{{ Str::slug($player->name) }}";
+                                a.download = `${playerSlug}-photoshoot-gallery.zip`;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                URL.revokeObjectURL(a.href);
+                            } catch (error) {
+                                console.error('Error generating zip:', error);
+                                alert('Failed to package images. Please try again.');
+                            } finally {
+                                // Restore original button state
+                                downloadBtn.removeAttribute('disabled');
+                                downloadBtn.classList.remove('opacity-75', 'cursor-wait');
+                                downloadBtn.innerHTML = originalBtnText;
+                                updateControls();
+                            }
                         });
                     }
 
