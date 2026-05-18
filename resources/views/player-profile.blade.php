@@ -334,11 +334,11 @@
                             </div>
 
                             <!-- Cyber Timeline Card -->
-                            <div class="cyber-card p-5 overflow-hidden">
+                            <a href="{{ route('team.profile', $membership->team) }}" class="cyber-card p-5 overflow-hidden block group/team">
                                 
                                 <div class="flex items-center gap-4 mb-3">
                                     <!-- Team Logo frame with bright pink accent -->
-                                    <div class="w-12 h-12 bg-[#0d0a14] border-2 border-pink-500/30 rounded flex items-center justify-center p-1.5 transform rotate-2">
+                                    <div class="w-12 h-12 bg-[#0d0a14] border-2 border-pink-500/30 rounded flex items-center justify-center p-1.5 transform rotate-2 group-hover/team:scale-105 group-hover/team:rotate-0 transition-all shrink-0">
                                         @if($membership->team->logo_image)
                                             <img src="{{ asset('storage/' . $membership->team->logo_image) }}" alt="{{ $membership->team->name }}" class="w-full h-full object-contain">
                                         @else
@@ -347,7 +347,7 @@
                                     </div>
                                     
                                     <div>
-                                        <h3 class="font-orbitron font-black text-white text-md tracking-wider uppercase">
+                                        <h3 class="font-orbitron font-black text-white text-md tracking-wider uppercase group-hover/team:text-red-400 transition-colors">
                                             {{ $membership->team->name }}
                                         </h3>
                                         <p class="text-gray-400 font-outfit text-xs font-bold uppercase tracking-wider mt-0.5">
@@ -382,7 +382,7 @@
                                         </span>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     @empty
                         <div class="cyber-card p-6 text-center text-gray-500">
