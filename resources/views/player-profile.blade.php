@@ -242,9 +242,9 @@
                                     {{ $social }}
                                 </span>
                                 
-                                <span class="text-xs text-gray-400 font-outfit mt-1 max-w-[120px] truncate">
+                                <!-- <span class="text-xs text-gray-400 font-outfit mt-1 max-w-[120px] truncate">
                                     {{ $isDiscordUsername ? $player->socials->$social : (str_contains($player->socials->$social, 'http') ? explode('/', rtrim($player->socials->$social, '/'))[count(explode('/', rtrim($player->socials->$social, '/')))-1] : $player->socials->$social) }}
-                                </span>
+                                </span> -->
                             </a>
                         @endif
                     @endforeach
