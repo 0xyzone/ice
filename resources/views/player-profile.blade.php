@@ -519,7 +519,7 @@
 
                             <!-- Card Metadata Info (Grid/Bento Cards) -->
                             <div class="gallery-info-container flex flex-col gap-1 mt-auto">
-                                <span class="text-white font-orbitron text-[11px] font-bold truncate tracking-wide" title="{{ basename($image->image_path) }}">{{ basename($image->image_path) }}</span>
+                                <span class="text-white font-orbitron text-[11px] font-bold truncate tracking-wide" title="{{ basename($image->image_path) }}">{{ $player->name . "_photo_" . $loop->iteration . ".jpg" }}</span>
                                 <div class="flex items-center justify-between text-[9px] text-gray-500">
                                     <span>Uploaded: {{ $image->created_at->format('M d, Y') }}</span>
                                     <span class="px-1.5 py-0.5 bg-white/5 rounded text-[8px] tracking-wide">{{ strtoupper(pathinfo($image->image_path, PATHINFO_EXTENSION)) }}</span>
