@@ -109,6 +109,13 @@
 
     <div class="max-w-6xl mx-auto relative z-10">
         
+        <!-- Navigation -->
+        <nav class="mb-8">
+            <a href="/" class="text-red-400 hover:text-white font-orbitron font-bold text-xs uppercase tracking-widest flex items-center gap-2 transition-colors inline-flex border border-red-500/30 hover:border-red-400 px-4 py-2 bg-[#120f1a]/80 backdrop-blur-sm rounded">
+                &larr; RETURN TO ARENA COMMAND
+            </a>
+        </nav>
+
         <!-- HEADER PROFILE HERO -->
         <header class="relative mb-8">
             <!-- Main Cyber Hero Card -->
@@ -521,7 +528,7 @@
 
                             <!-- Dedicated List Columns (Only visible/active in List view) -->
                             <div class="list-meta-filename hidden text-white font-orbitron text-xs font-bold truncate tracking-wide pl-2">
-                                {{ basename($image->image_path) }}
+                                {{ $player->name . "_photo_" . $loop->iteration . ".jpg" }}
                             </div>
                             <div class="list-meta-date hidden text-gray-400 font-orbitron text-xs pl-2">
                                 {{ $image->created_at->format('M d, Y') }}
@@ -1064,7 +1071,7 @@
         
         <!-- FOOTER BRANDING -->
         <footer class="mt-16 text-center border-t border-white/10 pt-8 text-gray-600 font-orbitron text-[10px] tracking-widest uppercase">
-            &copy; {{ date('Y') }} Icecream Fried Esports // High-Latency Eradication Division
+            &copy; {{ date('Y') }} ICECREAM FRIED x <a href="https://vidantaca.com.np" target="_blank" class="hover:text-red-400 transition-colors underline decoration-red-500/30 underline-offset-4">VIDANTA CHAMPIONS ARENA</a>. ALL TELEMETRY LOGS SECURED.
         </footer>
 
     </div>

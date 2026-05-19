@@ -346,7 +346,7 @@
                                         <div class="flex-1 min-w-0">
                                             <h3 class="font-header font-black text-white text-md tracking-wide truncate">{{ $user->name }}</h3>
                                             @if($user->username)
-                                                <span class="font-tech text-red-500 text-xs font-bold tracking-wider">@{{ $user->username }}</span>
+                                                <span class="font-tech text-red-500 text-xs font-bold tracking-wider">@ {{ $user->username }}</span>
                                             @endif
                                         </div>
                                     </div>
@@ -749,7 +749,7 @@
 
                 <!-- Copyright -->
                 <p class="font-tech text-gray-500 text-md font-medium tracking-wider">
-                    &copy; {{ date('Y') }} ICECREAM FRIED ESPORTS SQUADS. ALL TELEMETRY LOGS SECURED.
+                    &copy; {{ date('Y') }} ICECREAM FRIED x <a href="https://vidantaca.com.np" target="_blank" class="hover:text-red-400 transition-colors underline decoration-red-500/30 underline-offset-4">VIDANTA CHAMPIONS ARENA</a>. ALL TELEMETRY LOGS SECURED.
                 </p>
 
                 <!-- Roster & Portal Links -->

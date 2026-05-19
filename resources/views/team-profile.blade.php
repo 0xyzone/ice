@@ -85,6 +85,13 @@
 
     <div class="max-w-6xl mx-auto relative z-10">
         
+        <!-- Navigation -->
+        <nav class="mb-8">
+            <a href="/" class="text-violet-400 hover:text-white font-orbitron font-bold text-xs uppercase tracking-widest flex items-center gap-2 transition-colors inline-flex border border-violet-500/30 hover:border-violet-400 px-4 py-2 bg-[#120f1a]/80 backdrop-blur-sm rounded">
+                &larr; RETURN TO ARENA COMMAND
+            </a>
+        </nav>
+
         <!-- HEADER PROFILE HERO -->
         <header class="relative mb-8">
             <div class="cyber-card p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 md:gap-8 overflow-hidden">
@@ -284,7 +291,7 @@
         
         <!-- FOOTER BRANDING -->
         <footer class="mt-16 text-center border-t border-white/10 pt-8 text-gray-600 font-orbitron text-[10px] tracking-widest uppercase">
-            &copy; {{ date('Y') }} Icecream Fried Esports // High-Latency Eradication Division
+            &copy; {{ date('Y') }} ICECREAM FRIED x <a href="https://vidantaca.com.np" target="_blank" class="hover:text-violet-400 transition-colors underline decoration-violet-500/30 underline-offset-4">VIDANTA CHAMPIONS ARENA</a>. ALL TELEMETRY LOGS SECURED.
         </footer>
 
     </div>
