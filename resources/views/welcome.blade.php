@@ -336,7 +336,7 @@
                                     <!-- Avatar -->
                                     <div class="flex items-center gap-4">
                                         @if($user->avatar_url)
-                                            <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-14 h-14 rounded-full object-cover border-2 border-red-500/40 shadow-[0_0_10px_rgba(239,68,68,0.2)]">
+                                            <img src="{{ asset('storage/'.$user->avatar_url) }}" alt="{{ $user->name }}" class="w-14 h-14 rounded-full object-cover border-2 border-red-500/40 shadow-[0_0_10px_rgba(239,68,68,0.2)]">
                                         @else
                                             <div class="w-14 h-14 rounded-full bg-gradient-to-br from-red-900 to-black border-2 border-red-500/40 flex items-center justify-center shadow-[0_0_10px_rgba(239,68,68,0.2)]">
                                                 <span class="font-header font-black text-red-400 text-lg">{{ $initials }}</span>
