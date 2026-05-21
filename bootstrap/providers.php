@@ -1,7 +1,11 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\Filament\AppPanelProvider;
+use App\Providers\Filament\MukhiyasPanelProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Providers\Filament\AppPanelProvider::class,
-    App\Providers\Filament\MukhiyasPanelProvider::class,
+    AppServiceProvider::class,
+    AppPanelProvider::class,
+    MukhiyasPanelProvider::class,
 ];

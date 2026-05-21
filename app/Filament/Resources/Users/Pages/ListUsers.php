@@ -14,7 +14,7 @@ class ListUsers extends ListRecords
     {
         return [
             CreateAction::make()
-            ->label('Create New Player'),
+                ->label('Create New Player'),
         ];
     }
 }

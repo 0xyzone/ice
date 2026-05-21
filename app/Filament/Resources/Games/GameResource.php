@@ -19,6 +19,7 @@ class GameResource extends Resource
     protected static ?string $model = Game::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPuzzlePiece;
+
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::PuzzlePiece;
 
     protected static ?string $recordTitleAttribute = 'name';

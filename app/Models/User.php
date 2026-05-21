@@ -51,6 +51,20 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         ];
     }
 
+    protected $appends = [
+        'avatar_full_url',
+        'bio'
+    ];
+
+    protected function getAvatarFullUrlAttribute(): string
+    {
+        if ($this->avatar_url) {
+            return asset('storage/'.$this->avatar_url);
+        }
+
+        return 'https://ui-avatars.com/api/?name='.$this->name;
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'app') {

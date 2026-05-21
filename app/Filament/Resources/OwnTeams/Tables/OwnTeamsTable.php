@@ -8,7 +8,6 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use TinusG\FilamentHoverImageColumn\HoverImageColumn;
@@ -51,7 +50,7 @@ class OwnTeamsTable
                     ->label('View Public Profile')
                     ->icon('heroicon-o-eye')
                     ->color('info')
-                    ->url(fn(OwnTeam $team) => route('team.profile', $team))
+                    ->url(fn (OwnTeam $team) => route('team.profile', $team))
                     ->openUrlInNewTab(),
             ])
             ->toolbarActions([

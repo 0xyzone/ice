@@ -12,9 +12,6 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Infolists\Components\Card;
-use Filament\Infolists\Components\Infolist;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -23,6 +20,7 @@ use Filament\Tables\Table;
 class PlayerRelationManager extends RelationManager
 {
     protected static string $relationship = 'player';
+
     protected static ?string $title = 'Personal Information';
 
     public function form(Schema $schema): Schema
@@ -49,7 +47,7 @@ class PlayerRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('gender')
                     ->badge()
-                    ->color(fn($state) => $state == 'male' ? 'info' : ($state == 'female' ? 'warning' : 'danger'))
+                    ->color(fn ($state) => $state == 'male' ? 'info' : ($state == 'female' ? 'warning' : 'danger'))
                     ->formatStateUsing(fn ($state) => ucfirst($state)),
                 TextColumn::make('date_of_birth')->date(),
                 TextColumn::make('personal_contact_number'),

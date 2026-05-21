@@ -32,7 +32,7 @@ class UsersTable
                 TextColumn::make('roles.name')
                     ->badge()
                     ->formatStateUsing(fn ($state) => ucfirst($state))
-                    ->color(fn($state) => $state == 'admin' ? 'success' : 'gray'),
+                    ->color(fn ($state) => $state == 'admin' ? 'success' : 'gray'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
