@@ -321,70 +321,88 @@
                             <p>ROSTER LOADING... PLAYERS INCOMING</p>
                         </div>
                     @else
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            @foreach($members as $member)
-                                @php
-                                    $user   = $member->user;
-                                    $player = $user->player;
-                                    $initials = collect(explode(' ', $user->name))->map(fn($w) => strtoupper($w[0]))->implode('');
-                                @endphp
-                                <div class="group relative clip-cyber bg-gradient-to-br from-[#120303] to-[#070101] border border-red-500/15 hover:border-red-500/40 transition-all duration-300 p-6 flex flex-col gap-4 shadow-[0_0_20px_rgba(239,68,68,0.05)] hover:shadow-[0_0_30px_rgba(239,68,68,0.15)]">
+                        <div class="relative w-full px-4 overflow-hidden">
+                            <!-- Carousel Track -->
+                            <div id="squad-carousel" class="flex transition-transform duration-700 ease-out gap-6" style="transform: translateX(0px);">
+                                @foreach($members as $member)
+                                    @php
+                                        $user   = $member->user;
+                                        $player = $user->player;
+                                        $initials = collect(explode(' ', $user->name))->map(fn($w) => strtoupper($w[0]))->implode('');
+                                    @endphp
+                                    <div class="carousel-item flex-none w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] group relative clip-cyber bg-gradient-to-br from-[#120303] to-[#070101] border border-red-500/15 hover:border-red-500/40 transition-all duration-300 p-6 flex flex-col gap-4 shadow-[0_0_20px_rgba(239,68,68,0.05)] hover:shadow-[0_0_30px_rgba(239,68,68,0.15)]">
 
-                                    <!-- Scan line effect -->
-                                    <div class="absolute inset-0 cyber-scanner overflow-hidden pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                        <!-- Scan line effect -->
+                                        <div class="absolute inset-0 cyber-scanner overflow-hidden pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                                    <!-- Avatar -->
-                                    <div class="flex items-center gap-4">
-                                        @if($user->avatar_url)
-                                            <img src="{{ asset('storage/'.$user->avatar_url) }}" alt="{{ $user->name }}" class="w-14 h-14 rounded-full object-cover border-2 border-red-500/40 shadow-[0_0_10px_rgba(239,68,68,0.2)]">
-                                        @else
-                                            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-red-900 to-black border-2 border-red-500/40 flex items-center justify-center shadow-[0_0_10px_rgba(239,68,68,0.2)]">
-                                                <span class="font-header font-black text-red-400 text-lg">{{ $initials }}</span>
+                                        <!-- Avatar -->
+                                        <div class="flex items-center gap-4">
+                                            @if($user->avatar_url)
+                                                <img src="{{ asset('storage/'.$user->avatar_url) }}" alt="{{ $user->name }}" class="w-14 h-14 rounded-full object-cover border-2 border-red-500/40 shadow-[0_0_10px_rgba(239,68,68,0.2)]">
+                                            @else
+                                                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-red-900 to-black border-2 border-red-500/40 flex items-center justify-center shadow-[0_0_10px_rgba(239,68,68,0.2)]">
+                                                    <span class="font-header font-black text-red-400 text-lg">{{ $initials }}</span>
+                                                </div>
+                                            @endif
+
+                                            <div class="flex-1 min-w-0">
+                                                <h3 class="font-header font-black text-white text-md tracking-wide truncate">{{ $user->name }}</h3>
+                                                @if($user->username)
+                                                    <span class="font-tech text-red-500 text-xs font-bold tracking-wider">@ {{ $user->username }}</span>
+                                                @endif
                                             </div>
-                                        @endif
+                                        </div>
 
-                                        <div class="flex-1 min-w-0">
-                                            <h3 class="font-header font-black text-white text-md tracking-wide truncate">{{ $user->name }}</h3>
-                                            @if($user->username)
-                                                <span class="font-tech text-red-500 text-xs font-bold tracking-wider">@ {{ $user->username }}</span>
+                                        <!-- Badges -->
+                                        <div class="flex flex-wrap gap-2">
+                                            @if($member->role === 'captain')
+                                                <span class="font-tech text-[10px] font-black tracking-widest uppercase px-2 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded">⚡ CAPTAIN</span>
+                                            @endif
+                                            @if($member->team)
+                                                <span class="font-tech text-[10px] font-bold tracking-widest uppercase px-2 py-1 bg-black/40 border border-red-500/10 text-gray-400 rounded truncate max-w-full">{{ Str::upper($member->team->name) }}</span>
                                             @endif
                                         </div>
-                                    </div>
 
-                                    <!-- Badges -->
-                                    <div class="flex flex-wrap gap-2">
-                                        @if($member->role === 'captain')
-                                            <span class="font-tech text-[10px] font-black tracking-widest uppercase px-2 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded">⚡ CAPTAIN</span>
-                                        @endif
-                                        @if($member->team)
-                                            <span class="font-tech text-[10px] font-bold tracking-widest uppercase px-2 py-1 bg-black/40 border border-red-500/10 text-gray-400 rounded truncate max-w-full">{{ Str::upper($member->team->name) }}</span>
-                                        @endif
-                                    </div>
+                                        <!-- Player Details -->
+                                        <div class="space-y-1.5 border-t border-red-500/10 pt-3">
+                                            @if($player && $player->bio)
+                                                <p class="font-tech text-gray-500 text-xs leading-relaxed line-clamp-2">{{ $player->bio }}</p>
+                                            @else
+                                                <p class="font-tech text-gray-600 text-xs italic">No bio provided yet.</p>
+                                            @endif
+                                        </div>
 
-                                    <!-- Player Details -->
-                                    <div class="space-y-1.5 border-t border-red-500/10 pt-3">
-                                        @if($player && $player->bio)
-                                            <p class="font-tech text-gray-500 text-xs leading-relaxed line-clamp-2">{{ $player->bio }}</p>
-                                        @else
-                                            <p class="font-tech text-gray-600 text-xs italic">No bio provided yet.</p>
-                                        @endif
-                                    </div>
+                                        <!-- Profile Link -->
+                                        <div class="mt-auto pt-2">
+                                            @if($user->username)
+                                                <a href="{{ route('player.profile.username', $user->username) }}" class="block w-full text-center font-header font-black text-xs tracking-widest uppercase py-2.5 clip-cyber-sm border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white hover:border-red-500 transition-all duration-300">
+                                                    VIEW PROFILE
+                                                </a>
+                                            @else
+                                                <a href="{{ route('player.profile', $user->id) }}" class="block w-full text-center font-header font-black text-xs tracking-widest uppercase py-2.5 clip-cyber-sm border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white hover:border-red-500 transition-all duration-300">
+                                                    VIEW PROFILE
+                                                </a>
+                                            @endif
+                                        </div>
 
-                                    <!-- Profile Link -->
-                                    <div class="mt-auto pt-2">
-                                        @if($user->username)
-                                            <a href="{{ route('player.profile.username', $user->username) }}" class="block w-full text-center font-header font-black text-xs tracking-widest uppercase py-2.5 clip-cyber-sm border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white hover:border-red-500 transition-all duration-300">
-                                                VIEW PROFILE
-                                            </a>
-                                        @else
-                                            <a href="{{ route('player.profile', $user->id) }}" class="block w-full text-center font-header font-black text-xs tracking-widest uppercase py-2.5 clip-cyber-sm border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white hover:border-red-500 transition-all duration-300">
-                                                VIEW PROFILE
-                                            </a>
-                                        @endif
                                     </div>
+                                @endforeach
+                            </div>
 
-                                </div>
-                            @endforeach
+                            <!-- Carousel Navigation Controls -->
+                            <button id="carousel-prev" class="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/80 border border-red-500/30 flex items-center justify-center text-red-500 hover:bg-red-600 hover:text-white hover:border-red-500 transition-all duration-300 z-20">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                                </svg>
+                            </button>
+                            <button id="carousel-next" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/80 border border-red-500/30 flex items-center justify-center text-red-500 hover:bg-red-600 hover:text-white hover:border-red-500 transition-all duration-300 z-20">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </button>
+
+                            <!-- Carousel Indicators -->
+                            <div id="carousel-indicators" class="flex justify-center gap-2 mt-8"></div>
                         </div>
                     @endif
 
@@ -868,6 +886,194 @@
                     frameLalitpur.classList.add('opacity-0', 'absolute', 'pointer-events-none');
                 }
             }
+
+            // Meet the Squad - Auto-rotating & Pause-on-Hover Carousel
+            document.addEventListener('DOMContentLoaded', () => {
+                const track = document.getElementById('squad-carousel');
+                if (!track) return;
+
+                const cards = Array.from(track.children);
+                if (cards.length === 0) return;
+
+                const prevBtn = document.getElementById('carousel-prev');
+                const nextBtn = document.getElementById('carousel-next');
+                const indicatorsContainer = document.getElementById('carousel-indicators');
+
+                let currentIndex = 0;
+                let autoPlayInterval = null;
+                const autoPlayDelay = 4000; // 4 seconds auto-rotation
+
+                function getGap() {
+                    const style = window.getComputedStyle(track);
+                    const gapVal = parseFloat(style.gap);
+                    return isNaN(gapVal) ? 24 : gapVal;
+                }
+
+                function getVisibleCardsCount() {
+                    const containerWidth = track.parentElement.offsetWidth;
+                    const cardWidth = cards[0].offsetWidth;
+                    if (!cardWidth) return 1;
+                    return Math.max(1, Math.round(containerWidth / cardWidth));
+                }
+
+                function getMaxIndex() {
+                    const visibleCount = getVisibleCardsCount();
+                    return Math.max(0, cards.length - visibleCount);
+                }
+
+                function updateControlsVisibility() {
+                    const maxIndex = getMaxIndex();
+                    const displayStyle = maxIndex <= 0 ? 'none' : '';
+                    if (prevBtn) prevBtn.style.display = displayStyle;
+                    if (nextBtn) nextBtn.style.display = displayStyle;
+                    if (indicatorsContainer) indicatorsContainer.style.display = displayStyle;
+                }
+
+                function updateCarousel(transition = true) {
+                    const cardWidth = cards[0].offsetWidth;
+                    const gap = getGap();
+                    const maxIndex = getMaxIndex();
+
+                    if (currentIndex > maxIndex) {
+                        currentIndex = 0;
+                    } else if (currentIndex < 0) {
+                        currentIndex = maxIndex;
+                    }
+
+                    if (transition) {
+                        track.style.transition = 'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)';
+                    } else {
+                        track.style.transition = 'none';
+                    }
+
+                    const translateX = -currentIndex * (cardWidth + gap);
+                    track.style.transform = `translateX(${translateX}px)`;
+
+                    updateIndicators();
+                    updateControlsVisibility();
+                }
+
+                function setupIndicators() {
+                    if (!indicatorsContainer) return;
+                    indicatorsContainer.innerHTML = '';
+                    
+                    const maxIndex = getMaxIndex();
+                    if (maxIndex <= 0) return;
+                    
+                    for (let i = 0; i <= maxIndex; i++) {
+                        const dot = document.createElement('button');
+                        dot.className = `w-2.5 h-2.5 rounded-full transition-all duration-300 ${i === currentIndex ? 'bg-red-500 w-6' : 'bg-red-500/20 hover:bg-red-500/50'}`;
+                        dot.setAttribute('aria-label', `Go to squad section ${i + 1}`);
+                        dot.addEventListener('click', () => {
+                            currentIndex = i;
+                            updateCarousel();
+                            resetAutoPlay();
+                        });
+                        indicatorsContainer.appendChild(dot);
+                    }
+                }
+
+                function updateIndicators() {
+                    if (!indicatorsContainer) return;
+                    const dots = Array.from(indicatorsContainer.children);
+                    dots.forEach((dot, idx) => {
+                        if (idx === currentIndex) {
+                            dot.className = 'w-2.5 h-2.5 rounded-full transition-all duration-300 bg-red-500 w-6';
+                        } else {
+                            dot.className = 'w-2.5 h-2.5 rounded-full transition-all duration-300 bg-red-500/20 hover:bg-red-500/50';
+                        }
+                    });
+                }
+
+                function nextSlide() {
+                    const maxIndex = getMaxIndex();
+                    if (maxIndex <= 0) return;
+                    if (currentIndex >= maxIndex) {
+                        currentIndex = 0;
+                    } else {
+                        currentIndex++;
+                    }
+                    updateCarousel();
+                }
+
+                function prevSlide() {
+                    const maxIndex = getMaxIndex();
+                    if (maxIndex <= 0) return;
+                    if (currentIndex <= 0) {
+                        currentIndex = maxIndex;
+                    } else {
+                        currentIndex--;
+                    }
+                    updateCarousel();
+                }
+
+                function startAutoPlay() {
+                    if (getMaxIndex() <= 0) return;
+                    if (!autoPlayInterval) {
+                        autoPlayInterval = setInterval(nextSlide, autoPlayDelay);
+                    }
+                }
+
+                function stopAutoPlay() {
+                    if (autoPlayInterval) {
+                        clearInterval(autoPlayInterval);
+                        autoPlayInterval = null;
+                    }
+                }
+
+                function resetAutoPlay() {
+                    stopAutoPlay();
+                    startAutoPlay();
+                }
+
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', () => {
+                        nextSlide();
+                        resetAutoPlay();
+                    });
+                }
+
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', () => {
+                        prevSlide();
+                        resetAutoPlay();
+                    });
+                }
+
+                // Pause when hovering over the carousel container (includes navigation/indicators)
+                const hoverContainer = track.parentElement;
+                if (hoverContainer) {
+                    hoverContainer.addEventListener('mouseenter', stopAutoPlay);
+                    hoverContainer.addEventListener('mouseleave', startAutoPlay);
+                }
+
+                // Handle window resizing dynamically
+                let resizeTimeout;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(() => {
+                        const maxIndex = getMaxIndex();
+                        if (currentIndex > maxIndex) {
+                            currentIndex = maxIndex;
+                        }
+                        setupIndicators();
+                        updateCarousel(false);
+                    }, 150);
+                });
+
+                // Robust multi-phase initialization
+                function initCarousel() {
+                    setupIndicators();
+                    updateCarousel(false);
+                    resetAutoPlay();
+                }
+
+                // Initial run
+                initCarousel();
+
+                // Re-run after load to guarantee sizing accuracy with web fonts / images
+                window.addEventListener('load', initCarousel);
+            });
         </script>
 
     </body>
