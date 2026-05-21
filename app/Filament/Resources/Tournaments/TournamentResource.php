@@ -5,8 +5,7 @@ namespace App\Filament\Resources\Tournaments;
 use App\Filament\Resources\Tournaments\Pages\CreateTournament;
 use App\Filament\Resources\Tournaments\Pages\EditTournament;
 use App\Filament\Resources\Tournaments\Pages\ListTournaments;
-use App\Filament\Resources\Tournaments\RelationManagers\PlayerStatsRelationManager;
-use App\Filament\Resources\Tournaments\RelationManagers\TeamsRelationManager;
+use App\Filament\Resources\Tournaments\RelationManagers\MatchesRelationManager;
 use App\Filament\Resources\Tournaments\Schemas\TournamentForm;
 use App\Filament\Resources\Tournaments\Tables\TournamentsTable;
 use App\Models\Tournament;
@@ -37,8 +36,7 @@ class TournamentResource extends Resource
     public static function getRelations(): array
     {
         return [
-            TeamsRelationManager::class,
-            PlayerStatsRelationManager::class,
+            MatchesRelationManager::class,
         ];
     }
 

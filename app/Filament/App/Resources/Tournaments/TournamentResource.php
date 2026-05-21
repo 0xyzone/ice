@@ -4,7 +4,6 @@ namespace App\Filament\App\Resources\Tournaments;
 
 use App\Filament\App\Resources\Tournaments\Pages\ListTournaments;
 use App\Filament\App\Resources\Tournaments\Pages\ViewTournament;
-use App\Filament\Resources\Tournaments\RelationManagers\TeamsRelationManager;
 use App\Filament\Resources\Tournaments\Schemas\TournamentForm;
 use App\Filament\Resources\Tournaments\Tables\TournamentsTable;
 use App\Models\Tournament;
@@ -45,9 +44,7 @@ class TournamentResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            TeamsRelationManager::class,
-        ];
+        return [];
     }
 
     public static function getPages(): array
@@ -60,8 +57,10 @@ class TournamentResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->whereHas('teams.members', function ($query) {
-            $query->where('user_id', auth()->id());
+        $teamIds = auth()->user()->teamMemberships()->pluck('own_team_id')->toArray();
+
+        return parent::getEloquentQuery()->whereHas('matches', function ($query) use ($teamIds) {
+            $query->whereIn('own_team_id', $teamIds);
         });
     }
 }

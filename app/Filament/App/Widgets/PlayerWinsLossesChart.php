@@ -25,18 +25,19 @@ class PlayerWinsLossesChart extends ChartWidget
         $user = Auth::user();
 
         $player = User::with([
-            'teamMemberships.team.tournaments',
+            'matchStats.matchSeries',
         ])->find($user->id);
 
         $totalWon = 0;
         $totalLost = 0;
 
         if ($player) {
-            foreach ($player->teamMemberships as $membership) {
-                if ($membership->team) {
-                    foreach ($membership->team->tournaments as $tournament) {
-                        $totalWon += $tournament->pivot->matches_won;
-                        $totalLost += $tournament->pivot->matches_lost;
+            foreach ($player->matchStats as $stat) {
+                if ($stat->matchSeries) {
+                    if ($stat->matchSeries->result === 'won') {
+                        $totalWon++;
+                    } elseif ($stat->matchSeries->result === 'lost') {
+                        $totalLost++;
                     }
                 }
             }

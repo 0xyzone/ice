@@ -239,12 +239,12 @@
                         Tournaments
                     </h2>
                     <span class="text-xs font-orbitron text-red-400 font-black px-2 py-0.5 bg-[#1a0f12] border border-red-500/20 rounded">
-                        {{ $team->tournaments->count() }} EVENTS
+                        {{ count($tournaments) }} EVENTS
                     </span>
                 </div>
 
                 <div class="relative pl-6 border-l-2 border-red-500/20 flex flex-col gap-6">
-                    @forelse($team->tournaments as $tournament)
+                    @forelse($tournaments as $tournament)
                         <div class="relative">
                             
                             <!-- Node Bullet -->
@@ -256,27 +256,116 @@
                                     {{ $tournament->name }}
                                 </h3>
                                 <p class="text-red-400 font-orbitron font-bold text-[10px] uppercase tracking-widest mb-3">
-                                    🏆 {{ $tournament->pivot->rank ?? 'Participant' }}
+                                    🏆 {{ $tournament->rank }}
                                 </p>
 
                                 <div class="grid grid-cols-4 gap-2 text-center text-[10px] bg-[#0a0812]/80 border border-white/5 p-2 rounded">
                                     <div>
                                         <span class="text-gray-500 uppercase block font-orbitron">Played</span>
-                                        <span class="text-white font-bold font-orbitron">{{ $tournament->pivot->matches_played }}</span>
+                                        <span class="text-white font-bold font-orbitron">{{ $tournament->matches_played }}</span>
                                     </div>
                                     <div>
                                         <span class="text-green-400 uppercase block font-orbitron">Won</span>
-                                        <span class="text-green-400 font-bold font-orbitron">{{ $tournament->pivot->matches_won }}</span>
+                                        <span class="text-green-400 font-bold font-orbitron">{{ $tournament->matches_won }}</span>
                                     </div>
                                     <div>
                                         <span class="text-red-400 uppercase block font-orbitron">Lost</span>
-                                        <span class="text-red-400 font-bold font-orbitron">{{ $tournament->pivot->matches_lost }}</span>
+                                        <span class="text-red-400 font-bold font-orbitron">{{ $tournament->matches_lost }}</span>
                                     </div>
                                     <div>
                                         <span class="text-yellow-400 uppercase block font-orbitron">Points</span>
-                                        <span class="text-yellow-400 font-bold font-orbitron">{{ $tournament->pivot->points }}</span>
+                                        <span class="text-yellow-400 font-bold font-orbitron">{{ $tournament->points }}</span>
                                     </div>
                                 </div>
+
+                                <!-- Match Campaigns Details Section -->
+                                @if(!empty($tournament->matches) && $tournament->matches->isNotEmpty())
+                                    <div class="mt-5 flex flex-col gap-3.5 border-t border-white/5 pt-4">
+                                        <h4 class="text-[10px] font-orbitron font-extrabold uppercase tracking-wider text-gray-500">Match Campaigns</h4>
+                                        
+                                        <div class="flex flex-col gap-3">
+                                            @foreach($tournament->matches as $match)
+                                                @php
+                                                    $matchWon = $match->our_score > $match->opponent_score;
+                                                    $matchLost = $match->our_score < $match->opponent_score;
+                                                    $matchResultText = $matchWon ? 'VICTORY' : ($matchLost ? 'DEFEAT' : 'DRAW');
+                                                    $matchResultColor = $matchWon ? 'text-green-400 border-green-500/30 bg-green-500/5 shadow-[0_0_8px_rgba(34,197,94,0.1)]' : ($matchLost ? 'text-red-400 border-red-500/30 bg-red-500/5 shadow-[0_0_8px_rgba(239,68,68,0.1)]' : 'text-gray-400 border-white/10 bg-white/5');
+                                                @endphp
+                                                <div class="bg-[#120b1c]/80 border border-white/5 rounded p-3 flex flex-col gap-2.5 hover:border-red-500/20 transition-all">
+                                                    <!-- Match Header -->
+                                                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                                                        <div class="flex items-center gap-2">
+                                                            @if($match->opponent_logo)
+                                                                <img src="/storage/{{ $match->opponent_logo }}" alt="{{ $match->opponent_name }}" class="w-5 h-5 object-contain rounded-full border border-white/10 p-0.5 shrink-0 bg-[#07060a]">
+                                                            @else
+                                                                <div class="w-5 h-5 rounded-full border border-white/10 flex items-center justify-center bg-[#07060a] text-[8px] font-orbitron text-gray-500 font-bold shrink-0">VS</div>
+                                                            @endif
+                                                            <div class="flex flex-col">
+                                                                <span class="text-[11px] font-orbitron font-extrabold text-white uppercase tracking-wider">VS {{ $match->opponent_name }}</span>
+                                                                @if($match->stage)
+                                                                    <span class="text-[8px] font-outfit text-gray-500 font-medium">{{ $match->stage }}</span>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="flex items-center gap-1.5">
+                                                            <span class="text-[7px] font-orbitron font-bold px-1.5 py-0.5 rounded border {{ $matchResultColor }} shrink-0 tracking-widest uppercase">
+                                                                {{ $matchResultText }}
+                                                            </span>
+                                                            <span class="text-[9px] font-orbitron font-black text-white px-1.5 py-0.5 bg-[#0b0712] border border-white/5 rounded">
+                                                                {{ $match->our_score }} - {{ $match->opponent_score }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Nested Series Games -->
+                                                    @if($match->series->isNotEmpty())
+                                                        <div class="flex flex-col gap-2 border-t border-white/5 pt-2">
+                                                            @foreach($match->series->sortBy('game_number') as $game)
+                                                                @php
+                                                                    $gameWon = $game->result === 'won';
+                                                                    $gameLost = $game->result === 'lost';
+                                                                    $gameResultColor = $gameWon ? 'text-green-400' : ($gameLost ? 'text-red-400' : 'text-gray-400');
+                                                                @endphp
+                                                                <div class="bg-[#0b0712]/50 border border-white/5 p-2 rounded flex flex-col gap-2">
+                                                                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                                                                        <div class="flex items-center gap-2">
+                                                                            <span class="text-[8px] font-orbitron font-black text-red-500 uppercase tracking-widest bg-red-950/20 px-1.5 py-0.5 rounded border border-red-500/15">Game {{ $game->game_number }}</span>
+                                                                            <span class="text-[8px] font-orbitron font-bold {{ $gameResultColor }} uppercase">
+                                                                                {{ $game->result }} ({{ $game->our_score }}-{{ $game->opponent_score }})
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Player Stats List for this game -->
+                                                                    @if($game->playerStats->isNotEmpty())
+                                                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-1 border-t border-white/5 pt-1.5">
+                                                                            @foreach($game->playerStats as $pStat)
+                                                                                <div class="flex items-center justify-between bg-[#150f24]/40 border border-white/5 px-2 py-0.5 rounded">
+                                                                                    <div class="flex items-center gap-1">
+                                                                                        <span class="text-[9px] font-outfit text-white font-medium">
+                                                                                            {{ $pStat->user->name ?? 'Unknown' }}
+                                                                                        </span>
+                                                                                        @if($pStat->is_mvp)
+                                                                                            <span class="bg-pink-950/50 border border-pink-500/30 text-pink-400 px-1 py-0.2 rounded text-[6px] font-orbitron font-black tracking-widest uppercase">MVP</span>
+                                                                                        @endif
+                                                                                    </div>
+                                                                                    <span class="text-[8px] font-orbitron text-gray-400">
+                                                                                        {{ $pStat->kills }}/{{ $pStat->deaths }}/{{ $pStat->assists }}
+                                                                                    </span>
+                                                                                </div>
+                                                                            @endforeach
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     @empty

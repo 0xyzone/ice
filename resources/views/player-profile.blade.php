@@ -321,42 +321,135 @@
                                 Tournament-by-Tournament Specification
                             </h3>
                             <div class="flex flex-col gap-3">
-                                @foreach($player->tournamentStats as $stat)
+                                @foreach($tournamentStats as $stat)
                                     @php
                                         $tKda = $stat->matches_played > 0 ? round(($stat->kills + $stat->assists) / max(1, $stat->deaths), 2) : 0.00;
                                         $tWinRate = $stat->matches_played > 0 ? round(($stat->matches_won / $stat->matches_played) * 100, 1) : 0.0;
                                     @endphp
-                                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-3 bg-[#110c1a] border border-white/5 rounded-md hover:border-red-500/30 transition-colors">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]"></div>
-                                            <div>
-                                                <h4 class="font-orbitron font-extrabold text-sm text-white uppercase tracking-wider">
-                                                    {{ $stat->tournament->name }}
-                                                </h4>
-                                                <p class="text-[10px] text-gray-500 font-outfit mt-0.5">
-                                                    Matches Played: {{ $stat->matches_played }} | Wins: {{ $stat->matches_won }} | Losses: {{ $stat->matches_lost }}
-                                                </p>
+                                    <div class="flex flex-col gap-4 p-4 bg-[#110c1a] border border-white/5 rounded-md hover:border-red-500/30 transition-colors">
+                                        <!-- Tournament Header -->
+                                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/5 pb-3">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]"></div>
+                                                <div>
+                                                    <h4 class="font-orbitron font-extrabold text-sm text-white uppercase tracking-wider">
+                                                        {{ $stat->tournament->name }}
+                                                    </h4>
+                                                    <p class="text-[10px] text-gray-500 font-outfit mt-0.5">
+                                                        Maps Played: {{ $stat->matches_played }} | Wins: {{ $stat->matches_won }} | Losses: {{ $stat->matches_lost }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="flex flex-wrap items-center gap-3 text-xs">
+                                                <div class="bg-[#0c0812] px-2 py-0.5 rounded border border-white/5">
+                                                    <span class="text-gray-500 text-[8px] font-orbitron font-bold block">K/D/A</span>
+                                                    <span class="text-white font-black font-orbitron text-xs">{{ $stat->kills }}/{{ $stat->deaths }}/{{ $stat->assists }}</span>
+                                                </div>
+                                                <div class="bg-[#0c0812] px-2 py-0.5 rounded border border-white/5">
+                                                    <span class="text-gray-500 text-[8px] font-orbitron font-bold block">KDA</span>
+                                                    <span class="text-red-400 font-black font-orbitron text-xs">{{ number_format($tKda, 2) }}</span>
+                                                </div>
+                                                <div class="bg-[#0c0812] px-2 py-0.5 rounded border border-white/5">
+                                                    <span class="text-gray-500 text-[8px] font-orbitron font-bold block">WIN %</span>
+                                                    <span class="text-violet-400 font-black font-orbitron text-xs">{{ $tWinRate }}%</span>
+                                                </div>
+                                                @if($stat->mvps > 0)
+                                                    <div class="bg-pink-950/40 px-2 py-0.5 rounded border border-pink-500/30 text-pink-400 font-black font-orbitron text-xs flex items-center gap-1">
+                                                        <span>{{ $stat->mvps }}</span>
+                                                        <span class="text-[8px] font-bold">MVPs</span>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
-                                        <div class="flex flex-wrap items-center gap-4 text-xs">
-                                            <div class="bg-[#0c0812] px-2.5 py-1 rounded border border-white/5">
-                                                <span class="text-gray-500 text-[8px] font-orbitron font-bold block">K/D/A</span>
-                                                <span class="text-white font-black font-orbitron text-xs">{{ $stat->kills }}/{{ $stat->deaths }}/{{ $stat->assists }}</span>
-                                            </div>
-                                            <div class="bg-[#0c0812] px-2.5 py-1 rounded border border-white/5">
-                                                <span class="text-gray-500 text-[8px] font-orbitron font-bold block">KDA</span>
-                                                <span class="text-red-400 font-black font-orbitron text-xs">{{ number_format($tKda, 2) }}</span>
-                                            </div>
-                                            <div class="bg-[#0c0812] px-2.5 py-1 rounded border border-white/5">
-                                                <span class="text-gray-500 text-[8px] font-orbitron font-bold block">WIN %</span>
-                                                <span class="text-violet-400 font-black font-orbitron text-xs">{{ $tWinRate }}%</span>
-                                            </div>
-                                            @if($stat->mvps > 0)
-                                                <div class="bg-pink-950/40 px-2.5 py-1 rounded border border-pink-500/30 text-pink-400 font-black font-orbitron text-xs flex items-center gap-1">
-                                                    <span>{{ $stat->mvps }}</span>
-                                                    <span class="text-[8px] font-bold">MVPs</span>
+
+                                        <!-- Match Breakdown Section -->
+                                        <div class="flex flex-col gap-3.5 pl-2 sm:pl-4 border-l border-red-500/10">
+                                            @foreach($stat->matches as $mInfo)
+                                                @php
+                                                    $match = $mInfo->match;
+                                                    $isWon = $match->our_score > $match->opponent_score;
+                                                    $isLost = $match->our_score < $match->opponent_score;
+                                                    $outcomeText = $isWon ? 'WON' : ($isLost ? 'LOST' : 'DRAW');
+                                                    $outcomeColor = $isWon ? 'text-green-400 border-green-500/30 bg-green-950/20' : ($isLost ? 'text-red-400 border-red-500/30 bg-red-950/20' : 'text-gray-400 border-gray-500/30 bg-gray-950/20');
+                                                @endphp
+                                                <div class="bg-[#0c0812]/80 border border-white/5 rounded p-3.5 flex flex-col gap-3">
+                                                    <!-- Match Header Info -->
+                                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/5 pb-2">
+                                                        <div class="flex items-center gap-2.5">
+                                                            @if($match->opponent_logo)
+                                                                <img src="{{ asset('storage/' . $match->opponent_logo) }}" alt="{{ $match->opponent_name }}" class="w-6 h-6 object-contain rounded">
+                                                            @else
+                                                                <div class="w-6 h-6 rounded bg-white/5 border border-white/10 flex items-center justify-center text-[10px] text-gray-400 font-orbitron font-bold">VS</div>
+                                                            @endif
+                                                            <div>
+                                                                <h5 class="font-orbitron font-extrabold text-xs text-white uppercase tracking-wider">
+                                                                    vs {{ $match->opponent_name }}
+                                                                </h5>
+                                                                @if($match->stage)
+                                                                    <span class="text-[9px] text-gray-500 font-outfit uppercase tracking-widest block">{{ $match->stage }}</span>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex items-center gap-2">
+                                                            <span class="text-[9px] text-gray-500 font-orbitron">{{ \Carbon\Carbon::parse($match->match_date)->format('M d, Y') }}</span>
+                                                            <span class="px-2 py-0.5 border rounded text-[9px] font-orbitron font-black {{ $outcomeColor }}">
+                                                                {{ $outcomeText }} ({{ $match->our_score }}-{{ $match->opponent_score }})
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Match Map Series Details -->
+                                                    <div class="flex flex-col gap-2.5">
+                                                        @foreach($mInfo->series as $sInfo)
+                                                            @php
+                                                                $map = $sInfo->map;
+                                                                $pStat = $sInfo->player_stat;
+                                                                $mapWon = $map->result === 'won';
+                                                                $mapResultColor = $mapWon ? 'text-green-400' : ($map->result === 'lost' ? 'text-red-400' : 'text-gray-400');
+                                                            @endphp
+                                                            <div class="flex flex-col gap-2 p-2.5 bg-[#140e1f]/60 border border-white/5 rounded hover:border-violet-500/20 transition-colors">
+                                                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                                                    <!-- Map info -->
+                                                                    <div class="flex items-center gap-2">
+                                                                        <span class="text-[10px] font-orbitron font-bold text-violet-400">G{{ $map->game_number }}</span>
+                                                                        @if($map->map_name)
+                                                                            <span class="text-[11px] font-outfit text-white font-medium">{{ $map->map_name }}</span>
+                                                                        @endif
+                                                                        <span class="text-[9px] font-orbitron font-bold {{ $mapResultColor }} uppercase">
+                                                                            {{ $map->result }} ({{ $map->our_score }}-{{ $map->opponent_score }})
+                                                                        </span>
+                                                                        @if($map->win_condition)
+                                                                            <span class="text-[9px] text-gray-500 font-outfit">via {{ $map->win_condition }}</span>
+                                                                        @endif
+                                                                    </div>
+
+                                                                    <!-- Core stats -->
+                                                                    <div class="flex items-center gap-2">
+                                                                        <span class="text-[10px] text-gray-400 font-orbitron">KDA: <strong class="text-white">{{ $pStat->kills }}/{{ $pStat->deaths }}/{{ $pStat->assists }}</strong></span>
+                                                                        @if($pStat->is_mvp)
+                                                                            <span class="bg-pink-950/40 border border-pink-500/30 text-pink-400 px-1.5 py-0.5 rounded text-[8px] font-orbitron font-black tracking-widest uppercase">MVP</span>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Game-Specific / Extra Stats Badges -->
+                                                                @if(!empty($pStat->extra_stats) && is_array($pStat->extra_stats))
+                                                                    <div class="flex flex-wrap gap-2 pt-1.5 border-t border-white/5">
+                                                                        @foreach($pStat->extra_stats as $key => $val)
+                                                                            @if($key !== '' && $val !== null && $val !== '')
+                                                                                <div class="bg-[#0b0712] px-2 py-0.5 rounded border border-violet-500/10 text-violet-300 flex items-baseline gap-1 text-[9px]">
+                                                                                    <span class="text-gray-500 text-[8px] font-orbitron font-bold uppercase tracking-wider">{{ str_replace('_', ' ', $key) }}:</span>
+                                                                                    <span class="font-orbitron font-black text-white">{{ $val }}</span>
+                                                                                </div>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
                                                 </div>
-                                            @endif
+                                            @endforeach
                                         </div>
                                     </div>
                                 @endforeach

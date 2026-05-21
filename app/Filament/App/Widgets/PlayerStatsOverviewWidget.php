@@ -15,7 +15,7 @@ class PlayerStatsOverviewWidget extends BaseWidget
         $user = Auth::user();
 
         $player = User::with([
-            'teamMemberships.team.tournaments',
+            'matchStats.matchSeries',
         ])->find($user->id);
 
         $totalPlayed = 0;
@@ -25,12 +25,13 @@ class PlayerStatsOverviewWidget extends BaseWidget
 
         if ($player) {
             $teamsCount = $player->teamMemberships()->count();
-            foreach ($player->teamMemberships as $membership) {
-                if ($membership->team) {
-                    foreach ($membership->team->tournaments as $tournament) {
-                        $totalPlayed += $tournament->pivot->matches_played;
-                        $totalWon += $tournament->pivot->matches_won;
-                        $totalLost += $tournament->pivot->matches_lost;
+            foreach ($player->matchStats as $stat) {
+                if ($stat->matchSeries) {
+                    $totalPlayed++;
+                    if ($stat->matchSeries->result === 'won') {
+                        $totalWon++;
+                    } elseif ($stat->matchSeries->result === 'lost') {
+                        $totalLost++;
                     }
                 }
             }

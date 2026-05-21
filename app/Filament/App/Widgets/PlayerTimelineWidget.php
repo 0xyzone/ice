@@ -2,6 +2,7 @@
 
 namespace App\Filament\App\Widgets;
 
+use App\Models\Tournament;
 use App\Models\User;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,7 @@ class PlayerTimelineWidget extends Widget
     {
         $user = Auth::user();
         $player = User::with([
-            'teamMemberships.team.tournaments',
+            'teamMemberships.team',
         ])->find($user->id);
 
         $events = [];
@@ -35,7 +36,12 @@ class PlayerTimelineWidget extends Widget
                         'color' => '#8b5cf6',
                     ];
 
-                    foreach ($membership->team->tournaments as $tournament) {
+                    // Find all unique tournaments this team has matches in
+                    $tournaments = Tournament::whereHas('matches', function ($query) use ($membership) {
+                        $query->where('own_team_id', $membership->own_team_id);
+                    })->get();
+
+                    foreach ($tournaments as $tournament) {
                         $events[] = [
                             'date' => $tournament->start_date ? date('M d, Y', strtotime($tournament->start_date)) : 'N/A',
                             'timestamp' => $tournament->start_date ? strtotime($tournament->start_date) : 0,
