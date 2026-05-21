@@ -13,9 +13,9 @@ class PlayerProfileController extends Controller
             'socials',
             'player',
             'teamMemberships.team.game',
-            'teamMemberships.team.tournaments',
             'gameInfos.game',
             'galleries',
+            'tournamentStats.tournament',
         ])->findOrFail($id);
 
         return $this->renderProfile($player);
@@ -27,9 +27,9 @@ class PlayerProfileController extends Controller
             'socials',
             'player',
             'teamMemberships.team.game',
-            'teamMemberships.team.tournaments',
             'gameInfos.game',
             'galleries',
+            'tournamentStats.tournament',
         ])->where('username', $username)->firstOrFail();
 
         return $this->renderProfile($player);
@@ -37,23 +37,39 @@ class PlayerProfileController extends Controller
 
     private function renderProfile(User $player): View
     {
-        // Calculate dynamic player stats from tournament records of participating teams
+        // Calculate dynamic player stats from individual tournament records
         $totalPlayed = 0;
         $totalWon = 0;
         $totalLost = 0;
+        $totalKills = 0;
+        $totalDeaths = 0;
+        $totalAssists = 0;
+        $totalMvps = 0;
 
-        foreach ($player->teamMemberships as $membership) {
-            if ($membership->team) {
-                foreach ($membership->team->tournaments as $tournament) {
-                    $totalPlayed += $tournament->pivot->matches_played;
-                    $totalWon += $tournament->pivot->matches_won;
-                    $totalLost += $tournament->pivot->matches_lost;
-                }
-            }
+        foreach ($player->tournamentStats as $stat) {
+            $totalPlayed += $stat->matches_played;
+            $totalWon += $stat->matches_won;
+            $totalLost += $stat->matches_lost;
+            $totalKills += $stat->kills;
+            $totalDeaths += $stat->deaths;
+            $totalAssists += $stat->assists;
+            $totalMvps += $stat->mvps;
         }
 
         $winRate = $totalPlayed > 0 ? round(($totalWon / $totalPlayed) * 100, 1) : 0.0;
+        $kda = $totalPlayed > 0 ? round(($totalKills + $totalAssists) / max(1, $totalDeaths), 2) : 0.00;
 
-        return view('player-profile', compact('player', 'totalPlayed', 'totalWon', 'totalLost', 'winRate'));
+        return view('player-profile', compact(
+            'player',
+            'totalPlayed',
+            'totalWon',
+            'totalLost',
+            'winRate',
+            'totalKills',
+            'totalDeaths',
+            'totalAssists',
+            'totalMvps',
+            'kda'
+        ));
     }
 }

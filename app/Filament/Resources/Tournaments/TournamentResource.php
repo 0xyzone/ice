@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Tournaments;
 use App\Filament\Resources\Tournaments\Pages\CreateTournament;
 use App\Filament\Resources\Tournaments\Pages\EditTournament;
 use App\Filament\Resources\Tournaments\Pages\ListTournaments;
+use App\Filament\Resources\Tournaments\RelationManagers\PlayerStatsRelationManager;
 use App\Filament\Resources\Tournaments\RelationManagers\TeamsRelationManager;
 use App\Filament\Resources\Tournaments\Schemas\TournamentForm;
 use App\Filament\Resources\Tournaments\Tables\TournamentsTable;
@@ -37,6 +38,7 @@ class TournamentResource extends Resource
     {
         return [
             TeamsRelationManager::class,
+            PlayerStatsRelationManager::class,
         ];
     }
 

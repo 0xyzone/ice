@@ -115,4 +115,9 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
     {
         return $this->hasOne(UserLegalInfo::class);
     }
+
+    public function tournamentStats(): HasMany
+    {
+        return $this->hasMany(PlayerTournamentStat::class);
+    }
 }

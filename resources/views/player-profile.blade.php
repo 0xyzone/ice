@@ -165,27 +165,29 @@
                     </p>
                     
                     <!-- Quick stats summary block for playfulness -->
-                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-6 mt-4 pt-4 border-t border-white/5 text-sm">
-                        <div class="flex items-center gap-2">
-                            <span class="text-red-400 font-bold font-orbitron text-md">WIN RATE:</span>
-                            <span class="text-white font-black font-orbitron text-md">{{ $winRate }}%</span>
+                    @if($totalPlayed > 0)
+                        <div class="flex flex-wrap items-center justify-center md:justify-start gap-6 mt-4 pt-4 border-t border-white/5 text-sm">
+                            <div class="flex items-center gap-2">
+                                <span class="text-red-400 font-bold font-orbitron text-md">WIN RATE:</span>
+                                <span class="text-white font-black font-orbitron text-md">{{ $winRate }}%</span>
+                            </div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-white/20 hidden md:block"></div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-violet-400 font-bold font-orbitron text-md">MATCHES:</span>
+                                <span class="text-white font-black font-orbitron text-md">{{ $totalPlayed }}</span>
+                            </div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-white/20 hidden md:block"></div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-emerald-400 font-bold font-orbitron text-md">WINS:</span>
+                                <span class="text-white font-black font-orbitron text-md">{{ $totalWon }}</span>
+                            </div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-white/20 hidden md:block"></div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-pink-400 font-bold font-orbitron text-md">LOSSES:</span>
+                                <span class="text-white font-black font-orbitron text-md">{{ $totalLost }}</span>
+                            </div>
                         </div>
-                        <div class="w-1.5 h-1.5 rounded-full bg-white/20 hidden md:block"></div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-violet-400 font-bold font-orbitron text-md">MATCHES:</span>
-                            <span class="text-white font-black font-orbitron text-md">{{ $totalPlayed }}</span>
-                        </div>
-                        <div class="w-1.5 h-1.5 rounded-full bg-white/20 hidden md:block"></div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-emerald-400 font-bold font-orbitron text-md">WINS:</span>
-                            <span class="text-white font-black font-orbitron text-md">{{ $totalWon }}</span>
-                        </div>
-                        <div class="w-1.5 h-1.5 rounded-full bg-white/20 hidden md:block"></div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-pink-400 font-bold font-orbitron text-md">LOSSES:</span>
-                            <span class="text-white font-black font-orbitron text-md">{{ $totalLost }}</span>
-                        </div>
-                    </div>
+                    @endif
                 </div>
             </div>
         </header>
@@ -257,6 +259,112 @@
             
             <!-- LEFT COLUMN: ACTIVE GAME PROFILES (SPAN 3) -->
             <section class="lg:col-span-3 flex flex-col gap-6">
+                @if($totalPlayed > 0)
+                    <!-- COMBAT METRICS DASHBOARD -->
+                    <div class="flex flex-col gap-6">
+                        <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                            <h2 class="text-2xl font-orbitron font-extrabold text-white uppercase tracking-wider flex items-center gap-3">
+                                <span class="w-2.5 h-6 bg-red-500 shadow-[0_0_12px_#ef4444] block"></span>
+                                Combat Specification & Metrics
+                            </h2>
+                            <span class="text-xs font-orbitron text-red-400 font-black px-2 py-0.5 bg-[#1a0f12] border border-red-500/20 rounded">
+                                SYSTEM ONLINE
+                            </span>
+                        </div>
+
+                        <!-- Metric Cards Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <!-- KDA Ratio -->
+                            <div class="cyber-card p-5 overflow-hidden relative">
+                                <div class="absolute left-0 top-0 bottom-0 w-1 bg-red-500 shadow-[0_0_10px_#ef4444]"></div>
+                                <span class="text-gray-500 font-orbitron font-bold text-[9px] tracking-wider uppercase block mb-1">KDA RATIO</span>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-4xl font-orbitron font-black text-white tracking-tight">{{ number_format($kda, 2) }}</span>
+                                    <span class="text-xs text-red-400 font-orbitron font-bold uppercase">RATIO</span>
+                                </div>
+                                <div class="text-[10px] text-gray-400 mt-2 font-outfit">
+                                    Total: {{ $totalKills }} K / {{ $totalDeaths }} D / {{ $totalAssists }} A
+                                </div>
+                            </div>
+
+                            <!-- Win Rate -->
+                            <div class="cyber-card p-5 overflow-hidden relative">
+                                <div class="absolute left-0 top-0 bottom-0 w-1 bg-violet-500 shadow-[0_0_10px_#8b5cf6]"></div>
+                                <span class="text-gray-500 font-orbitron font-bold text-[9px] tracking-wider uppercase block mb-1">BATTLE WIN RATE</span>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-4xl font-orbitron font-black text-white tracking-tight">{{ $winRate }}%</span>
+                                    <span class="text-xs text-violet-400 font-orbitron font-bold uppercase">RATE</span>
+                                </div>
+                                <div class="text-[10px] text-gray-400 mt-2 font-outfit">
+                                    Outcomes: {{ $totalWon }} W / {{ $totalLost }} L
+                                </div>
+                            </div>
+
+                            <!-- MVPs -->
+                            <div class="cyber-card p-5 overflow-hidden relative">
+                                <div class="absolute left-0 top-0 bottom-0 w-1 bg-pink-500 shadow-[0_0_10px_#ec4899]"></div>
+                                <span class="text-gray-500 font-orbitron font-bold text-[9px] tracking-wider uppercase block mb-1">MOST VALUABLE PLAYER</span>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-4xl font-orbitron font-black text-white tracking-tight">{{ $totalMvps }}</span>
+                                    <span class="text-xs text-pink-400 font-orbitron font-bold uppercase">MVPS</span>
+                                </div>
+                                <div class="text-[10px] text-gray-400 mt-2 font-outfit flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5 text-pink-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    Dominating MVP awards
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tournament breakdown list -->
+                        <div class="cyber-card p-5 flex flex-col gap-4">
+                            <h3 class="font-orbitron font-bold text-xs text-red-400 uppercase tracking-widest border-b border-white/5 pb-2">
+                                Tournament-by-Tournament Specification
+                            </h3>
+                            <div class="flex flex-col gap-3">
+                                @foreach($player->tournamentStats as $stat)
+                                    @php
+                                        $tKda = $stat->matches_played > 0 ? round(($stat->kills + $stat->assists) / max(1, $stat->deaths), 2) : 0.00;
+                                        $tWinRate = $stat->matches_played > 0 ? round(($stat->matches_won / $stat->matches_played) * 100, 1) : 0.0;
+                                    @endphp
+                                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-3 bg-[#110c1a] border border-white/5 rounded-md hover:border-red-500/30 transition-colors">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]"></div>
+                                            <div>
+                                                <h4 class="font-orbitron font-extrabold text-sm text-white uppercase tracking-wider">
+                                                    {{ $stat->tournament->name }}
+                                                </h4>
+                                                <p class="text-[10px] text-gray-500 font-outfit mt-0.5">
+                                                    Matches Played: {{ $stat->matches_played }} | Wins: {{ $stat->matches_won }} | Losses: {{ $stat->matches_lost }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-wrap items-center gap-4 text-xs">
+                                            <div class="bg-[#0c0812] px-2.5 py-1 rounded border border-white/5">
+                                                <span class="text-gray-500 text-[8px] font-orbitron font-bold block">K/D/A</span>
+                                                <span class="text-white font-black font-orbitron text-xs">{{ $stat->kills }}/{{ $stat->deaths }}/{{ $stat->assists }}</span>
+                                            </div>
+                                            <div class="bg-[#0c0812] px-2.5 py-1 rounded border border-white/5">
+                                                <span class="text-gray-500 text-[8px] font-orbitron font-bold block">KDA</span>
+                                                <span class="text-red-400 font-black font-orbitron text-xs">{{ number_format($tKda, 2) }}</span>
+                                            </div>
+                                            <div class="bg-[#0c0812] px-2.5 py-1 rounded border border-white/5">
+                                                <span class="text-gray-500 text-[8px] font-orbitron font-bold block">WIN %</span>
+                                                <span class="text-violet-400 font-black font-orbitron text-xs">{{ $tWinRate }}%</span>
+                                            </div>
+                                            @if($stat->mvps > 0)
+                                                <div class="bg-pink-950/40 px-2.5 py-1 rounded border border-pink-500/30 text-pink-400 font-black font-orbitron text-xs flex items-center gap-1">
+                                                    <span>{{ $stat->mvps }}</span>
+                                                    <span class="text-[8px] font-bold">MVPs</span>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="flex items-center justify-between border-b border-white/10 pb-3">
                     <h2 class="text-2xl font-orbitron font-extrabold text-white uppercase tracking-wider flex items-center gap-3">
                         <span class="w-2.5 h-6 bg-red-500 shadow-[0_0_12px_#ef4444] block"></span>
