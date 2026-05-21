@@ -17,7 +17,7 @@ class ApiController extends Controller
                 return [
                     'id' => $player->user_id,
                     'name' => $player->user->name,
-                    'bio' => $player->user->player->bio,
+                    // 'bio' => $player->user->player->bio,
                     'username' => $player->user->username,
                     'email' => $player->user->email,
                     'avatar' => $player->user->avatar_full_url,
