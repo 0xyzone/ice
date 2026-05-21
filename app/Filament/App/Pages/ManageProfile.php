@@ -3,6 +3,7 @@
 namespace App\Filament\App\Pages;
 
 use App\Models\PlayerDetail;
+use App\Models\User;
 use App\Models\UserLegalInfo;
 use App\Models\UserSocial;
 use BackedEnum;
@@ -25,6 +26,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -48,8 +50,9 @@ class ManageProfile extends Page
     public function mount(): void
     {
         $playerDetail = $this->getRecord()?->attributesToArray() ?? [];
-        $socials = auth()->user()->socials?->attributesToArray() ?? [];
-        $user = auth()->user();
+        $socials = Auth::user()->socials?->attributesToArray() ?? [];
+        /** @var User $user */
+        $user = Auth::user();
         $userAvatar = ['avatar_url' => $user->avatar_url];
         $username = ['username' => $user->username];
 
@@ -66,19 +69,19 @@ class ManageProfile extends Page
             ->components([
                 Form::make([
                     Hidden::make('user_id')
-                        ->default(auth()->user()->id),
+                        ->default(Auth::user()->id),
 
                     Section::make('Account Overview')
                         ->schema([
                             TextEntry::make('user_name')
                                 ->label('Player Name')
-                                ->state(auth()->user()->name),
+                                ->state(Auth::user()->name),
                             TextEntry::make('user_email')
                                 ->label('Email Address')
-                                ->state(auth()->user()->email),
+                                ->state(Auth::user()->email),
                             TextEntry::make('user_id')
                                 ->label('Player ID')
-                                ->state(auth()->user()->id),
+                                ->state(Auth::user()->id),
                         ])
                         ->columns(3)
                         ->columnSpanFull(),
@@ -107,7 +110,7 @@ class ManageProfile extends Page
                                         ->prefixIcon('heroicon-m-at-symbol')
                                         ->required()
                                         ->alphaDash()
-                                        ->unique('users', 'username', ignorable: auth()->user()),
+                                        ->unique('users', 'username', ignorable: Auth::user()),
                                     Select::make('gender')
                                         ->prefixIcon('heroicon-m-user')
                                         ->options([
@@ -141,7 +144,7 @@ class ManageProfile extends Page
                                                         return;
                                                     }
 
-                                                    $userId = auth()->id();
+                                                    $userId = Auth::id();
                                                     $exists = PlayerDetail::query()
                                                         ->where('user_id', '!=', $userId)
                                                         ->where(function ($query) use ($value) {
@@ -178,7 +181,7 @@ class ManageProfile extends Page
                                                         return;
                                                     }
 
-                                                    $userId = auth()->id();
+                                                    $userId = Auth::id();
                                                     $exists = PlayerDetail::query()
                                                         ->where('user_id', '!=', $userId)
                                                         ->where(function ($query) use ($value) {
@@ -232,7 +235,7 @@ class ManageProfile extends Page
                                                                 return;
                                                             }
 
-                                                            $userId = auth()->id();
+                                                            $userId = Auth::id();
                                                             $exists = PlayerDetail::query()
                                                                 ->where('user_id', '!=', $userId)
                                                                 ->where(function ($query) use ($value) {
@@ -546,31 +549,32 @@ class ManageProfile extends Page
         $record = $this->getRecord();
         if (! $record) {
             $record = new PlayerDetail;
-            $record->user_id = auth()->user()->id;
+            $record->user_id = Auth::user()->id;
         }
         $record->fill($playerDetailData);
         $record->save();
 
         // Save Socials
-        $socials = auth()->user()->socials;
+        $socials = Auth::user()->socials;
         if (! $socials) {
             $socials = new UserSocial;
-            $socials->user_id = auth()->user()->id;
+            $socials->user_id = Auth::user()->id;
         }
         $socials->fill($socialData);
         $socials->save();
 
         // Save Legal Info
-        $legalInfo = auth()->user()->legalInfo;
+        $legalInfo = Auth::user()->legalInfo;
         if (! $legalInfo) {
             $legalInfo = new UserLegalInfo;
-            $legalInfo->user_id = auth()->user()->id;
+            $legalInfo->user_id = Auth::user()->id;
         }
         $legalInfo->fill($legalData);
         $legalInfo->save();
 
         // Save User details (Avatar and Username)
-        $user = auth()->user();
+        /** @var User $user */
+        $user = Auth::user();
         $user->username = $data['username'] ?? null;
         $user->avatar_url = $data['avatar_url'] ?? null;
         $user->save();
@@ -606,7 +610,7 @@ class ManageProfile extends Page
     public function getRecord(): ?PlayerDetail
     {
         return PlayerDetail::query()
-            ->where('user_id', auth()->user()->id)
+            ->where('user_id', Auth::id())
             ->first();
     }
 }

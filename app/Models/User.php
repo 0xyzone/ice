@@ -53,8 +53,13 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
 
     protected $appends = [
         'avatar_full_url',
-        'bio'
+        'bio',
     ];
+
+    protected function getBioAttribute(): ?string
+    {
+        return $this->player?->bio;
+    }
 
     protected function getAvatarFullUrlAttribute(): string
     {

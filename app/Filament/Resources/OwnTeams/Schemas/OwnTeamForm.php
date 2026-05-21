@@ -48,9 +48,7 @@ class OwnTeamForm
                                             ->nullable(),
                                         TextInput::make('name')
                                             ->required()
-                                            ->maxLength(255)
-                                            ->live(onBlur: true)
-                                            ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                                            ->maxLength(255),
                                         TextInput::make('slug')
                                             ->required()
                                             ->unique(table: OwnTeam::class, column: 'slug', ignoreRecord: true)
