@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Matches\Schemas;
 
-use App\Enums\MlbbHero;
 use App\Models\User;
+use App\Services\MlbbHeroService;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
@@ -143,11 +143,7 @@ class MatchForm
                                                                             ->columnSpan(2),
                                                                         Select::make('hero')
                                                                             ->label('Hero Played')
-                                                                            ->options(
-                                                                                collect(MlbbHero::cases())
-                                                                                    ->mapWithKeys(fn (MlbbHero $hero) => [$hero->value => $hero->value])
-                                                                                    ->toArray()
-                                                                            )
+                                                                            ->options(app(MlbbHeroService::class)->getHeroOptions())
                                                                             ->searchable()
                                                                             ->nullable()
                                                                             ->placeholder('Select hero...')

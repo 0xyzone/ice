@@ -342,7 +342,15 @@
                                                                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-1 border-t border-white/5 pt-1.5">
                                                                             @foreach($game->playerStats as $pStat)
                                                                                 <div class="flex items-center justify-between bg-[#150f24]/40 border border-white/5 px-2 py-0.5 rounded">
-                                                                                    <div class="flex items-center gap-1">
+                                                                                    <div class="flex items-center gap-1.5">
+                                                                                        @if($pStat->hero)
+                                                                                            @php
+                                                                                                $teamHeroIcon = app(\App\Services\MlbbHeroService::class)->getHeroIcon($pStat->hero);
+                                                                                            @endphp
+                                                                                            @if($teamHeroIcon)
+                                                                                                <img src="{{ $teamHeroIcon }}" alt="{{ $pStat->hero }}" title="{{ $pStat->hero }}" class="w-3.5 h-3.5 rounded-full border border-violet-500/30 object-cover shrink-0">
+                                                                                            @endif
+                                                                                        @endif
                                                                                         <span class="text-[9px] font-outfit text-white font-medium">
                                                                                             {{ $pStat->user->name ?? 'Unknown' }}
                                                                                         </span>

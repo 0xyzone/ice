@@ -426,8 +426,15 @@
                                                                     <!-- Core stats + Hero badge -->
                                                                     <div class="flex flex-wrap items-center gap-2">
                                                                         @if($pStat->hero)
-                                                                            <span class="inline-flex items-center gap-1 bg-teal-950/50 border border-teal-500/40 text-teal-300 px-2 py-0.5 rounded text-[9px] font-orbitron font-black tracking-widest uppercase">
-                                                                                <svg class="w-2.5 h-2.5 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M14.5 2.5c0 1.5-1.5 7-1.5 7h-2S9.5 4 9.5 2.5a2.5 2.5 0 0 1 5 0zM12 11a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-4.99 1.5A5 5 0 0 0 12 17a5 5 0 0 0 4.99-4.5H7.01zM5 19h14l-1 3H6l-1-3z"/></svg>
+                                                                            @php
+                                                                                $heroIcon = app(\App\Services\MlbbHeroService::class)->getHeroIcon($pStat->hero);
+                                                                            @endphp
+                                                                            <span class="inline-flex items-center gap-1.5 bg-teal-950/50 border border-teal-500/40 text-teal-300 px-2 py-0.5 rounded text-[9px] font-orbitron font-black tracking-widest uppercase shadow-[0_0_8px_rgba(20,184,166,0.1)]">
+                                                                                @if($heroIcon)
+                                                                                    <img src="{{ $heroIcon }}" alt="{{ $pStat->hero }}" class="w-4 h-4 rounded-full border border-teal-500/30 object-cover shrink-0">
+                                                                                @else
+                                                                                    <svg class="w-2.5 h-2.5 shrink-0 text-teal-400" fill="currentColor" viewBox="0 0 24 24"><path d="M14.5 2.5c0 1.5-1.5 7-1.5 7h-2S9.5 4 9.5 2.5a2.5 2.5 0 0 1 5 0zM12 11a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-4.99 1.5A5 5 0 0 0 12 17a5 5 0 0 0 4.99-4.5H7.01zM5 19h14l-1 3H6l-1-3z"/></svg>
+                                                                                @endif
                                                                                 {{ $pStat->hero }}
                                                                             </span>
                                                                         @endif
