@@ -18,6 +18,7 @@ class MatchSeries extends Model
         'win_condition',
         'our_score',
         'opponent_score',
+        'did_we_win',
     ];
 
     protected function casts(): array
@@ -32,12 +33,20 @@ class MatchSeries extends Model
     protected static function booted(): void
     {
         static::saving(function (MatchSeries $series) {
-            if ($series->our_score > $series->opponent_score) {
-                $series->result = 'won';
-            } elseif ($series->our_score < $series->opponent_score) {
-                $series->result = 'lost';
+            // If `did_we_win` virtual attribute is present (from form toggle), use it explicitly
+            if (! is_null($series->did_we_win)) {
+                $series->result = $series->did_we_win ? 'won' : 'lost';
+                // Remove the virtual attribute so it doesn't try to map to a column
+                unset($series->did_we_win);
             } else {
-                $series->result = 'draw';
+                // Fallback: auto-determine from scores
+                if ($series->our_score > $series->opponent_score) {
+                    $series->result = 'won';
+                } elseif ($series->our_score < $series->opponent_score) {
+                    $series->result = 'lost';
+                } else {
+                    $series->result = 'draw';
+                }
             }
         });
 

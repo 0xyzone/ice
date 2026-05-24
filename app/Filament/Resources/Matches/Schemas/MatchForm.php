@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Matches\Schemas;
 
+use App\Enums\MlbbHero;
 use App\Models\User;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
@@ -75,7 +76,8 @@ class MatchForm
                                             ->label('Match Series Maps')
                                             ->itemLabel(fn (array $state): ?string => isset($state['game_number']) ? 'Game #'.$state['game_number'] : null)
                                             ->schema([
-                                                Grid::make(3)
+                                                // ── Game / Scores / Win toggle row ───────────────────────────
+                                                Grid::make(4)
                                                     ->schema([
                                                         TextInput::make('game_number')
                                                             ->label('Game / Map Number')
@@ -92,6 +94,14 @@ class MatchForm
                                                             ->numeric()
                                                             ->default(0)
                                                             ->required(),
+                                                        Toggle::make('did_we_win')
+                                                            ->label('We Won This Series')
+                                                            ->helperText('Toggle on if we won this game.')
+                                                            ->inline(false)
+                                                            ->afterStateHydrated(function (Toggle $component, $record): void {
+                                                                // Hydrate from the persisted `result` column for existing records
+                                                                $component->state($record?->result === 'won');
+                                                            }),
                                                     ]),
 
                                                 Section::make('Player Stats for this Game')
@@ -100,7 +110,8 @@ class MatchForm
                                                             ->relationship('playerStats')
                                                             ->label('Player Individual Performance')
                                                             ->schema([
-                                                                Grid::make(5)
+                                                                // ── Row 1: Player & Hero ─────────────────────────────
+                                                                Grid::make(4)
                                                                     ->schema([
                                                                         Select::make('user_id')
                                                                             ->label('Player')
@@ -130,6 +141,22 @@ class MatchForm
                                                                             ->preload()
                                                                             ->required()
                                                                             ->columnSpan(2),
+                                                                        Select::make('hero')
+                                                                            ->label('Hero Played')
+                                                                            ->options(
+                                                                                collect(MlbbHero::cases())
+                                                                                    ->mapWithKeys(fn (MlbbHero $hero) => [$hero->value => $hero->value])
+                                                                                    ->toArray()
+                                                                            )
+                                                                            ->searchable()
+                                                                            ->nullable()
+                                                                            ->placeholder('Select hero...')
+                                                                            ->columnSpan(2),
+                                                                    ]),
+
+                                                                // ── Row 2: KDA + MVP ────────────────────────────────
+                                                                Grid::make(4)
+                                                                    ->schema([
                                                                         TextInput::make('kills')
                                                                             ->label('Kills')
                                                                             ->numeric()
@@ -147,15 +174,15 @@ class MatchForm
                                                                             ->required(),
                                                                         Toggle::make('is_mvp')
                                                                             ->label('MVP')
-                                                                            ->inline(false)
-                                                                            ->columnSpan(1),
+                                                                            ->inline(false),
                                                                     ]),
+
                                                                 KeyValue::make('extra_stats')
                                                                     ->label('Extra / Game-Specific Stats')
                                                                     ->keyLabel('Metric Name')
                                                                     ->valueLabel('Value')
-                                                                    ->keyPlaceholder('e.g. Hero, Gold, Damage, ACS')
-                                                                    ->valuePlaceholder('e.g. Ling, 12K, 85000, 240')
+                                                                    ->keyPlaceholder('e.g. Gold, Damage, ACS')
+                                                                    ->valuePlaceholder('e.g. 12K, 85000, 240')
                                                                     ->columnSpanFull(),
                                                             ])
                                                             ->defaultItems(0)

@@ -16,6 +16,7 @@ class PlayerMatchStat extends Model
         'deaths',
         'assists',
         'is_mvp',
+        'hero',
         'extra_stats',
     ];
 
@@ -26,6 +27,7 @@ class PlayerMatchStat extends Model
             'deaths' => 'integer',
             'assists' => 'integer',
             'is_mvp' => 'boolean',
+            'hero' => 'string',
             'extra_stats' => 'array',
         ];
     }
