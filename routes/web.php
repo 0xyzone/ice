@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PlayerProfileController;
 use App\Http\Controllers\TeamProfileController;
@@ -39,6 +40,10 @@ Route::get('/', function () {
 Route::get('/login', [LoginController::class, 'show'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
+Route::post('/auth/google/disconnect', [GoogleAuthController::class, 'disconnect'])->middleware('auth')->name('auth.google.disconnect');
 
 Route::redirect('/app/login', '/login');
 Route::redirect('/mukhiyas/login', '/login');

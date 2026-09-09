@@ -16,7 +16,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password', 'avatar_url', 'username'])]
+#[Fillable(['name', 'email', 'password', 'avatar_url', 'username', 'google_id', 'google_avatar_url'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerifyEmail
 {
@@ -67,7 +67,16 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
             return asset('storage/'.$this->avatar_url);
         }
 
+        if ($this->google_avatar_url) {
+            return $this->google_avatar_url;
+        }
+
         return 'https://ui-avatars.com/api/?name='.$this->name;
+    }
+
+    public function hasGoogleLinked(): bool
+    {
+        return ! empty($this->google_id);
     }
 
     public function canAccessPanel(Panel $panel): bool
@@ -103,7 +112,11 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar_url ? asset('storage/'.$this->avatar_url) : null;
+        if ($this->avatar_url) {
+            return asset('storage/'.$this->avatar_url);
+        }
+
+        return $this->google_avatar_url ?: null;
     }
 
     public function galleries(): HasMany

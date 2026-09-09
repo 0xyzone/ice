@@ -49,6 +49,20 @@ class ManageProfile extends Page
 
     public function mount(): void
     {
+        if (session('status')) {
+            Notification::make()
+                ->title(session('status'))
+                ->success()
+                ->send();
+        }
+
+        if (session('error')) {
+            Notification::make()
+                ->title(session('error'))
+                ->danger()
+                ->send();
+        }
+
         $playerDetail = $this->getRecord()?->attributesToArray() ?? [];
         $socials = Auth::user()->socials?->attributesToArray() ?? [];
         /** @var User $user */
@@ -61,6 +75,48 @@ class ManageProfile extends Page
         $galleries = $user->galleries()->pluck('image_path')->toArray();
 
         $this->form->fill(array_merge($playerDetail, $socials, $userAvatar, $username, $legalInfo, ['galleries' => $galleries]));
+    }
+
+    /**
+     * @return array<Action>
+     */
+    protected function getHeaderActions(): array
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        if ($user && $user->hasGoogleLinked()) {
+            return [
+                Action::make('disconnectGoogle')
+                    ->label('Disconnect Google')
+                    ->icon('heroicon-m-link-slash')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Disconnect Google Account')
+                    ->modalDescription('Are you sure you want to unlink your Google account from your profile?')
+                    ->action(function () {
+                        /** @var User $user */
+                        $user = Auth::user();
+                        $user->google_id = null;
+                        $user->save();
+
+                        Notification::make()
+                            ->title('Google account disconnected.')
+                            ->success()
+                            ->send();
+
+                        $this->js('window.location.reload()');
+                    }),
+            ];
+        }
+
+        return [
+            Action::make('connectGoogle')
+                ->label('Connect Google Account')
+                ->icon('heroicon-m-link')
+                ->color('warning')
+                ->url(route('auth.google.redirect')),
+        ];
     }
 
     public function form(Schema $schema): Schema
@@ -82,8 +138,16 @@ class ManageProfile extends Page
                             TextEntry::make('user_id')
                                 ->label('Player ID')
                                 ->state(Auth::user()->id),
+                            TextEntry::make('google_status')
+                                ->label('Google Account')
+                                ->badge()
+                                ->color(fn () => Auth::user()->hasGoogleLinked() ? 'success' : 'gray')
+                                ->state(fn () => Auth::user()->hasGoogleLinked() ? 'Connected' : 'Not Linked'),
                         ])
-                        ->columns(3)
+                        ->columns([
+                            'default' => 2,
+                            'md' => 4,
+                        ])
                         ->columnSpanFull(),
 
                     Grid::make([

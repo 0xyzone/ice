@@ -128,8 +128,15 @@
 
                 <!-- Session Status / Errors -->
                 @if (session('status'))
-                    <div class="mb-4 bg-red-950/20 border border-red-500/30 rounded-lg p-3 text-red-400 font-tech text-md tracking-wider">
+                    <div class="mb-4 bg-emerald-950/30 border border-emerald-500/40 rounded-lg p-3 text-emerald-400 font-tech text-md tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]"></span>
                         {{ session('status') }}
+                    </div>
+                @endif
+                @if (session('error'))
+                    <div class="mb-4 bg-red-950/40 border border-red-500/40 rounded-lg p-3 text-red-400 font-tech text-md tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]"></span>
+                        {{ session('error') }}
                     </div>
                 @endif
 
@@ -210,6 +217,29 @@
                     </div>
 
                 </form>
+
+                <!-- Cyber Divider -->
+                <div class="relative flex py-4 items-center my-1">
+                    <div class="flex-grow border-t border-red-500/20"></div>
+                    <span class="flex-shrink mx-3 font-header text-[10px] tracking-widest text-gray-400 uppercase">OR IDENTITY LINK</span>
+                    <div class="flex-grow border-t border-red-500/20"></div>
+                </div>
+
+                <!-- Google OAuth Button -->
+                <div>
+                    <a 
+                        href="{{ route('auth.google.redirect') }}" 
+                        class="clip-cyber-sm w-full py-3 bg-red-950/20 hover:bg-red-900/30 border border-red-500/30 hover:border-red-500/70 text-gray-200 hover:text-white font-tech font-bold tracking-widest text-md transition-all duration-300 flex items-center justify-center gap-3 shadow-[0_0_15px_rgba(239,68,68,0.15)] hover:shadow-[0_0_20px_rgba(239,68,68,0.3)] group cursor-pointer"
+                    >
+                        <svg class="w-5 h-5 transition-transform group-hover:scale-110 duration-200" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.02h3.86c2.26-2.09 3.68-5.17 3.68-9.12z"/>
+                            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3.02c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.12C3.26 21.36 7.37 24 12 24z"/>
+                            <path fill="#FBBC05" d="M5.27 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.61H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.39l3.98-3.12z"/>
+                            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.37 0 3.26 2.64 1.29 6.61l3.98 3.12c.95-2.85 3.6-4.98 6.73-4.98z"/>
+                        </svg>
+                        <span>LOGIN WITH GOOGLE</span>
+                    </a>
+                </div>
 
                 <!-- Footer back-links -->
                 <div class="mt-6 pt-5 border-t border-red-500/10 flex justify-center text-center">
