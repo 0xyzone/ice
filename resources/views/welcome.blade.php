@@ -771,12 +771,13 @@
                 </p>
 
                 <!-- Roster & Portal Links -->
-                <div class="flex gap-6 font-tech text-md font-semibold tracking-wider text-gray-500">
+                <div class="flex flex-wrap items-center justify-center md:justify-end gap-x-6 gap-y-2 font-tech text-md font-semibold tracking-wider text-gray-500">
                     <a href="#squads" class="hover:text-red-400 transition-colors">SQUADS</a>
                     <a href="#roster" class="hover:text-red-400 transition-colors">ROSTER</a>
                     <a href="#heroes" class="hover:text-red-400 transition-colors">SPECIALTIES</a>
-                    <a href="#stats" class="hover:text-red-400 transition-colors">OUR VISION</a>
                     <a href="#vidanta" class="hover:text-red-400 transition-colors">VIDANTA ARENA</a>
+                    <a href="{{ url('/privacy-policy') }}" class="text-gray-400 hover:text-red-400 transition-colors">PRIVACY POLICY</a>
+                    <a href="{{ url('/terms-of-service') }}" class="text-gray-400 hover:text-red-400 transition-colors">TERMS OF SERVICE</a>
                 </div>
 
             </div>

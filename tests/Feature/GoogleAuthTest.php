@@ -95,7 +95,7 @@ class GoogleAuthTest extends TestCase
         $this->assertEquals('https://google.com/avatar999.jpg', $user->google_avatar_url);
     }
 
-    public function test_login_with_unregistered_google_account_is_blocked(): void
+    public function test_login_with_unregistered_google_account_redirects_to_unregistered_page(): void
     {
         $abstractUser = Mockery::mock(SocialiteUser::class);
         $abstractUser->shouldReceive('getId')->andReturn('google-unregistered');
@@ -109,9 +109,48 @@ class GoogleAuthTest extends TestCase
 
         $response = $this->get(route('auth.google.callback'));
 
-        $response->assertRedirect('/login');
+        $response->assertRedirect(route('auth.unregistered'));
         $this->assertGuest();
-        $response->assertSessionHasErrors('login');
+        $response->assertSessionHas('unregistered_google_email', 'unknown@gmail.com');
+
+        // Test the unregistered page renders with email and notice
+        $pageResponse = $this->withSession(['unregistered_google_email' => 'unknown@gmail.com'])
+            ->get(route('auth.unregistered'));
+
+        $pageResponse->assertStatus(200);
+        $pageResponse->assertSee('ACCOUNT');
+        $pageResponse->assertSee('NOT FOUND');
+        $pageResponse->assertSee('unknown@gmail.com');
+    }
+
+    public function test_unverified_player_email_is_marked_verified_upon_google_login(): void
+    {
+        $user = User::factory()->unverified()->create([
+            'email' => 'unverified_player@gmail.com',
+            'google_id' => null,
+        ]);
+        $user->assignRole('player');
+        $this->assertFalse($user->hasVerifiedEmail());
+
+        $abstractUser = Mockery::mock(SocialiteUser::class);
+        $abstractUser->shouldReceive('getId')->andReturn('google-verified-888');
+        $abstractUser->shouldReceive('getEmail')->andReturn('unverified_player@gmail.com');
+        $abstractUser->shouldReceive('getAvatar')->andReturn(null);
+
+        $provider = Mockery::mock('Laravel\Socialite\Two\GoogleProvider');
+        $provider->shouldReceive('user')->andReturn($abstractUser);
+
+        Socialite::shouldReceive('driver')->with('google')->andReturn($provider);
+
+        $response = $this->get(route('auth.google.callback'));
+
+        $response->assertRedirect('/app');
+        $this->assertAuthenticatedAs($user);
+
+        $user->refresh();
+        $this->assertTrue($user->hasVerifiedEmail());
+        $this->assertNotNull($user->email_verified_at);
+        $this->assertEquals('google-verified-888', $user->google_id);
     }
 
     public function test_authenticated_player_can_connect_google_account(): void

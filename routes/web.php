@@ -43,7 +43,14 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
+Route::get('/auth/unregistered', [GoogleAuthController::class, 'unregistered'])->name('auth.unregistered');
 Route::post('/auth/google/disconnect', [GoogleAuthController::class, 'disconnect'])->middleware('auth')->name('auth.google.disconnect');
+
+Route::view('/privacy-policy', 'privacy-policy')->name('privacy.policy');
+Route::redirect('/privacy', '/privacy-policy');
+
+Route::view('/terms-of-service', 'terms-of-service')->name('terms.service');
+Route::redirect('/terms', '/terms-of-service');
 
 Route::redirect('/app/login', '/login');
 Route::redirect('/mukhiyas/login', '/login');

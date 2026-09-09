@@ -242,10 +242,15 @@
                 </div>
 
                 <!-- Footer back-links -->
-                <div class="mt-6 pt-5 border-t border-red-500/10 flex justify-center text-center">
+                <div class="mt-6 pt-5 border-t border-red-500/10 flex flex-col items-center justify-center gap-2 text-center">
                     <a href="/" class="font-tech text-md font-bold tracking-widest text-gray-500 hover:text-red-400 transition-colors duration-300">
                         &larr; BACK TO ARENA COMMAND
                     </a>
+                    <div class="flex items-center gap-3 font-tech text-xs tracking-wider text-gray-600">
+                        <a href="{{ url('/privacy-policy') }}" class="hover:text-gray-400 transition-colors">Privacy Policy</a>
+                        <span>&bull;</span>
+                        <a href="{{ url('/terms-of-service') }}" class="hover:text-gray-400 transition-colors">Terms of Service</a>
+                    </div>
                 </div>
 
             </div>

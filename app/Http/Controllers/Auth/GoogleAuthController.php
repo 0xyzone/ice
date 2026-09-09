@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 use Laravel\Socialite\Facades\Socialite;
 use Spatie\Permission\Models\Role;
 use Throwable;
@@ -27,7 +28,13 @@ class GoogleAuthController extends Controller
             $request->session()->put('google_oauth_mode', 'login');
         }
 
-        return Socialite::driver('google')->redirect();
+        $driver = Socialite::driver('google');
+
+        if ($request->has('prompt')) {
+            $driver->with(['prompt' => $request->query('prompt')]);
+        }
+
+        return $driver->redirect();
     }
 
     /**
@@ -93,6 +100,12 @@ class GoogleAuthController extends Controller
             if (! $currentUser->google_avatar_url) {
                 $currentUser->google_avatar_url = $googleUser->getAvatar();
             }
+
+            // Mark email as verified if not yet verified
+            if (! $currentUser->hasVerifiedEmail()) {
+                $currentUser->markEmailAsVerified();
+            }
+
             $currentUser->save();
 
             return redirect('/app/manage-profile')->with('status', 'Google account successfully linked!');
@@ -111,30 +124,40 @@ class GoogleAuthController extends Controller
                 if (! $user->google_avatar_url) {
                     $user->google_avatar_url = $googleUser->getAvatar();
                 }
-                if (! $user->email_verified_at) {
-                    $user->email_verified_at = now();
-                }
                 $user->save();
             }
         }
 
-        // Check 3: If no account exists
+        // Check 3: If no account exists (admin has not created an account yet)
         if (! $user) {
             $allowRegistration = config('services.google.allow_registration', false);
 
             if ($allowRegistration) {
                 $user = $this->createNewGoogleUser($googleUser);
             } else {
-                return redirect('/login')->withErrors([
-                    'login' => 'No player account found associated with '.$googleUser->getEmail().'. Please contact an administrator.',
-                ]);
+                return redirect()->route('auth.unregistered')->with('unregistered_google_email', $googleUser->getEmail());
             }
+        }
+
+        // Guarantee user's email is marked as verified upon successful Google login
+        if (! $user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
         }
 
         Auth::login($user, remember: true);
         $request->session()->regenerate();
 
         return $this->redirectUser($user);
+    }
+
+    /**
+     * Display the notice informing the player their account has not yet been provisioned by an admin.
+     */
+    public function unregistered(Request $request): View
+    {
+        return view('auth.unregistered', [
+            'email' => session('unregistered_google_email'),
+        ]);
     }
 
     /**
