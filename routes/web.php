@@ -18,7 +18,16 @@ use App\Models\Tournament;
 use Illuminate\Support\Facades\DB;
 
 Route::get('/', function () {
-    $teams = OwnTeam::with(['game', 'members.user.player'])->where('status', true)->get();
+    $teams = OwnTeam::with([
+        'game',
+        'members' => function ($query) {
+            $query->where('status', true)
+                ->orderByDesc('is_main_roster')
+                ->orderByRaw("CASE WHEN role = 'captain' THEN 0 ELSE 1 END")
+                ->orderBy('created_at');
+        },
+        'members.user.player',
+    ])->where('status', true)->get();
 
     $squadsCount = OwnTeam::where('status', true)->count();
     $athletesCount = TeamMember::where('status', true)->count();
@@ -30,6 +39,8 @@ Route::get('/', function () {
 
     $members = TeamMember::with(['user.player', 'team'])
         ->whereHas('user')
+        ->where('status', true)
+        ->orderByDesc('is_main_roster')
         ->orderByRaw("CASE WHEN role = 'captain' THEN 0 ELSE 1 END")
         ->orderBy('created_at')
         ->get();

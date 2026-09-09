@@ -16,6 +16,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class MembersRelationManager extends RelationManager
@@ -44,14 +45,25 @@ class MembersRelationManager extends RelationManager
                     ->prefixIcon('heroicon-m-tag')
                     ->options([
                         'captain' => 'Captain',
-                        'main_roster' => 'Main Roster',
+                        'player' => 'Player',
+                        'main_roster' => 'Main Roster Player',
                         'substitute' => 'Substitute / Reserve',
                         'coach' => 'Coach',
                         'analyst' => 'Analyst',
                         'manager' => 'Manager',
                     ])
+                    ->default('player')
                     ->required()
                     ->native(false),
+
+                Toggle::make('is_main_roster')
+                    ->label('Main Roster Lineup')
+                    ->helperText('Turn ON for the primary starting lineup, or OFF for normal/reserve players.')
+                    ->default(true)
+                    ->onIcon('heroicon-m-bolt')
+                    ->offIcon('heroicon-m-user-group')
+                    ->onColor('success')
+                    ->offColor('gray'),
 
                 Toggle::make('status')
                     ->label('Is Active Member')
@@ -82,12 +94,21 @@ class MembersRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('role')
+            ->defaultSort('is_main_roster', 'desc')
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Player')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
+
+                ToggleColumn::make('is_main_roster')
+                    ->label('Main Roster')
+                    ->onIcon('heroicon-m-bolt')
+                    ->offIcon('heroicon-m-user-group')
+                    ->onColor('success')
+                    ->offColor('gray')
+                    ->sortable(),
 
                 TextColumn::make('role')
                     ->label('Role')
@@ -132,6 +153,18 @@ class MembersRelationManager extends RelationManager
                     ->date()
                     ->placeholder('-')
                     ->sortable(),
+            ])
+            ->filters([
+                TernaryFilter::make('is_main_roster')
+                    ->label('Lineup Type')
+                    ->placeholder('All Players')
+                    ->trueLabel('Main Roster Lineup')
+                    ->falseLabel('Reserves / Normal Players'),
+                TernaryFilter::make('status')
+                    ->label('Active Membership')
+                    ->placeholder('All Members')
+                    ->trueLabel('Active Members')
+                    ->falseLabel('Past Members'),
             ])
             ->headerActions([
                 CreateAction::make(),

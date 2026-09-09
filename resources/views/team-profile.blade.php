@@ -181,53 +181,130 @@
             
             <!-- LEFT COLUMN: ACTIVE ROSTER PLAYERS (SPAN 3) -->
             <section class="lg:col-span-3 flex flex-col gap-6">
-                <div class="flex items-center justify-between border-b border-white/10 pb-3">
-                    <h2 class="text-2xl font-orbitron font-extrabold text-white uppercase tracking-wider flex items-center gap-3">
-                        <span class="w-2.5 h-6 bg-violet-500 shadow-[0_0_12px_#8b5cf6] block"></span>
-                        Active Team Roster
-                    </h2>
-                    <span class="text-xs font-orbitron text-violet-400 font-black px-2 py-0.5 bg-[#171125] border border-violet-500/20 rounded">
-                        {{ $team->members->count() }} PLAYERS
-                    </span>
+                @php
+                    $mainLineup = $team->members->where('is_main_roster', true);
+                    $reserveLineup = $team->members->where('is_main_roster', false);
+                @endphp
+
+                <!-- 1. MAIN ROSTER (STARTING LINEUP) -->
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                        <h2 class="text-2xl font-orbitron font-extrabold text-white uppercase tracking-wider flex items-center gap-3">
+                            <span class="w-2.5 h-6 bg-red-500 shadow-[0_0_12px_#ef4444] block"></span>
+                            Main Roster Lineup
+                        </h2>
+                        <span class="text-xs font-orbitron text-red-400 font-black px-2.5 py-1 bg-red-950/40 border border-red-500/30 rounded flex items-center gap-1.5 shadow-[0_0_8px_rgba(239,68,68,0.2)]">
+                            <span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span>
+                            {{ $mainLineup->count() }} STARTING ATHLETES
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        @forelse($mainLineup as $member)
+                            <a href="{{ route('player.profile', $member->user_id) }}" class="cyber-card p-4 flex items-center justify-between gap-4 overflow-hidden relative group/player border-red-500/30 hover:border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.08)]">
+                                <!-- Glowing neon stripe on the side for main roster -->
+                                <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-red-500 to-orange-500 shadow-[0_0_12px_#ef4444] transition-all"></div>
+
+                                <div class="flex items-center gap-3 pl-1">
+                                    <!-- Avatar -->
+                                    <div class="w-11 h-11 rounded-full bg-[#0a0712] border-2 border-red-500/40 group-hover/player:border-red-400 flex items-center justify-center shrink-0 transition-all overflow-hidden">
+                                        @if($member->user->avatar_url)
+                                            <img src="{{ asset('storage/'.$member->user->avatar_url) }}" alt="{{ $member->user->name }}" class="w-full h-full object-cover">
+                                        @elseif($member->user->google_avatar_url)
+                                            <img src="{{ $member->user->google_avatar_url }}" alt="{{ $member->user->name }}" class="w-full h-full object-cover">
+                                        @else
+                                            <span class="text-red-400 group-hover/player:text-white font-orbitron font-black text-sm uppercase transition-colors">{{ substr($member->user->name, 0, 2) }}</span>
+                                        @endif
+                                    </div>
+
+                                    <div>
+                                        <div class="flex items-center gap-1.5">
+                                            <h3 class="font-orbitron font-bold text-white group-hover/player:text-red-400 text-sm tracking-wide transition-colors">
+                                                {{ $member->user->name }}
+                                            </h3>
+                                        </div>
+                                        <div class="flex flex-wrap items-center gap-1.5 mt-1">
+                                            <span class="font-orbitron font-black text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-sm inline-block
+                                                @if($member->role === 'captain') bg-yellow-950/50 border border-yellow-500/50 text-yellow-400
+                                                @else bg-red-950/40 border border-red-500/30 text-red-400
+                                                @endif">
+                                                {{ ucwords(str_replace('_', ' ', $member->role)) }}
+                                            </span>
+                                            <span class="font-orbitron font-bold text-[8px] uppercase tracking-wider px-1.5 py-0.5 rounded-sm bg-emerald-950/50 border border-emerald-500/40 text-emerald-400">
+                                                ⚡ MAIN LINEUP
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Link Button to Player Profile -->
+                                <span class="px-3 py-1 bg-red-950/50 border border-red-500/40 text-red-400 font-orbitron font-bold text-[10px] uppercase tracking-widest rounded-sm group-hover/player:bg-red-500 group-hover/player:text-black transition-all shrink-0">
+                                    PROFILE
+                                </span>
+                            </a>
+                        @empty
+                            <div class="cyber-card p-8 text-center text-gray-500 col-span-2">
+                                No main roster players currently assigned.
+                            </div>
+                        @endforelse
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    @forelse($team->members as $member)
-                        <a href="{{ route('player.profile', $member->user_id) }}" class="cyber-card p-4 flex items-center justify-between gap-4 overflow-hidden relative group/player">
-                            <!-- Mini neon stripe on the side -->
-                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-violet-500 shadow-[0_0_10px_#8b5cf6] group-hover/player:bg-red-500 group-hover/player:shadow-[0_0_10px_#ef4444] transition-all"></div>
+                <!-- 2. RESERVES & SUBSTITUTES -->
+                <div class="space-y-4 pt-4 border-t border-white/5">
+                    <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                        <h2 class="text-lg font-orbitron font-bold text-gray-300 uppercase tracking-wider flex items-center gap-2.5">
+                            <span class="w-2 h-4 bg-blue-500 shadow-[0_0_8px_#3b82f6] block"></span>
+                            Reserves &amp; Normal Squad
+                        </h2>
+                        <span class="text-xs font-orbitron text-blue-400 font-bold px-2 py-0.5 bg-[#0f172a] border border-blue-500/20 rounded">
+                            {{ $reserveLineup->count() }} RESERVES
+                        </span>
+                    </div>
 
-                            <div class="flex items-center gap-3">
-                                <!-- Avatar -->
-                                <div class="w-10 h-10 rounded-full bg-[#0a0712] border-2 border-violet-500/20 group-hover/player:border-red-500/40 flex items-center justify-center shrink-0 transition-all">
-                                    <span class="text-violet-400 group-hover/player:text-red-400 font-orbitron font-black text-sm uppercase transition-colors">{{ substr($member->user->name, 0, 2) }}</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        @forelse($reserveLineup as $member)
+                            <a href="{{ route('player.profile', $member->user_id) }}" class="cyber-card p-3.5 flex items-center justify-between gap-4 overflow-hidden relative group/player border-blue-500/15 hover:border-blue-400/50 bg-[#08070d]">
+                                <!-- Subtle blue stripe for reserves -->
+                                <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500/40 group-hover/player:bg-blue-400 transition-all"></div>
+
+                                <div class="flex items-center gap-3 pl-1">
+                                    <!-- Avatar -->
+                                    <div class="w-9 h-9 rounded-full bg-[#0a0c16] border border-blue-500/30 group-hover/player:border-blue-400 flex items-center justify-center shrink-0 transition-all overflow-hidden">
+                                        @if($member->user->avatar_url)
+                                            <img src="{{ asset('storage/'.$member->user->avatar_url) }}" alt="{{ $member->user->name }}" class="w-full h-full object-cover">
+                                        @elseif($member->user->google_avatar_url)
+                                            <img src="{{ $member->user->google_avatar_url }}" alt="{{ $member->user->name }}" class="w-full h-full object-cover">
+                                        @else
+                                            <span class="text-blue-400 font-orbitron font-bold text-xs uppercase">{{ substr($member->user->name, 0, 2) }}</span>
+                                        @endif
+                                    </div>
+
+                                    <div>
+                                        <h3 class="font-orbitron font-bold text-gray-200 group-hover/player:text-blue-400 text-xs tracking-wide transition-colors">
+                                            {{ $member->user->name }}
+                                        </h3>
+                                        <div class="flex flex-wrap items-center gap-1.5 mt-1">
+                                            <span class="font-orbitron font-semibold text-[8px] uppercase tracking-wider px-1.5 py-0.5 rounded-sm bg-blue-950/40 border border-blue-500/30 text-blue-400">
+                                                🛡️ RESERVE
+                                            </span>
+                                            <span class="font-tech text-gray-500 text-[10px] uppercase font-semibold">
+                                                {{ ucwords(str_replace('_', ' ', $member->role)) }}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <h3 class="font-orbitron font-bold text-white group-hover/player:text-red-400 text-sm tracking-wide transition-colors">
-                                        {{ $member->user->name }}
-                                    </h3>
-                                    <span class="font-orbitron font-black text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-sm inline-block mt-1
-                                        @if($member->role === 'captain') bg-yellow-950/40 border border-yellow-500/40 text-yellow-400
-                                        @elseif($member->role === 'main_roster') bg-green-950/40 border border-green-500/40 text-green-400
-                                        @elseif($member->role === 'substitute') bg-blue-950/40 border border-blue-500/40 text-blue-400
-                                        @else bg-red-950/40 border border-red-500/40 text-red-400
-                                        @endif">
-                                        {{ ucwords(str_replace('_', ' ', $member->role)) }}
-                                    </span>
-                                </div>
+                                <span class="px-2.5 py-0.5 bg-blue-950/40 border border-blue-500/30 text-blue-400 font-orbitron font-semibold text-[9px] uppercase tracking-wider rounded-sm group-hover/player:bg-blue-500 group-hover/player:text-white transition-all shrink-0">
+                                    VIEW
+                                </span>
+                            </a>
+                        @empty
+                            <div class="cyber-card p-6 text-center text-gray-600 col-span-2 text-xs font-tech tracking-wider">
+                                No reserve players currently listed for this team.
                             </div>
-
-                            <!-- Link Button to Player Profile -->
-                            <span class="px-3 py-1 bg-red-950/50 border border-red-500/40 text-red-400 font-orbitron font-bold text-[10px] uppercase tracking-widest rounded-sm group-hover/player:bg-red-500 group-hover/player:text-black transition-all shrink-0">
-                                PROFILE
-                            </span>
-                        </a>
-                    @empty
-                        <div class="cyber-card p-10 text-center text-gray-500 col-span-2">
-                            No active players registered inside this team roster.
-                        </div>
-                    @endforelse
+                        @endforelse
+                    </div>
                 </div>
             </section>
 

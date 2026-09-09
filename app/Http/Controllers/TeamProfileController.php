@@ -13,7 +13,10 @@ class TeamProfileController extends Controller
         $team = OwnTeam::with([
             'game',
             'members' => function ($query) {
-                $query->where('status', true); // Only active roster members
+                $query->where('status', true)
+                    ->orderByDesc('is_main_roster')
+                    ->orderByRaw("CASE WHEN role = 'captain' THEN 0 ELSE 1 END")
+                    ->orderBy('created_at');
             },
             'members.user.player',
         ])->findOrFail($id);
@@ -26,7 +29,10 @@ class TeamProfileController extends Controller
         $team = OwnTeam::with([
             'game',
             'members' => function ($query) {
-                $query->where('status', true); // Only active roster members
+                $query->where('status', true)
+                    ->orderByDesc('is_main_roster')
+                    ->orderByRaw("CASE WHEN role = 'captain' THEN 0 ELSE 1 END")
+                    ->orderBy('created_at');
             },
             'members.user.player',
         ])->where('slug', $slug)->firstOrFail();

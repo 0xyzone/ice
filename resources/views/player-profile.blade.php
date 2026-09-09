@@ -602,15 +602,26 @@
 
                                 <div class="flex flex-wrap items-center justify-between gap-3 text-xs border-t border-white/5 pt-3 mt-3">
                                     <div>
-                                        <span class="text-gray-500 font-orbitron font-bold text-[8px] tracking-wider uppercase block mb-0.5">TEAM ROLE</span>
-                                        <span class="font-orbitron font-black text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-sm
-                                            @if($membership->role === 'captain') bg-yellow-950/40 border border-yellow-500/40 text-yellow-400
-                                            @elseif($membership->role === 'main_roster') bg-green-950/40 border border-green-500/40 text-green-400
-                                            @elseif($membership->role === 'substitute') bg-blue-950/40 border border-blue-500/40 text-blue-400
-                                            @else bg-red-950/40 border border-red-500/40 text-red-400
-                                            @endif">
-                                            {{ ucwords(str_replace('_', ' ', $membership->role)) }}
-                                        </span>
+                                        <span class="text-gray-500 font-orbitron font-bold text-[8px] tracking-wider uppercase block mb-1">TEAM ROLE &amp; LINEUP</span>
+                                        <div class="flex items-center gap-1.5 flex-wrap">
+                                            @if($membership->is_main_roster)
+                                                <span class="font-orbitron font-black text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-sm bg-red-950/60 border border-red-500/40 text-red-400 shadow-[0_0_8px_rgba(239,68,68,0.2)]">
+                                                    ⚡ MAIN ROSTER
+                                                </span>
+                                            @else
+                                                <span class="font-orbitron font-black text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-sm bg-zinc-900/80 border border-zinc-700/50 text-zinc-400">
+                                                    🛡️ RESERVE
+                                                </span>
+                                            @endif
+                                            <span class="font-orbitron font-black text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-sm
+                                                @if($membership->role === 'captain') bg-yellow-950/40 border border-yellow-500/40 text-yellow-400
+                                                @elseif($membership->role === 'main_roster') bg-red-950/40 border border-red-500/40 text-red-400
+                                                @elseif($membership->role === 'substitute') bg-blue-950/40 border border-blue-500/40 text-blue-400
+                                                @else bg-zinc-900/60 border border-zinc-700/40 text-gray-300
+                                                @endif">
+                                                {{ ucwords(str_replace('_', ' ', $membership->role)) }}
+                                            </span>
+                                        </div>
                                     </div>
 
                                     <div class="text-right">

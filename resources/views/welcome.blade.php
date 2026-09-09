@@ -255,11 +255,22 @@
                                                 @if($member->user)
                                                     <div class="flex items-center justify-between bg-black/40 border border-red-500/5 px-3.5 py-2.5 clip-cyber-sm">
                                                         <div class="flex items-center gap-3">
-                                                            <div class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_6px_#ef4444]"></div>
+                                                            <div class="w-2 h-2 rounded-full {{ $member->is_main_roster ? 'bg-red-500 shadow-[0_0_6px_#ef4444]' : 'bg-gray-600' }}"></div>
                                                             <div>
-                                                                <span class="font-header font-bold text-sm text-gray-200">
-                                                                    {{ $member->user->name }}
-                                                                </span>
+                                                                <div class="flex items-center gap-2">
+                                                                    <span class="font-header font-bold text-sm text-gray-200">
+                                                                        {{ $member->user->name }}
+                                                                    </span>
+                                                                    @if($member->is_main_roster)
+                                                                        <span class="px-1.5 py-0.2 bg-red-950/80 border border-red-500/40 rounded font-tech text-[9px] font-black text-red-400 uppercase tracking-wider">
+                                                                            MAIN
+                                                                        </span>
+                                                                    @else
+                                                                        <span class="px-1.5 py-0.2 bg-zinc-900/80 border border-zinc-700/40 rounded font-tech text-[9px] font-bold text-gray-400 uppercase tracking-wider">
+                                                                            RESERVE
+                                                                        </span>
+                                                                    @endif
+                                                                </div>
                                                                 <span class="font-tech text-gray-500 font-bold text-xs uppercase block">
                                                                     {{ $member->user->username ? '@' . $member->user->username : 'NO HANDLE' }}
                                                                 </span>
@@ -355,8 +366,13 @@
 
                                         <!-- Badges -->
                                         <div class="flex flex-wrap gap-2">
+                                            @if($member->is_main_roster)
+                                                <span class="font-tech text-[10px] font-black tracking-widest uppercase px-2 py-1 bg-red-600/25 border border-red-500/50 text-red-400 rounded shadow-[0_0_8px_rgba(239,68,68,0.2)]">⚡ MAIN ROSTER</span>
+                                            @else
+                                                <span class="font-tech text-[10px] font-bold tracking-widest uppercase px-2 py-1 bg-zinc-900/70 border border-zinc-700/40 text-gray-400 rounded">🛡️ RESERVE</span>
+                                            @endif
                                             @if($member->role === 'captain')
-                                                <span class="font-tech text-[10px] font-black tracking-widest uppercase px-2 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded">⚡ CAPTAIN</span>
+                                                <span class="font-tech text-[10px] font-black tracking-widest uppercase px-2 py-1 bg-amber-600/20 border border-amber-500/40 text-amber-400 rounded">👑 CAPTAIN</span>
                                             @endif
                                             @if($member->team)
                                                 <span class="font-tech text-[10px] font-bold tracking-widest uppercase px-2 py-1 bg-black/40 border border-red-500/10 text-gray-400 rounded truncate max-w-full">{{ Str::upper($member->team->name) }}</span>
