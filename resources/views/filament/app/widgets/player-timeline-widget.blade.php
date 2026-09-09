@@ -1,89 +1,88 @@
 <x-filament-widgets::widget>
     <x-filament::section>
         <x-slot name="heading">
-            <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; letter-spacing: 1px; color: #ef4444;">
-                ROSTER TIMELINE & CAMPAIGN MILESTONES
+            <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: -0.01em; color: #f8fafc;">
+                Roster Timeline & Milestones
             </span>
         </x-slot>
 
         <style>
-            .cyber-timeline {
+            .clean-timeline {
                 position: relative;
-                padding-left: 30px;
-                margin-top: 15px;
+                padding-left: 28px;
+                margin-top: 16px;
+                font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
             }
-            .cyber-timeline::before {
+            .clean-timeline::before {
                 content: '';
                 position: absolute;
-                left: 9px;
-                top: 0;
-                bottom: 0;
+                left: 8px;
+                top: 6px;
+                bottom: 6px;
                 width: 2px;
-                background: linear-gradient(to bottom, #ef4444 0%, #8b5cf6 50%, rgba(239, 68, 68, 0.1) 100%);
+                background: #334155;
             }
-            .cyber-timeline-item {
+            .clean-timeline-item {
                 position: relative;
-                margin-bottom: 24px;
+                margin-bottom: 22px;
             }
-            .cyber-timeline-item:last-child {
+            .clean-timeline-item:last-child {
                 margin-bottom: 0;
             }
-            .cyber-timeline-dot {
+            .clean-timeline-dot {
                 position: absolute;
-                left: -26px;
+                left: -24px;
                 top: 4px;
                 width: 10px;
                 height: 10px;
                 border-radius: 50%;
-                box-shadow: 0 0 10px currentColor;
-                background: #000;
+                background: #0f172a;
                 border: 2px solid currentColor;
             }
-            .cyber-timeline-date {
-                font-family: 'Orbitron', monospace;
+            .clean-timeline-date {
                 font-size: 11px;
-                font-weight: 700;
-                color: #9ca3af;
+                font-weight: 600;
+                color: #94a3b8;
                 text-transform: uppercase;
-                letter-spacing: 0.5px;
+                letter-spacing: 0.04em;
             }
-            .cyber-timeline-title {
+            .clean-timeline-title {
                 font-size: 14px;
-                font-weight: 800;
-                color: #fff;
+                font-weight: 700;
+                color: #f1f5f9;
                 margin-top: 2px;
             }
-            .cyber-timeline-desc {
-                font-size: 12px;
-                color: #9ca3af;
-                margin-top: 4px;
-                line-height: 1.4;
+            .clean-timeline-desc {
+                font-size: 12.5px;
+                color: #94a3b8;
+                margin-top: 3px;
+                line-height: 1.5;
             }
-            .cyber-timeline-desc strong {
-                color: #fff;
+            .clean-timeline-desc strong {
+                color: #e2e8f0;
             }
             .empty-timeline {
                 text-align: center;
-                padding: 30px 0;
-                color: #9ca3af;
+                padding: 32px 0;
+                color: #94a3b8;
                 font-size: 13px;
             }
         </style>
 
         @if(count($events) > 0)
-            <div class="cyber-timeline">
+            <div class="clean-timeline">
                 @foreach($events as $event)
-                    <div class="cyber-timeline-item">
-                        <div class="cyber-timeline-dot" style="color: {{ $event['color'] }};"></div>
-                        <div class="cyber-timeline-date">{{ $event['date'] }}</div>
-                        <div class="cyber-timeline-title">{{ $event['title'] }}</div>
-                        <div class="cyber-timeline-desc">{!! $event['desc'] !!}</div>
+                    <div class="clean-timeline-item">
+                        <div class="clean-timeline-dot" style="color: {{ $event['color'] }};"></div>
+                        <div class="clean-timeline-date">{{ $event['date'] }}</div>
+                        <div class="clean-timeline-title">{{ $event['title'] }}</div>
+                        <div class="clean-timeline-desc">{!! $event['desc'] !!}</div>
                     </div>
                 @endforeach
             </div>
         @else
             <div class="empty-timeline">
-                <svg style="width: 32px; height: 32px; margin: 0 auto 10px; color: #4b5563;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg style="width: 28px; height: 28px; margin: 0 auto 10px; color: #475569;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 No platform milestones or competitive campaigns recorded yet.

@@ -1,185 +1,159 @@
 <x-filament-widgets::widget>
     <style>
-        .esports-widget-card {
-            background: linear-gradient(135deg, #100a1c 0%, #1c0e29 50%, #0c0817 100%);
-            border: 2px solid #ef4444;
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.15), inset 0 0 15px rgba(239, 68, 68, 0.05);
-            border-radius: 16px;
+        .pro-widget-card {
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.9) 0%, rgba(11, 15, 23, 0.95) 100%);
+            border: 1px solid rgba(51, 65, 85, 0.7);
+            border-radius: 20px;
             padding: 28px;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
         }
-        .esports-widget-card:hover {
-            box-shadow: 0 0 25px rgba(239, 68, 68, 0.3), inset 0 0 20px rgba(239, 68, 68, 0.1);
-            transform: translateY(-2px);
-        }
-        .esports-widget-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(239, 68, 68, 0.08) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .esports-badge {
-            background: #ef4444;
-            color: #000;
-            font-family: 'Orbitron', monospace;
-            font-weight: 900;
-            font-size: 10px;
-            letter-spacing: 2px;
+        .pro-badge {
+            background: rgba(249, 115, 22, 0.1);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.25);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
             padding: 4px 10px;
-            border-radius: 4px;
-            display: inline-block;
-            text-transform: uppercase;
-            box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
-        .esports-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 26px;
-            font-weight: 900;
-            color: #fff;
-            text-transform: uppercase;
+        .pro-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #f97316;
+        }
+        .pro-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #f8fafc;
             margin-top: 14px;
-            letter-spacing: -0.5px;
-            line-height: 1.2;
+            letter-spacing: -0.02em;
+            line-height: 1.25;
         }
-        .esports-title span {
-            background: linear-gradient(90deg, #ef4444, #ec4899, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .pro-title span {
+            color: #f97316;
         }
-        .esports-desc {
-            color: #9ca3af;
-            font-size: 14px;
+        .pro-desc {
+            color: #94a3b8;
+            font-size: 13.5px;
             margin-top: 8px;
             line-height: 1.5;
-            max-w: 600px;
+            max-width: 580px;
         }
-        .esports-stats-grid {
+        .pro-stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
+            gap: 14px;
             margin-top: 24px;
         }
         @media (max-width: 640px) {
-            .esports-stats-grid {
+            .pro-stats-grid {
                 grid-template-columns: 1fr;
             }
         }
-        .esports-stat-box {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(239, 68, 68, 0.12);
-            border-radius: 12px;
-            padding: 18px;
+        .pro-stat-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            border-radius: 14px;
+            padding: 16px;
             text-align: center;
-            position: relative;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
-        .esports-stat-box:hover {
-            background: rgba(239, 68, 68, 0.04);
-            border-color: rgba(239, 68, 68, 0.35);
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.1);
+        .pro-stat-box:hover {
+            border-color: rgba(100, 116, 139, 0.6);
+            background: rgba(30, 41, 59, 0.4);
         }
-        .esports-stat-label {
+        .pro-stat-label {
             font-size: 11px;
-            color: #9ca3af;
+            color: #94a3b8;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.05em;
             display: block;
         }
-        .esports-stat-value {
-            font-size: 26px;
-            font-weight: 900;
-            margin-top: 6px;
+        .pro-stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            margin-top: 4px;
             display: block;
-            font-family: 'Orbitron', sans-serif;
+            letter-spacing: -0.02em;
         }
-        .val-red { color: #ef4444; text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
-        .val-violet { color: #8b5cf6; text-shadow: 0 0 10px rgba(139, 92, 246, 0.5); }
-        .val-emerald { color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+        .val-flame { color: #f97316; }
+        .val-sky { color: #38bdf8; }
+        .val-emerald { color: #34d399; }
 
-        .esports-btn-wrapper {
-            margin-top: 26px;
+        .pro-btn-wrapper {
+            margin-top: 24px;
             display: flex;
             justify-content: flex-start;
         }
-        .esports-glow-btn {
-            background: #ef4444;
-            color: #000 !important;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
+        .pro-action-btn {
+            background: #f97316;
+            color: #ffffff !important;
+            font-weight: 600;
             font-size: 13px;
-            letter-spacing: 2px;
-            padding: 14px 30px;
-            border-radius: 8px;
+            padding: 10px 22px;
+            border-radius: 12px;
             text-decoration: none;
-            text-transform: uppercase;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
-            transform: skewX(-8deg);
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
             border: none;
             cursor: pointer;
         }
-        .esports-glow-btn:hover {
-            background: #f87171;
-            box-shadow: 0 0 35px rgba(239, 68, 68, 0.7);
-            transform: skewX(-8deg) translateY(-2px);
+        .pro-action-btn:hover {
+            background: #ea580c;
+            box-shadow: 0 6px 20px rgba(249, 115, 22, 0.45);
         }
-        .esports-glow-btn:active {
-            transform: skewX(-8deg) translateY(0);
-        }
-        .esports-glow-btn svg {
+        .pro-action-btn svg {
             width: 16px;
             height: 16px;
-            transform: skewX(8deg);
-        }
-        .esports-glow-btn span {
-            display: inline-block;
-            transform: skewX(8deg);
         }
     </style>
 
-    <div class="esports-widget-card">
+    <div class="pro-widget-card">
         <div style="position: relative; z-index: 2;">
-            <span class="esports-badge">COMPETITIVE AGGREGATE</span>
+            <span class="pro-badge">Athlete Overview</span>
 
-            <h2 class="esports-title">
+            <h2 class="pro-title">
                 Welcome back, <span>{{ $player->name }}</span>
             </h2>
-            <p class="esports-desc">
-                Dominate your matches, track tournament brackets, and showcase your achievements to the gaming community.
+            <p class="pro-desc">
+                Review your tournament records, match stats, and manage your public athlete dossier.
             </p>
 
-            <div class="esports-stats-grid">
-                <div class="esports-stat-box">
-                    <span class="esports-stat-label">WIN RATE</span>
-                    <span class="esports-stat-value val-red">{{ $winRate }}%</span>
+            <div class="pro-stats-grid">
+                <div class="pro-stat-box">
+                    <span class="pro-stat-label">Win Rate</span>
+                    <span class="pro-stat-value val-flame">{{ $winRate }}%</span>
                 </div>
-                <div class="esports-stat-box">
-                    <span class="esports-stat-label">MATCHES</span>
-                    <span class="esports-stat-value val-violet">{{ $totalPlayed }}</span>
+                <div class="pro-stat-box">
+                    <span class="pro-stat-label">Matches</span>
+                    <span class="pro-stat-value val-sky">{{ $totalPlayed }}</span>
                 </div>
-                <div class="esports-stat-box">
-                    <span class="esports-stat-label">WINS</span>
-                    <span class="esports-stat-value val-emerald">{{ $totalWon }}</span>
+                <div class="pro-stat-box">
+                    <span class="pro-stat-label">Victories</span>
+                    <span class="pro-stat-value val-emerald">{{ $totalWon }}</span>
                 </div>
             </div>
 
-            <div class="esports-btn-wrapper">
-                <a href="{{ $profileUrl }}" target="_blank" class="esports-glow-btn">
-                    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <div class="pro-btn-wrapper">
+                <a href="{{ $profileUrl }}" target="_blank" class="pro-action-btn">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                     </svg>
-                    <span>VIEW PUBLIC PROFILE</span>
+                    <span>View Public Profile</span>
                 </a>
             </div>
         </div>

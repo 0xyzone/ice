@@ -33,7 +33,7 @@ class PlayerTimelineWidget extends Widget
                         'title' => 'Joined Roster',
                         'desc' => "Joined team **{$membership->team->name}** as a **".ucfirst($membership->role).'**.',
                         'type' => 'team',
-                        'color' => '#8b5cf6',
+                        'color' => '#f97316',
                     ];
 
                     // Find all unique tournaments this team has matches in
@@ -48,7 +48,7 @@ class PlayerTimelineWidget extends Widget
                             'title' => 'Tournament Campaign Started',
                             'desc' => "Campaign began in **{$tournament->name}** playing for **{$membership->team->name}**.",
                             'type' => 'tournament',
-                            'color' => '#ef4444',
+                            'color' => '#f59e0b',
                         ];
                     }
                 }

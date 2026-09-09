@@ -1,83 +1,215 @@
-// Global Cyberpunk Mouse Trail Effect
+// Smooth, Subtle & Elegant Cursor Follower and Trail
 document.addEventListener('DOMContentLoaded', () => {
-    // Only enable mouse trail on desktop devices
-    if (window.matchMedia('(pointer: fine)').matches) {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.style.position = 'fixed';
-        canvas.style.top = '0';
-        canvas.style.left = '0';
-        canvas.style.width = '100vw';
-        canvas.style.height = '100vh';
-        canvas.style.pointerEvents = 'none';
-        canvas.style.zIndex = '9999';
-        document.body.appendChild(canvas);
+    if (!window.matchMedia('(pointer: fine)').matches) return;
 
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.id = 'pro-cursor-trail-canvas';
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100vw';
+    canvas.style.height = '100vh';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = '9999';
+    document.body.appendChild(canvas);
 
-        window.addEventListener('resize', () => {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        });
+    let dpr = window.devicePixelRatio || 1;
+    let width = canvas.width = window.innerWidth * dpr;
+    let height = canvas.height = window.innerHeight * dpr;
 
-        const points = [];
+    function onResize() {
+        dpr = window.devicePixelRatio || 1;
+        width = canvas.width = window.innerWidth * dpr;
+        height = canvas.height = window.innerHeight * dpr;
+    }
+    window.addEventListener('resize', onResize);
 
-        window.addEventListener('mousemove', (e) => {
-            points.push({
-                x: e.clientX,
-                y: e.clientY,
-                color: Math.random() > 0.5 ? '#ef4444' : '#f97316', // Theme red or orange
-                life: 1.0 // Start with full life
-            });
-        });
+    const mouse = { x: -1000, y: -1000, lastX: -1000, lastY: -1000, speed: 0 };
+    const follower = { x: -1000, y: -1000, radius: 5, targetRadius: 5 };
 
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
+    const trail = [];
+    const maxTrailLength = 18;
 
-            // Decay the life of all points
-            for (let i = 0; i < points.length; i++) {
-                points[i].life -= 0.025; // Control fade out speed here
-            }
+    const particles = [];
+    const maxParticles = 40;
 
-            // Remove expired points from the beginning
-            while (points.length > 0 && points[0].life <= 0) {
-                points.shift();
-            }
+    // Subtle, calming fire palette: warm blaze, ember, amber, and golden spark
+    const palette = ['#f97316', '#fb923c', '#ea580c', '#f59e0b', '#fed7aa'];
 
-            if (points.length > 1) {
-                for (let i = 0; i < points.length - 1; i++) {
-                    const p1 = points[i];
-                    const p2 = points[i + 1];
+    let isHoveringInteractive = false;
 
-                    const ratio = i / points.length;
-                    const opacity = ratio * 0.7 * p1.life;
+    window.addEventListener('mousemove', (e) => {
+        const targetX = e.clientX * dpr;
+        const targetY = e.clientY * dpr;
 
-                    if (opacity <= 0) continue;
+        const dx = targetX - (mouse.lastX === -1000 ? targetX : mouse.lastX);
+        const dy = targetY - (mouse.lastY === -1000 ? targetY : mouse.lastY);
+        mouse.speed = Math.sqrt(dx * dx + dy * dy);
 
-                    ctx.beginPath();
-                    ctx.moveTo(p1.x, p1.y);
-                    ctx.lineTo(p2.x, p2.y);
+        mouse.lastX = mouse.x;
+        mouse.lastY = mouse.y;
+        mouse.x = targetX;
+        mouse.y = targetY;
 
-                    ctx.strokeStyle = p1.color;
-                    ctx.globalAlpha = opacity;
-                    ctx.lineWidth = ratio * 5 + 1.5;
-                    ctx.lineCap = 'round';
-                    ctx.lineJoin = 'round';
-
-                    ctx.shadowBlur = ratio * 10;
-                    ctx.shadowColor = p1.color;
-
-                    ctx.stroke();
-                }
-            }
-
-            ctx.globalAlpha = 1.0;
-            ctx.shadowBlur = 0;
-
-            requestAnimationFrame(animate);
+        if (follower.x === -1000) {
+            follower.x = mouse.x;
+            follower.y = mouse.y;
         }
 
-        animate();
+        trail.push({
+            x: mouse.x,
+            y: mouse.y,
+            life: 1.0,
+            width: Math.min(8, Math.max(2.5, mouse.speed * 0.1)) * dpr,
+            color: palette[Math.floor(Math.random() * palette.length)]
+        });
+
+        // Gentle micro-particles on brisk movement
+        if (mouse.speed > 12 * dpr && particles.length < maxParticles) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = (Math.random() * 1.5 + 0.3) * dpr;
+            particles.push({
+                x: mouse.x,
+                y: mouse.y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed - 0.2 * dpr,
+                radius: (Math.random() * 1.6 + 0.8) * dpr,
+                color: palette[Math.floor(Math.random() * palette.length)],
+                life: 1.0,
+                decay: 0.04
+            });
+        }
+    }, { passive: true });
+
+    // Subtle micro-burst on click
+    window.addEventListener('click', (e) => {
+        const clickX = e.clientX * dpr;
+        const clickY = e.clientY * dpr;
+        const burstCount = 8;
+
+        for (let i = 0; i < burstCount; i++) {
+            const angle = (Math.PI * 2 / burstCount) * i;
+            const force = (Math.random() * 2.5 + 1) * dpr;
+            particles.push({
+                x: clickX,
+                y: clickY,
+                vx: Math.cos(angle) * force,
+                vy: Math.sin(angle) * force,
+                radius: (Math.random() * 1.8 + 1) * dpr,
+                color: Math.random() > 0.4 ? '#f97316' : '#fb923c',
+                life: 1.0,
+                decay: 0.035
+            });
+        }
+    }, { passive: true });
+
+    document.addEventListener('mouseover', (e) => {
+        const target = e.target;
+        if (target.closest('a, button, input, [role="button"], .pro-card, .glass-card')) {
+            isHoveringInteractive = true;
+            follower.targetRadius = 12 * dpr;
+        }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+        const target = e.target;
+        if (target.closest('a, button, input, [role="button"], .pro-card, .glass-card')) {
+            isHoveringInteractive = false;
+            follower.targetRadius = 5 * dpr;
+        }
+    });
+
+    function render() {
+        ctx.clearRect(0, 0, width, height);
+
+        // Smooth subtle follower halo
+        if (mouse.x !== -1000) {
+            follower.x += (mouse.x - follower.x) * 0.35;
+            follower.y += (mouse.y - follower.y) * 0.35;
+            follower.radius += (follower.targetRadius - follower.radius) * 0.2;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(follower.x, follower.y, follower.radius, 0, Math.PI * 2);
+            ctx.fillStyle = isHoveringInteractive ? 'rgba(251, 146, 60, 0.22)' : 'rgba(249, 115, 22, 0.18)';
+            ctx.shadowColor = isHoveringInteractive ? '#fb923c' : '#f97316';
+            ctx.shadowBlur = 8 * dpr;
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(follower.x, follower.y, 1.8 * dpr, 0, Math.PI * 2);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+            ctx.restore();
+        }
+
+        // Smooth Bézier trail
+        if (trail.length > 2) {
+            ctx.save();
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            for (let i = 0; i < trail.length - 1; i++) {
+                const p1 = trail[i];
+                const p2 = trail[i + 1];
+                const progress = i / trail.length;
+                const alpha = progress * 0.45 * p1.life;
+
+                if (alpha <= 0.01) continue;
+
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+
+                const midX = (p1.x + p2.x) / 2;
+                const midY = (p1.y + p2.y) / 2;
+                ctx.quadraticCurveTo(p1.x, p1.y, midX, midY);
+
+                ctx.strokeStyle = p1.color;
+                ctx.lineWidth = p1.width * progress;
+                ctx.globalAlpha = alpha;
+                ctx.shadowColor = p1.color;
+                ctx.shadowBlur = 4 * dpr * progress;
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        for (let i = trail.length - 1; i >= 0; i--) {
+            trail[i].life -= 0.065;
+            if (trail[i].life <= 0) {
+                trail.splice(i, 1);
+            }
+        }
+        while (trail.length > maxTrailLength) {
+            trail.shift();
+        }
+
+        // Drifting particles
+        ctx.save();
+        for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.02 * dpr;
+            p.vx *= 0.98;
+            p.life -= p.decay;
+
+            if (p.life <= 0) {
+                particles.splice(i, 1);
+                continue;
+            }
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius * p.life, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.life * 0.6;
+            ctx.fill();
+        }
+        ctx.restore();
+
+        requestAnimationFrame(render);
     }
+
+    render();
 });

@@ -1,186 +1,128 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $team->name }} // Esports Team Profile</title>
+    <title>{{ $team->name }} — Esports Team Profile</title>
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Vite Assets (Tailwind CSS) -->
+    <!-- Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <style>
-        body {
-            background-color: #07060a;
-            background-image: 
-                radial-gradient(circle at 0% 0%, rgba(239, 68, 68, 0.18) 0%, transparent 35%),
-                radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 35%),
-                radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.08) 0%, transparent 40%),
-                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 100% 100%, 30px 30px, 30px 30px;
-            font-family: 'Outfit', sans-serif;
-            overflow-x: hidden;
-        }
-
-        .cyber-card {
-            background: linear-gradient(135deg, rgba(20, 16, 28, 0.85) 0%, rgba(10, 8, 15, 0.95) 100%);
-            border: 2px solid rgba(139, 92, 246, 0.25);
-            position: relative;
-            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        .cyber-card:hover {
-            border-color: rgba(139, 92, 246, 0.8);
-            box-shadow: 
-                0 0 20px rgba(139, 92, 246, 0.2),
-                0 0 4px rgba(239, 68, 68, 0.3);
-            transform: translateY(-4px) scale(1.01);
-        }
-
-        .cyber-card::before {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 10px;
-            height: 10px;
-            border-top: 2px solid #a78bfa;
-            border-left: 2px solid #a78bfa;
-        }
-
-        .cyber-card::after {
-            content: '';
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            width: 10px;
-            height: 10px;
-            border-bottom: 2px solid #ef4444;
-            border-right: 2px solid #ef4444;
-        }
-
-        .scanlines::before {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
-            z-index: 2;
-            background-size: 100% 3px;
-            pointer-events: none;
-        }
-    </style>
 </head>
-<body class="text-gray-100 min-h-screen relative scanlines py-10 px-4 md:px-8">
+<body class="bg-[#0b0f17] text-slate-100 font-sans antialiased min-h-screen py-8 md:py-12 px-4 sm:px-6 lg:px-8 subtle-mesh-bg overflow-x-hidden">
 
-    <!-- Glowing Background blobs -->
-    <div class="absolute w-80 h-80 bg-violet-500/20 rounded-full blur-[100px] top-10 left-10 pointer-events-none animate-pulse"></div>
-    <div class="absolute w-96 h-96 bg-red-600/15 rounded-full blur-[120px] bottom-10 right-10 pointer-events-none animate-pulse" style="animation-duration: 6s;"></div>
+    <div class="max-w-6xl mx-auto space-y-10">
 
-    <div class="max-w-6xl mx-auto relative z-10">
-        
-        <!-- Navigation -->
-        <nav class="mb-8">
-            <a href="/" class="text-violet-400 hover:text-white font-orbitron font-bold text-xs uppercase tracking-widest flex items-center gap-2 transition-colors inline-flex border border-violet-500/30 hover:border-violet-400 px-4 py-2 bg-[#120f1a]/80 backdrop-blur-sm rounded">
-                &larr; RETURN TO ARENA COMMAND
+        <!-- Top Navigation -->
+        <nav class="flex items-center justify-between flex-wrap gap-4">
+            <a href="/" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900/60 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white text-xs font-semibold tracking-wide transition-all group shadow-sm">
+                <svg class="w-4 h-4 text-orange-400 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                <span>Back to Homepage</span>
             </a>
+
+            <div class="flex items-center gap-2 text-xs text-slate-400 font-medium">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Active Division Profile</span>
+            </div>
         </nav>
 
-        <!-- HEADER PROFILE HERO -->
-        <header class="relative mb-8">
-            <div class="cyber-card p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 md:gap-8 overflow-hidden">
+        <!-- =================================================================
+             TEAM HERO BANNER
+             ================================================================= -->
+        <header class="pro-card p-6 md:p-10 border border-slate-800/80 shadow-xl relative overflow-hidden">
+            
+            <div class="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8">
                 
-                <!-- Corner hazard ribbon -->
-                <div class="absolute -top-3 -right-3 w-16 h-16 bg-violet-600 rotate-45 flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.5)]">
-                    <span class="text-[8px] font-orbitron font-black text-black tracking-widest -mt-4 uppercase">TEAM</span>
-                </div>
-                
-                <!-- Team Logo Holder -->
-                <div class="relative shrink-0">
-                    <div class="w-32 h-32 md:w-40 md:h-40 rounded-xl bg-[#0f0b18] border-2 border-violet-500/40 p-3 flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.15)] relative overflow-hidden">
-                        @if($team->logo_image)
-                            <img src="{{ asset('storage/' . $team->logo_image) }}" alt="{{ $team->name }}" class="w-full h-full object-contain relative z-10" />
-                        @else
-                            <div class="text-violet-500 font-orbitron font-black text-5xl relative z-10 uppercase">{{ substr($team->name, 0, 2) }}</div>
-                        @endif
-                    </div>
+                <!-- Team Crest / Logo -->
+                <div class="w-28 h-28 md:w-36 md:h-36 rounded-2xl bg-slate-900 border border-slate-800 p-3 flex items-center justify-center shrink-0 shadow-lg relative overflow-hidden">
+                    @if($team->logo_image)
+                        <img src="{{ asset('storage/' . $team->logo_image) }}" alt="{{ $team->name }}" class="w-full h-full object-contain" />
+                    @else
+                        <div class="text-orange-400 font-bold text-4xl uppercase">{{ substr($team->name, 0, 2) }}</div>
+                    @endif
                 </div>
 
-                <!-- Team Info -->
-                <div class="text-center md:text-left flex-grow">
-                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-2">
-                        <h1 class="text-3xl md:text-5xl font-orbitron font-black tracking-wider text-white uppercase">
+                <!-- Team Information -->
+                <div class="flex-grow text-center md:text-left space-y-4">
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-3">
+                        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
                             {{ $team->name }}
                         </h1>
-                        <span class="px-2.5 py-0.5 bg-violet-950/60 border border-violet-500/40 text-violet-400 font-orbitron font-bold text-xs uppercase tracking-widest rounded-sm">
+                        <span class="px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/25 text-orange-300 text-xs font-semibold uppercase tracking-wider">
                             {{ $team->short_name }}
                         </span>
                     </div>
 
-                    <p class="text-violet-400 font-orbitron font-bold text-sm tracking-wider uppercase mb-4">
-                        🎮 {{ $team->game->name }} Division
+                    <p class="text-slate-400 text-sm font-medium flex items-center justify-center md:justify-start gap-2">
+                        <span class="text-orange-400">●</span>
+                        <span>{{ $team->game->name }} Division</span>
                     </p>
 
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl text-xs">
-                        <div class="bg-[#120f1a] border border-white/5 p-2 rounded">
-                            <span class="text-gray-500 font-orbitron font-bold text-[8px] tracking-wider uppercase block">Gender Division</span>
-                            <span class="text-white font-bold uppercase">{{ $team->gender ?? 'Any' }}</span>
+                    <!-- Key Metadata Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 max-w-2xl text-xs">
+                        <div class="bg-slate-900/70 border border-slate-800/80 p-3 rounded-xl">
+                            <span class="text-slate-400 font-medium text-[11px] block">Division Bracket</span>
+                            <span class="text-white font-semibold text-sm mt-0.5 block capitalize">{{ $team->gender ?? 'Open Division' }}</span>
                         </div>
-                        <div class="bg-[#120f1a] border border-white/5 p-2 rounded col-span-2">
-                            <span class="text-gray-500 font-orbitron font-bold text-[8px] tracking-wider uppercase block">Contact Email</span>
-                            <span class="text-red-400 font-bold truncate block">{{ $team->email ?? 'N/A' }}</span>
+                        <div class="bg-slate-900/70 border border-slate-800/80 p-3 rounded-xl col-span-2">
+                            <span class="text-slate-400 font-medium text-[11px] block">Team Communications</span>
+                            <span class="text-slate-200 font-semibold text-sm mt-0.5 block truncate">{{ $team->email ?? 'management@vidantaca.com.np' }}</span>
                         </div>
-                        <div class="bg-[#120f1a] border border-white/5 p-2 rounded">
-                            <span class="text-gray-500 font-orbitron font-bold text-[8px] tracking-wider uppercase block">Club Status</span>
+                        <div class="bg-slate-900/70 border border-slate-800/80 p-3 rounded-xl">
+                            <span class="text-slate-400 font-medium text-[11px] block">Roster Status</span>
                             @if($team->status)
-                                <span class="text-green-400 font-bold uppercase flex items-center gap-1">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span> Active
+                                <span class="text-emerald-400 font-semibold text-sm mt-0.5 flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Active
                                 </span>
                             @else
-                                <span class="text-zinc-500 font-bold uppercase">Standby</span>
+                                <span class="text-slate-400 font-semibold text-sm mt-0.5 block">Standby</span>
                             @endif
                         </div>
                     </div>
+
                 </div>
 
             </div>
+
         </header>
 
-        <!-- STATS OVERVIEW SECTION -->
-        <section class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-            <div class="cyber-card p-4 text-center">
-                <span class="text-gray-500 font-orbitron font-bold text-[9px] tracking-widest uppercase block mb-1">Matches Played</span>
-                <span class="text-3xl font-orbitron font-black text-white">{{ $totalPlayed }}</span>
+        <!-- =================================================================
+             STATISTICS SUMMARY STRIP
+             ================================================================= -->
+        <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div class="pro-card p-5 text-center border border-slate-800/80">
+                <span class="text-slate-400 text-xs font-medium uppercase tracking-wider block mb-1">Matches Played</span>
+                <span class="text-2xl md:text-3xl font-bold text-white">{{ $totalPlayed }}</span>
             </div>
-            <div class="cyber-card p-4 text-center">
-                <span class="text-green-400 font-orbitron font-bold text-[9px] tracking-widest uppercase block mb-1">Matches Won</span>
-                <span class="text-3xl font-orbitron font-black text-green-400">{{ $totalWon }}</span>
+            <div class="pro-card p-5 text-center border border-slate-800/80">
+                <span class="text-slate-400 text-xs font-medium uppercase tracking-wider block mb-1">Matches Won</span>
+                <span class="text-2xl md:text-3xl font-bold text-emerald-400">{{ $totalWon }}</span>
             </div>
-            <div class="cyber-card p-4 text-center">
-                <span class="text-red-400 font-orbitron font-bold text-[9px] tracking-widest uppercase block mb-1">Matches Lost</span>
-                <span class="text-3xl font-orbitron font-black text-red-400">{{ $totalLost }}</span>
+            <div class="pro-card p-5 text-center border border-slate-800/80">
+                <span class="text-slate-400 text-xs font-medium uppercase tracking-wider block mb-1">Matches Lost</span>
+                <span class="text-2xl md:text-3xl font-bold text-red-400">{{ $totalLost }}</span>
             </div>
-            <div class="cyber-card p-4 text-center">
-                <span class="text-violet-400 font-orbitron font-bold text-[9px] tracking-widest uppercase block mb-1">Win Rate</span>
-                <span class="text-3xl font-orbitron font-black text-violet-400">{{ $winRate }}%</span>
+            <div class="pro-card p-5 text-center border border-slate-800/80">
+                <span class="text-slate-400 text-xs font-medium uppercase tracking-wider block mb-1">Win Rate</span>
+                <span class="text-2xl md:text-3xl font-bold text-sky-400">{{ $winRate }}%</span>
             </div>
-            <div class="cyber-card p-4 text-center col-span-2 md:col-span-1">
-                <span class="text-yellow-400 font-orbitron font-bold text-[9px] tracking-widest uppercase block mb-1">Total Points</span>
-                <span class="text-3xl font-orbitron font-black text-yellow-400">{{ $totalPoints }}</span>
+            <div class="pro-card p-5 text-center border border-slate-800/80 col-span-2 sm:col-span-1">
+                <span class="text-slate-400 text-xs font-medium uppercase tracking-wider block mb-1">Total Points</span>
+                <span class="text-2xl md:text-3xl font-bold text-amber-400">{{ $totalPoints }}</span>
             </div>
         </section>
 
-        <!-- MAIN LAYOUT BODY -->
-        <main class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <!-- =================================================================
+             MAIN CONTENT: ROSTER & CAMPAIGNS
+             ================================================================= -->
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10">
             
-            <!-- LEFT COLUMN: ACTIVE ROSTER PLAYERS (SPAN 3) -->
-            <section class="lg:col-span-3 flex flex-col gap-6">
+            <!-- LEFT COLUMN: ACTIVE ROSTER (SPAN 7) -->
+            <section class="lg:col-span-7 space-y-8">
                 @php
                     $mainLineup = $team->members->where('is_main_roster', true);
                     $reserveLineup = $team->members->where('is_main_roster', false);
@@ -188,62 +130,59 @@
 
                 <!-- 1. MAIN ROSTER (STARTING LINEUP) -->
                 <div class="space-y-4">
-                    <div class="flex items-center justify-between border-b border-white/10 pb-3">
-                        <h2 class="text-2xl font-orbitron font-extrabold text-white uppercase tracking-wider flex items-center gap-3">
-                            <span class="w-2.5 h-6 bg-red-500 shadow-[0_0_12px_#ef4444] block"></span>
-                            Main Roster Lineup
-                        </h2>
-                        <span class="text-xs font-orbitron text-red-400 font-black px-2.5 py-1 bg-red-950/40 border border-red-500/30 rounded flex items-center gap-1.5 shadow-[0_0_8px_rgba(239,68,68,0.2)]">
-                            <span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span>
-                            {{ $mainLineup->count() }} STARTING ATHLETES
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div class="flex items-center gap-3">
+                            <span class="w-2.5 h-6 rounded-md bg-orange-500 block"></span>
+                            <h2 class="text-lg md:text-xl font-bold text-white tracking-tight">
+                                Main Roster Lineup
+                            </h2>
+                        </div>
+                        <span class="px-3 py-1 rounded-full badge-main text-xs font-semibold flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
+                            {{ $mainLineup->count() }} Starting Athletes
                         </span>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         @forelse($mainLineup as $member)
-                            <a href="{{ route('player.profile', $member->user_id) }}" class="cyber-card p-4 flex items-center justify-between gap-4 overflow-hidden relative group/player border-red-500/30 hover:border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.08)]">
-                                <!-- Glowing neon stripe on the side for main roster -->
-                                <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-red-500 to-orange-500 shadow-[0_0_12px_#ef4444] transition-all"></div>
-
-                                <div class="flex items-center gap-3 pl-1">
+                            <a href="{{ route('player.profile', $member->user_id) }}" class="pro-card p-4 flex items-center justify-between gap-4 border border-slate-800 hover:border-orange-500/40 group transition-all">
+                                
+                                <div class="flex items-center gap-3.5 min-w-0">
                                     <!-- Avatar -->
-                                    <div class="w-11 h-11 rounded-full bg-[#0a0712] border-2 border-red-500/40 group-hover/player:border-red-400 flex items-center justify-center shrink-0 transition-all overflow-hidden">
+                                    <div class="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 overflow-hidden shadow-sm">
                                         @if($member->user->avatar_url)
                                             <img src="{{ asset('storage/'.$member->user->avatar_url) }}" alt="{{ $member->user->name }}" class="w-full h-full object-cover">
                                         @elseif($member->user->google_avatar_url)
                                             <img src="{{ $member->user->google_avatar_url }}" alt="{{ $member->user->name }}" class="w-full h-full object-cover">
                                         @else
-                                            <span class="text-red-400 group-hover/player:text-white font-orbitron font-black text-sm uppercase transition-colors">{{ substr($member->user->name, 0, 2) }}</span>
+                                            <span class="text-orange-400 font-bold text-sm uppercase">{{ substr($member->user->name, 0, 2) }}</span>
                                         @endif
                                     </div>
 
-                                    <div>
-                                        <div class="flex items-center gap-1.5">
-                                            <h3 class="font-orbitron font-bold text-white group-hover/player:text-red-400 text-sm tracking-wide transition-colors">
-                                                {{ $member->user->name }}
-                                            </h3>
-                                        </div>
+                                    <div class="min-w-0">
+                                        <h3 class="font-semibold text-white group-hover:text-orange-300 text-sm tracking-tight truncate transition-colors">
+                                            {{ $member->user->name }}
+                                        </h3>
                                         <div class="flex flex-wrap items-center gap-1.5 mt-1">
-                                            <span class="font-orbitron font-black text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-sm inline-block
-                                                @if($member->role === 'captain') bg-yellow-950/50 border border-yellow-500/50 text-yellow-400
-                                                @else bg-red-950/40 border border-red-500/30 text-red-400
+                                            <span class="text-[11px] font-medium px-2 py-0.5 rounded capitalize
+                                                @if($member->role === 'captain') badge-captain
+                                                @else bg-slate-800 text-slate-300 border border-slate-700
                                                 @endif">
                                                 {{ ucwords(str_replace('_', ' ', $member->role)) }}
                                             </span>
-                                            <span class="font-orbitron font-bold text-[8px] uppercase tracking-wider px-1.5 py-0.5 rounded-sm bg-emerald-950/50 border border-emerald-500/40 text-emerald-400">
+                                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded badge-main inline-flex items-center gap-1">
                                                 ⚡ MAIN LINEUP
                                             </span>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Link Button to Player Profile -->
-                                <span class="px-3 py-1 bg-red-950/50 border border-red-500/40 text-red-400 font-orbitron font-bold text-[10px] uppercase tracking-widest rounded-sm group-hover/player:bg-red-500 group-hover/player:text-black transition-all shrink-0">
-                                    PROFILE
+                                <span class="px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 text-xs font-semibold group-hover:bg-orange-500 group-hover:border-orange-500 group-hover:text-white transition-all shrink-0">
+                                    Profile &rarr;
                                 </span>
                             </a>
                         @empty
-                            <div class="cyber-card p-8 text-center text-gray-500 col-span-2">
+                            <div class="pro-card p-6 text-center text-slate-400 col-span-2 text-sm">
                                 No main roster players currently assigned.
                             </div>
                         @endforelse
@@ -251,56 +190,55 @@
                 </div>
 
                 <!-- 2. RESERVES & SUBSTITUTES -->
-                <div class="space-y-4 pt-4 border-t border-white/5">
-                    <div class="flex items-center justify-between border-b border-white/10 pb-3">
-                        <h2 class="text-lg font-orbitron font-bold text-gray-300 uppercase tracking-wider flex items-center gap-2.5">
-                            <span class="w-2 h-4 bg-blue-500 shadow-[0_0_8px_#3b82f6] block"></span>
-                            Reserves &amp; Normal Squad
-                        </h2>
-                        <span class="text-xs font-orbitron text-blue-400 font-bold px-2 py-0.5 bg-[#0f172a] border border-blue-500/20 rounded">
-                            {{ $reserveLineup->count() }} RESERVES
+                <div class="space-y-4 pt-2">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div class="flex items-center gap-3">
+                            <span class="w-2.5 h-5 rounded-md bg-sky-500 block"></span>
+                            <h2 class="text-base md:text-lg font-bold text-slate-200 tracking-tight">
+                                Reserves &amp; Normal Squad
+                            </h2>
+                        </div>
+                        <span class="px-2.5 py-0.5 rounded-full badge-reserve text-xs font-semibold">
+                            {{ $reserveLineup->count() }} Reserves
                         </span>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         @forelse($reserveLineup as $member)
-                            <a href="{{ route('player.profile', $member->user_id) }}" class="cyber-card p-3.5 flex items-center justify-between gap-4 overflow-hidden relative group/player border-blue-500/15 hover:border-blue-400/50 bg-[#08070d]">
-                                <!-- Subtle blue stripe for reserves -->
-                                <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500/40 group-hover/player:bg-blue-400 transition-all"></div>
-
-                                <div class="flex items-center gap-3 pl-1">
-                                    <!-- Avatar -->
-                                    <div class="w-9 h-9 rounded-full bg-[#0a0c16] border border-blue-500/30 group-hover/player:border-blue-400 flex items-center justify-center shrink-0 transition-all overflow-hidden">
+                            <a href="{{ route('player.profile', $member->user_id) }}" class="pro-card p-3.5 flex items-center justify-between gap-4 border border-slate-800 hover:border-sky-500/40 group transition-all">
+                                
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <div class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 overflow-hidden">
                                         @if($member->user->avatar_url)
                                             <img src="{{ asset('storage/'.$member->user->avatar_url) }}" alt="{{ $member->user->name }}" class="w-full h-full object-cover">
                                         @elseif($member->user->google_avatar_url)
                                             <img src="{{ $member->user->google_avatar_url }}" alt="{{ $member->user->name }}" class="w-full h-full object-cover">
                                         @else
-                                            <span class="text-blue-400 font-orbitron font-bold text-xs uppercase">{{ substr($member->user->name, 0, 2) }}</span>
+                                            <span class="text-sky-400 font-bold text-xs uppercase">{{ substr($member->user->name, 0, 2) }}</span>
                                         @endif
                                     </div>
 
-                                    <div>
-                                        <h3 class="font-orbitron font-bold text-gray-200 group-hover/player:text-blue-400 text-xs tracking-wide transition-colors">
+                                    <div class="min-w-0">
+                                        <h3 class="font-semibold text-slate-200 group-hover:text-sky-300 text-sm tracking-tight truncate transition-colors">
                                             {{ $member->user->name }}
                                         </h3>
-                                        <div class="flex flex-wrap items-center gap-1.5 mt-1">
-                                            <span class="font-orbitron font-semibold text-[8px] uppercase tracking-wider px-1.5 py-0.5 rounded-sm bg-blue-950/40 border border-blue-500/30 text-blue-400">
+                                        <div class="flex flex-wrap items-center gap-1.5 mt-0.5">
+                                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded badge-reserve inline-flex items-center gap-1">
                                                 🛡️ RESERVE
                                             </span>
-                                            <span class="font-tech text-gray-500 text-[10px] uppercase font-semibold">
+                                            <span class="text-xs text-slate-400 font-medium capitalize">
                                                 {{ ucwords(str_replace('_', ' ', $member->role)) }}
                                             </span>
                                         </div>
                                     </div>
                                 </div>
 
-                                <span class="px-2.5 py-0.5 bg-blue-950/40 border border-blue-500/30 text-blue-400 font-orbitron font-semibold text-[9px] uppercase tracking-wider rounded-sm group-hover/player:bg-blue-500 group-hover/player:text-white transition-all shrink-0">
-                                    VIEW
+                                <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs font-medium group-hover:bg-sky-600 group-hover:text-white transition-all shrink-0">
+                                    View
                                 </span>
                             </a>
                         @empty
-                            <div class="cyber-card p-6 text-center text-gray-600 col-span-2 text-xs font-tech tracking-wider">
+                            <div class="pro-card p-6 text-center text-slate-400 col-span-2 text-xs">
                                 No reserve players currently listed for this team.
                             </div>
                         @endforelse
@@ -308,153 +246,149 @@
                 </div>
             </section>
 
-            <!-- RIGHT COLUMN: TOURNAMENTS & HISTORICAL CAMPAIGNS (SPAN 2) -->
-            <section class="lg:col-span-2 flex flex-col gap-6">
-                <div class="flex items-center justify-between border-b border-white/10 pb-3">
-                    <h2 class="text-2xl font-orbitron font-extrabold text-white uppercase tracking-wider flex items-center gap-3">
-                        <span class="w-2.5 h-6 bg-red-500 shadow-[0_0_12px_#ef4444] block"></span>
-                        Tournaments
-                    </h2>
-                    <span class="text-xs font-orbitron text-red-400 font-black px-2 py-0.5 bg-[#1a0f12] border border-red-500/20 rounded">
-                        {{ count($tournaments) }} EVENTS
+            <!-- RIGHT COLUMN: TOURNAMENTS & CAMPAIGNS (SPAN 5) -->
+            <section class="lg:col-span-5 space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div class="flex items-center gap-3">
+                        <span class="w-2.5 h-6 rounded-md bg-amber-500 block"></span>
+                        <h2 class="text-lg md:text-xl font-bold text-white tracking-tight">
+                            Tournaments
+                        </h2>
+                    </div>
+                    <span class="px-3 py-1 rounded-full badge-captain text-xs font-semibold">
+                        {{ count($tournaments) }} Campaigns
                     </span>
                 </div>
 
-                <div class="relative pl-6 border-l-2 border-red-500/20 flex flex-col gap-6">
+                <div class="space-y-5">
                     @forelse($tournaments as $tournament)
-                        <div class="relative">
-                            
-                            <!-- Node Bullet -->
-                            <div class="absolute -left-[32px] top-1.5 w-4 h-4 rounded-full border-2 border-red-500 bg-[#07060a] shadow-[0_0_8px_#ef4444] z-10"></div>
-
-                            <!-- Timeline Card -->
-                            <div class="cyber-card p-5">
-                                <h3 class="font-orbitron font-black text-white text-md tracking-wider uppercase mb-1">
+                        <div class="pro-card p-5 border border-slate-800/80 space-y-4">
+                            <div>
+                                <h3 class="font-bold text-white text-base tracking-tight mb-1">
                                     {{ $tournament->name }}
                                 </h3>
-                                <p class="text-red-400 font-orbitron font-bold text-[10px] uppercase tracking-widest mb-3">
-                                    🏆 {{ $tournament->rank }}
+                                <p class="text-amber-400 text-xs font-semibold flex items-center gap-1.5">
+                                    <span>🏆</span>
+                                    <span>{{ $tournament->rank }}</span>
                                 </p>
+                            </div>
 
-                                <div class="grid grid-cols-4 gap-2 text-center text-[10px] bg-[#0a0812]/80 border border-white/5 p-2 rounded">
-                                    <div>
-                                        <span class="text-gray-500 uppercase block font-orbitron">Played</span>
-                                        <span class="text-white font-bold font-orbitron">{{ $tournament->matches_played }}</span>
-                                    </div>
-                                    <div>
-                                        <span class="text-green-400 uppercase block font-orbitron">Won</span>
-                                        <span class="text-green-400 font-bold font-orbitron">{{ $tournament->matches_won }}</span>
-                                    </div>
-                                    <div>
-                                        <span class="text-red-400 uppercase block font-orbitron">Lost</span>
-                                        <span class="text-red-400 font-bold font-orbitron">{{ $tournament->matches_lost }}</span>
-                                    </div>
-                                    <div>
-                                        <span class="text-yellow-400 uppercase block font-orbitron">Points</span>
-                                        <span class="text-yellow-400 font-bold font-orbitron">{{ $tournament->points }}</span>
-                                    </div>
+                            <!-- Tournament Stat Matrix -->
+                            <div class="grid grid-cols-4 gap-2 text-center text-xs bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl">
+                                <div>
+                                    <span class="text-slate-400 text-[11px] block">Played</span>
+                                    <span class="text-white font-bold text-sm">{{ $tournament->matches_played }}</span>
                                 </div>
+                                <div>
+                                    <span class="text-emerald-400 text-[11px] block">Won</span>
+                                    <span class="text-emerald-400 font-bold text-sm">{{ $tournament->matches_won }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-red-400 text-[11px] block">Lost</span>
+                                    <span class="text-red-400 font-bold text-sm">{{ $tournament->matches_lost }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-amber-400 text-[11px] block">Points</span>
+                                    <span class="text-amber-400 font-bold text-sm">{{ $tournament->points }}</span>
+                                </div>
+                            </div>
 
-                                <!-- Match Campaigns Details Section -->
-                                @if(!empty($tournament->matches) && $tournament->matches->isNotEmpty())
-                                    <div class="mt-5 flex flex-col gap-3.5 border-t border-white/5 pt-4">
-                                        <h4 class="text-[10px] font-orbitron font-extrabold uppercase tracking-wider text-gray-500">Match Campaigns</h4>
-                                        
-                                        <div class="flex flex-col gap-3">
-                                            @foreach($tournament->matches as $match)
-                                                @php
-                                                    $matchWon = $match->our_score > $match->opponent_score;
-                                                    $matchLost = $match->our_score < $match->opponent_score;
-                                                    $matchResultText = $matchWon ? 'VICTORY' : ($matchLost ? 'DEFEAT' : 'DRAW');
-                                                    $matchResultColor = $matchWon ? 'text-green-400 border-green-500/30 bg-green-500/5 shadow-[0_0_8px_rgba(34,197,94,0.1)]' : ($matchLost ? 'text-red-400 border-red-500/30 bg-red-500/5 shadow-[0_0_8px_rgba(239,68,68,0.1)]' : 'text-gray-400 border-white/10 bg-white/5');
-                                                @endphp
-                                                <div class="bg-[#120b1c]/80 border border-white/5 rounded p-3 flex flex-col gap-2.5 hover:border-red-500/20 transition-all">
-                                                    <!-- Match Header -->
-                                                    <div class="flex items-center justify-between gap-2 flex-wrap">
-                                                        <div class="flex items-center gap-2">
-                                                            @if($match->opponent_logo)
-                                                                <img src="/storage/{{ $match->opponent_logo }}" alt="{{ $match->opponent_name }}" class="w-5 h-5 object-contain rounded-full border border-white/10 p-0.5 shrink-0 bg-[#07060a]">
-                                                            @else
-                                                                <div class="w-5 h-5 rounded-full border border-white/10 flex items-center justify-center bg-[#07060a] text-[8px] font-orbitron text-gray-500 font-bold shrink-0">VS</div>
+                            <!-- Match Campaigns Breakdown -->
+                            @if(!empty($tournament->matches) && $tournament->matches->isNotEmpty())
+                                <div class="space-y-3 pt-3 border-t border-slate-800">
+                                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Match History</span>
+                                    
+                                    <div class="space-y-2.5">
+                                        @foreach($tournament->matches as $match)
+                                            @php
+                                                $matchWon = $match->our_score > $match->opponent_score;
+                                                $matchLost = $match->our_score < $match->opponent_score;
+                                                $matchResultText = $matchWon ? 'Victory' : ($matchLost ? 'Defeat' : 'Draw');
+                                                $matchResultBadge = $matchWon ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20' : ($matchLost ? 'bg-red-500/10 text-red-300 border-red-500/20' : 'bg-slate-800 text-slate-300 border-slate-700');
+                                            @endphp
+                                            <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-3 space-y-2">
+                                                
+                                                <div class="flex items-center justify-between gap-2 flex-wrap text-xs">
+                                                    <div class="flex items-center gap-2">
+                                                        @if($match->opponent_logo)
+                                                            <img src="/storage/{{ $match->opponent_logo }}" alt="{{ $match->opponent_name }}" class="w-6 h-6 object-contain rounded-md border border-slate-800 p-0.5 shrink-0 bg-slate-900">
+                                                        @else
+                                                            <div class="w-6 h-6 rounded-md border border-slate-800 flex items-center justify-center bg-slate-900 text-[9px] font-bold text-slate-400 shrink-0">VS</div>
+                                                        @endif
+                                                        <div>
+                                                            <span class="font-semibold text-white block">VS {{ $match->opponent_name }}</span>
+                                                            @if($match->stage)
+                                                                <span class="text-[11px] text-slate-400">{{ $match->stage }}</span>
                                                             @endif
-                                                            <div class="flex flex-col">
-                                                                <span class="text-[11px] font-orbitron font-extrabold text-white uppercase tracking-wider">VS {{ $match->opponent_name }}</span>
-                                                                @if($match->stage)
-                                                                    <span class="text-[8px] font-outfit text-gray-500 font-medium">{{ $match->stage }}</span>
-                                                                @endif
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        <div class="flex items-center gap-1.5">
-                                                            <span class="text-[7px] font-orbitron font-bold px-1.5 py-0.5 rounded border {{ $matchResultColor }} shrink-0 tracking-widest uppercase">
-                                                                {{ $matchResultText }}
-                                                            </span>
-                                                            <span class="text-[9px] font-orbitron font-black text-white px-1.5 py-0.5 bg-[#0b0712] border border-white/5 rounded">
-                                                                {{ $match->our_score }} - {{ $match->opponent_score }}
-                                                            </span>
                                                         </div>
                                                     </div>
-
-                                                    <!-- Nested Series Games -->
-                                                    @if($match->series->isNotEmpty())
-                                                        <div class="flex flex-col gap-2 border-t border-white/5 pt-2">
-                                                            @foreach($match->series->sortBy('game_number') as $game)
-                                                                @php
-                                                                    $gameWon = $game->result === 'won';
-                                                                    $gameLost = $game->result === 'lost';
-                                                                    $gameResultColor = $gameWon ? 'text-green-400' : ($gameLost ? 'text-red-400' : 'text-gray-400');
-                                                                @endphp
-                                                                <div class="bg-[#0b0712]/50 border border-white/5 p-2 rounded flex flex-col gap-2">
-                                                                    <div class="flex items-center justify-between gap-2 flex-wrap">
-                                                                        <div class="flex items-center gap-2">
-                                                                            <span class="text-[8px] font-orbitron font-black text-red-500 uppercase tracking-widest bg-red-950/20 px-1.5 py-0.5 rounded border border-red-500/15">Game {{ $game->game_number }}</span>
-                                                                            <span class="text-[8px] font-orbitron font-bold {{ $gameResultColor }} uppercase">
-                                                                                {{ $game->result }} ({{ $game->our_score }}-{{ $game->opponent_score }})
-                                                                            </span>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!-- Player Stats List for this game -->
-                                                                    @if($game->playerStats->isNotEmpty())
-                                                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-1 border-t border-white/5 pt-1.5">
-                                                                            @foreach($game->playerStats as $pStat)
-                                                                                <div class="flex items-center justify-between bg-[#150f24]/40 border border-white/5 px-2 py-0.5 rounded">
-                                                                                    <div class="flex items-center gap-1.5">
-                                                                                        @if($pStat->hero)
-                                                                                            @php
-                                                                                                $teamHeroIcon = app(\App\Services\MlbbHeroService::class)->getHeroIcon($pStat->hero);
-                                                                                            @endphp
-                                                                                            @if($teamHeroIcon)
-                                                                                                <img src="{{ $teamHeroIcon }}" alt="{{ $pStat->hero }}" title="{{ $pStat->hero }}" class="w-3.5 h-3.5 rounded-full border border-violet-500/30 object-cover shrink-0">
-                                                                                            @endif
-                                                                                        @endif
-                                                                                        <span class="text-[9px] font-outfit text-white font-medium">
-                                                                                            {{ $pStat->user->name ?? 'Unknown' }}
-                                                                                        </span>
-                                                                                        @if($pStat->is_mvp)
-                                                                                            <span class="bg-pink-950/50 border border-pink-500/30 text-pink-400 px-1 py-0.2 rounded text-[6px] font-orbitron font-black tracking-widest uppercase">MVP</span>
-                                                                                        @endif
-                                                                                    </div>
-                                                                                    <span class="text-[8px] font-orbitron text-gray-400">
-                                                                                        {{ $pStat->kills }}/{{ $pStat->deaths }}/{{ $pStat->assists }}
-                                                                                    </span>
-                                                                                </div>
-                                                                            @endforeach
-                                                                        </div>
-                                                                    @endif
-                                                                </div>
-                                                            @endforeach
-                                                        </div>
-                                                    @endif
+                                                    
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="text-[11px] font-semibold px-2 py-0.5 rounded border {{ $matchResultBadge }}">
+                                                            {{ $matchResultText }}
+                                                        </span>
+                                                        <span class="text-xs font-bold text-white px-2 py-0.5 bg-slate-800 border border-slate-700 rounded-md">
+                                                            {{ $match->our_score }} - {{ $match->opponent_score }}
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                            @endforeach
-                                        </div>
+
+                                                <!-- Games In Match Series -->
+                                                @if($match->series->isNotEmpty())
+                                                    <div class="space-y-1.5 border-t border-slate-800/60 pt-2 text-xs">
+                                                        @foreach($match->series->sortBy('game_number') as $game)
+                                                            @php
+                                                                $gameWon = $game->result === 'won';
+                                                                $gameLost = $game->result === 'lost';
+                                                                $gameColor = $gameWon ? 'text-emerald-400' : ($gameLost ? 'text-red-400' : 'text-slate-400');
+                                                            @endphp
+                                                            <div class="bg-slate-950/40 border border-slate-800/60 p-2 rounded-lg space-y-1.5">
+                                                                <div class="flex items-center justify-between text-[11px] font-medium">
+                                                                    <span class="text-slate-300">Game {{ $game->game_number }}</span>
+                                                                    <span class="{{ $gameColor }} font-semibold capitalize">
+                                                                        {{ $game->result }} ({{ $game->our_score }}-{{ $game->opponent_score }})
+                                                                    </span>
+                                                                </div>
+
+                                                                @if($game->playerStats->isNotEmpty())
+                                                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 pt-1 border-t border-slate-800/40">
+                                                                        @foreach($game->playerStats as $pStat)
+                                                                            <div class="flex items-center justify-between bg-slate-900/50 border border-slate-800/50 px-2 py-1 rounded text-[11px]">
+                                                                                <div class="flex items-center gap-1.5 truncate">
+                                                                                    @if($pStat->hero)
+                                                                                        @php
+                                                                                            $teamHeroIcon = app(\App\Services\MlbbHeroService::class)->getHeroIcon($pStat->hero);
+                                                                                        @endphp
+                                                                                        @if($teamHeroIcon)
+                                                                                            <img src="{{ $teamHeroIcon }}" alt="{{ $pStat->hero }}" title="{{ $pStat->hero }}" class="w-4 h-4 rounded-full border border-slate-700 object-cover shrink-0">
+                                                                                        @endif
+                                                                                    @endif
+                                                                                    <span class="text-slate-200 font-medium truncate">
+                                                                                        {{ $pStat->user->name ?? 'Unknown' }}
+                                                                                    </span>
+                                                                                    @if($pStat->is_mvp)
+                                                                                        <span class="badge-captain px-1 py-0.2 rounded text-[9px] font-bold">MVP</span>
+                                                                                    @endif
+                                                                                </div>
+                                                                                <span class="text-slate-400 text-xs font-mono ml-2 shrink-0">
+                                                                                    {{ $pStat->kills }}/{{ $pStat->deaths }}/{{ $pStat->assists }}
+                                                                                </span>
+                                                                            </div>
+                                                                        @endforeach
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endforeach
                                     </div>
-                                @endif
-                            </div>
+                                </div>
+                            @endif
                         </div>
                     @empty
-                        <div class="cyber-card p-6 text-center text-gray-500">
+                        <div class="pro-card p-6 text-center text-slate-400 text-sm">
                             No tournament campaigns registered for this team.
                         </div>
                     @endforelse
@@ -463,9 +397,9 @@
 
         </main>
         
-        <!-- FOOTER BRANDING -->
-        <footer class="mt-16 text-center border-t border-white/10 pt-8 text-gray-600 font-orbitron text-[10px] tracking-widest uppercase">
-            &copy; {{ date('Y') }} ICECREAM FRIED x <a href="https://vidantaca.com.np" target="_blank" class="hover:text-violet-400 transition-colors underline decoration-violet-500/30 underline-offset-4">VIDANTA CHAMPIONS ARENA</a>. ALL TELEMETRY LOGS SECURED.
+        <!-- Footer -->
+        <footer class="mt-16 text-center border-t border-slate-800/80 pt-8 text-slate-500 text-xs tracking-wider">
+            &copy; {{ date('Y') }} IceCream Fried Esports &bull; Vidanta Champions Arena. All Rights Reserved.
         </footer>
 
     </div>
