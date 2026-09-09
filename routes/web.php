@@ -44,6 +44,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
 Route::get('/auth/unregistered', [GoogleAuthController::class, 'unregistered'])->name('auth.unregistered');
+Route::view('/account-deactivated', 'auth.deactivated')->name('auth.deactivated');
 Route::post('/auth/google/disconnect', [GoogleAuthController::class, 'disconnect'])->middleware('auth')->name('auth.google.disconnect');
 
 Route::view('/privacy-policy', 'privacy-policy')->name('privacy.policy');

@@ -144,6 +144,11 @@ class GoogleAuthController extends Controller
             $user->markEmailAsVerified();
         }
 
+        // Check if account has been deactivated by an administrator
+        if (! $user->isActive()) {
+            return redirect()->route('auth.deactivated');
+        }
+
         Auth::login($user, remember: true);
         $request->session()->regenerate();
 

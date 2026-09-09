@@ -231,4 +231,29 @@ class GoogleAuthTest extends TestCase
         $user->refresh();
         $this->assertNull($user->google_id);
     }
+
+    public function test_deactivated_player_logging_in_with_google_is_redirected_to_deactivated_page(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'deactivated_player@gmail.com',
+            'google_id' => 'google-deactivated-id',
+            'is_active' => false,
+        ]);
+        $user->assignRole('player');
+
+        $abstractUser = Mockery::mock(SocialiteUser::class);
+        $abstractUser->shouldReceive('getId')->andReturn('google-deactivated-id');
+        $abstractUser->shouldReceive('getEmail')->andReturn('deactivated_player@gmail.com');
+        $abstractUser->shouldReceive('getAvatar')->andReturn(null);
+
+        $provider = Mockery::mock('Laravel\Socialite\Two\GoogleProvider');
+        $provider->shouldReceive('user')->andReturn($abstractUser);
+
+        Socialite::shouldReceive('driver')->with('google')->andReturn($provider);
+
+        $response = $this->get(route('auth.google.callback'));
+
+        $response->assertRedirect(route('auth.deactivated'));
+        $this->assertGuest();
+    }
 }

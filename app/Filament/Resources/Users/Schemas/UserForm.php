@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Users\Schemas;
 
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -13,7 +14,7 @@ class UserForm
         return $schema
             ->components([
                 Section::make('Account Credentials')
-                    ->description('Manage user credentials and basic account information.')
+                    ->description('Manage user credentials, status, and basic account information.')
                     ->icon('heroicon-m-user-circle')
                     ->columns(4)
                     ->columnSpanFull()
@@ -51,6 +52,12 @@ class UserForm
                         TextInput::make('id')
                             ->disabled()
                             ->copyable(),
+
+                        Toggle::make('is_active')
+                            ->label('Account Active')
+                            ->default(true)
+                            ->inline(false)
+                            ->helperText('Deactivated players are blocked from logging in to the portal.'),
                     ]),
             ]);
     }
