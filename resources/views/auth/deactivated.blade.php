@@ -38,7 +38,7 @@
                         Access Denied by Administrator
                     </h1>
                     <p class="text-xs text-slate-400 mt-1.5 max-w-sm">
-                        This athlete profile is temporarily inactive per organization administrative settings.
+                        This account is temporarily inactive per organization administrative settings.
                     </p>
                 </div>
 
@@ -57,7 +57,7 @@
                     </div>
 
                     <p class="text-xs text-slate-300 leading-relaxed pt-1">
-                        Your player account has been set to <strong class="text-red-300 font-medium">inactive</strong> by an administrator. Access to roster management, player dashboards, and scrim analytics is paused.
+                        Your account has been set to <strong class="text-red-300 font-medium">inactive</strong> by an administrator. Access to administrative controls, roster management, and player dashboards is paused.
                     </p>
                 </div>
 
@@ -68,7 +68,7 @@
                         Reactivation Information
                     </h2>
                     <p class="text-slate-300">
-                        If you believe this suspension is in error or you have recently rejoined the active lineup, please reach out to your team management or head administrator to have your profile restored.
+                        If you believe this suspension is in error or you have recently been reinstated, please reach out to the organization head administrator to have your profile restored.
                     </p>
                 </div>
 

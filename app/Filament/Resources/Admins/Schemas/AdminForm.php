@@ -2,7 +2,9 @@
 
 namespace App\Filament\Resources\Admins\Schemas;
 
+use App\Models\User;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -15,7 +17,7 @@ class AdminForm
                 Section::make('Admin Credentials')
                     ->description('Manage administrator credentials and system access details.')
                     ->icon('heroicon-m-shield-check')
-                    ->columns(3)
+                    ->columns(4)
                     ->columnSpanFull()
                     ->schema([
                         TextInput::make('name')
@@ -38,6 +40,15 @@ class AdminForm
                             ->dehydrated(fn ($state) => filled($state))
                             ->maxLength(255)
                             ->helperText(fn (string $context): string => $context === 'edit' ? 'Leave blank to keep current password.' : ''),
+
+                        Toggle::make('is_active')
+                            ->label('Account Active')
+                            ->default(true)
+                            ->inline(false)
+                            ->disabled(fn (?User $record) => $record && $record->id === auth()->id())
+                            ->helperText(fn (?User $record) => $record && $record->id === auth()->id()
+                                ? 'You cannot deactivate your own account.'
+                                : 'Deactivated administrators are blocked from logging in to the system.'),
                     ]),
             ]);
     }

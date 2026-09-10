@@ -64,9 +64,13 @@ class AdminResource extends Resource
         $actionName = $action instanceof UnitEnum ? $action->name : $action;
         $permission = ucfirst($actionName).':'.class_basename(static::class);
 
-        return filament()->auth()->user()?->can($permission)
-            ? Response::allow()
-            : Response::deny();
+        $user = filament()->auth()->user();
+
+        if ($user && ($user->hasRole(['super_admin', 'admin']) || $user->can($permission))) {
+            return Response::allow();
+        }
+
+        return Response::deny();
     }
 
     public static function can(string|UnitEnum $action, ?Model $record = null): bool
