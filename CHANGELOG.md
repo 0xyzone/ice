@@ -2,6 +2,16 @@
 
 All notable changes to the **IceCream Fried Esports Portal** are documented in this file.
 
+## [v1.6.0] - 2026-11-15
+
+### Added
+- **Three.js 3D WebGL Visuals**: Interactive 3D Esports Crest hero canvases (`MukhiyasHero3DWidget`, `PlayerHero3DWidget`) responding to pointer tilt, plus a subtle ambient 3D particle/wireframe backdrop (`#icf-ambient-webgl`).
+- **GSAP Motion Choreography**: Hardware-accelerated widget entrance staggers, animated numeric stat counters, and subtle 3D hover tilt with full `prefers-reduced-motion` support via `gsap.matchMedia()`.
+- **Real-DB Dashboard Widgets**:
+  - **Mukhiyas Panel**: `MukhiyasHero3DWidget`, `GameDivisionBreakdownWidget` (live MLBB / PUBGM / Free Fire counts), `UpcomingMatchesWidget`, and `SuperAdminAccessOverviewWidget` (Super Admin only).
+  - **App Panel**: `PlayerHero3DWidget`, `PlayerGameAccountsWidget` (logged-in player's `GameInfo` accounts and multi-roles), and `PlayerUpcomingMatchesWidget` (scoped to the player's active teams).
+- **Strict Widget Permission Gating**: Added `canView()` authorization checks and logged-in user scoping across all Mukhiyas and App dashboard widgets.
+
 ## [v1.5.0] - 2026-11-15
 
 ### Added

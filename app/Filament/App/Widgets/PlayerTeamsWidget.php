@@ -15,6 +15,11 @@ class PlayerTeamsWidget extends BaseWidget
 
     protected int|string|array $columnSpan = 'full';
 
+    public static function canView(): bool
+    {
+        return Auth::check();
+    }
+
     public function table(Table $table): Table
     {
         return $table

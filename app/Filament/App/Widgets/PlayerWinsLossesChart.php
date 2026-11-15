@@ -14,6 +14,11 @@ class PlayerWinsLossesChart extends ChartWidget
 
     protected static ?int $sort = 5;
 
+    public static function canView(): bool
+    {
+        return Auth::check();
+    }
+
     protected function getType(): string
     {
         return 'doughnut';

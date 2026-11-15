@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class PlayerStatsOverviewWidget extends BaseWidget
 {
+    public static function canView(): bool
+    {
+        return Auth::check();
+    }
+
     protected function getStats(): array
     {
         /** @var User $user */

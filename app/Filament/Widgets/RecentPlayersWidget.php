@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Resources\Users\UserResource;
 use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
@@ -10,9 +11,14 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class RecentPlayersWidget extends BaseWidget
 {
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 6;
 
     protected int|string|array $columnSpan = 'full';
+
+    public static function canView(): bool
+    {
+        return UserResource::canViewAny();
+    }
 
     public function table(Table $table): Table
     {

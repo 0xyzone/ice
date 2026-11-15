@@ -15,6 +15,11 @@ class PlayerTimelineWidget extends Widget
 
     protected static ?int $sort = 6;
 
+    public static function canView(): bool
+    {
+        return Auth::check();
+    }
+
     public function getViewData(): array
     {
         $user = Auth::user();

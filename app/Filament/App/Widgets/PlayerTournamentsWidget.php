@@ -15,6 +15,11 @@ class PlayerTournamentsWidget extends BaseWidget
 
     protected int|string|array $columnSpan = 'full';
 
+    public static function canView(): bool
+    {
+        return Auth::check();
+    }
+
     public function table(Table $table): Table
     {
         $teamIds = Auth::user()->teamMemberships()->pluck('own_team_id')->toArray();

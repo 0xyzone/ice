@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Resources\Tournaments\TournamentResource;
 use App\Models\Tournament;
 use Filament\Widgets\ChartWidget;
 
@@ -11,7 +12,12 @@ class TournamentsStatusChart extends ChartWidget
 
     protected ?string $maxHeight = '250px';
 
-    protected static ?int $sort = 5;
+    protected static ?int $sort = 8;
+
+    public static function canView(): bool
+    {
+        return TournamentResource::canViewAny();
+    }
 
     protected function getType(): string
     {

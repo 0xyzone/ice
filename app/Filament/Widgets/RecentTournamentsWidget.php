@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Resources\Tournaments\TournamentResource;
 use App\Models\Tournament;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -9,9 +10,14 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class RecentTournamentsWidget extends BaseWidget
 {
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 5;
 
     protected int|string|array $columnSpan = 'full';
+
+    public static function canView(): bool
+    {
+        return TournamentResource::canViewAny();
+    }
 
     public function table(Table $table): Table
     {

@@ -3,11 +3,15 @@
 namespace App\Providers\Filament;
 
 use App\Filament\App\Pages\ManageProfile;
+use App\Filament\Widgets\GameDivisionBreakdownWidget;
+use App\Filament\Widgets\MukhiyasHero3DWidget;
 use App\Filament\Widgets\MukhiyasStatsOverview;
 use App\Filament\Widgets\PlayersRegistrationChart;
 use App\Filament\Widgets\RecentPlayersWidget;
 use App\Filament\Widgets\RecentTournamentsWidget;
+use App\Filament\Widgets\SuperAdminAccessOverviewWidget;
 use App\Filament\Widgets\TournamentsStatusChart;
+use App\Filament\Widgets\UpcomingMatchesWidget;
 use App\Http\Middleware\Authenticate;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -54,6 +58,10 @@ class MukhiyasPanelProvider extends PanelProvider
                 PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
                 fn () => view('filament.components.topbar-quick-links'),
             )
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
+                fn () => view('filament.components.motion-scripts'),
+            )
 
             ->passwordReset()
             ->emailVerification()
@@ -66,7 +74,11 @@ class MukhiyasPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
                 // AccountWidget::class,
+                MukhiyasHero3DWidget::class,
                 MukhiyasStatsOverview::class,
+                GameDivisionBreakdownWidget::class,
+                UpcomingMatchesWidget::class,
+                SuperAdminAccessOverviewWidget::class,
                 RecentTournamentsWidget::class,
                 RecentPlayersWidget::class,
                 PlayersRegistrationChart::class,

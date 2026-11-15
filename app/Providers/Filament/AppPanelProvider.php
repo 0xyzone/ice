@@ -2,11 +2,14 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\App\Widgets\PlayerGameAccountsWidget;
+use App\Filament\App\Widgets\PlayerHero3DWidget;
 use App\Filament\App\Widgets\PlayerProfileLinkWidget;
 use App\Filament\App\Widgets\PlayerStatsOverviewWidget;
 use App\Filament\App\Widgets\PlayerTeamsWidget;
 use App\Filament\App\Widgets\PlayerTimelineWidget;
 use App\Filament\App\Widgets\PlayerTournamentsWidget;
+use App\Filament\App\Widgets\PlayerUpcomingMatchesWidget;
 use App\Filament\App\Widgets\PlayerWinsLossesChart;
 use App\Http\Middleware\Authenticate;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
@@ -49,6 +52,10 @@ class AppPanelProvider extends PanelProvider
                 PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
                 fn () => view('filament.components.topbar-quick-links'),
             )
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
+                fn () => view('filament.components.motion-scripts'),
+            )
 
             // ->registration()
             ->profile()
@@ -62,7 +69,10 @@ class AppPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'App\Filament\App\Widgets')
             ->widgets([
                 // AccountWidget::class,
+                PlayerHero3DWidget::class,
                 PlayerStatsOverviewWidget::class,
+                PlayerGameAccountsWidget::class,
+                PlayerUpcomingMatchesWidget::class,
                 PlayerProfileLinkWidget::class,
                 PlayerTeamsWidget::class,
                 PlayerTournamentsWidget::class,
