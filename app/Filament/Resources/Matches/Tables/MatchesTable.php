@@ -40,6 +40,7 @@ class MatchesTable
                                 default => 'gray',
                             })
                             ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                            ->extraAttributes(['class' => 'icf-card-corner-status'])
                             ->grow(false),
                     ]),
                     Stack::make([

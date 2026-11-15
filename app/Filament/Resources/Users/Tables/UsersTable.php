@@ -21,6 +21,7 @@ use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use STS\FilamentImpersonate\Actions\Impersonate;
 
 class UsersTable
 {
@@ -56,6 +57,7 @@ class UsersTable
                         ])->space(1),
                         ToggleColumn::make('is_active')
                             ->label('Active')
+                            ->extraAttributes(['class' => 'icf-card-corner-status'])
                             ->grow(false),
                     ]),
                     Stack::make([
@@ -96,6 +98,11 @@ class UsersTable
                     ->icon('heroicon-m-cog-6-tooth')
                     ->color('warning')
                     ->url(fn (User $record): string => UserResource::getUrl('edit', ['record' => $record])),
+                Impersonate::make()
+                    ->label('Impersonate')
+                    ->color('info')
+                    ->redirectTo(fn (): string => filament()->getPanel('app')->getUrl())
+                    ->backTo(fn (): string => UserResource::getUrl('index', panel: 'mukhiyas')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

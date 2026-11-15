@@ -53,6 +53,7 @@ class AdminsTable
                         ToggleColumn::make('is_active')
                             ->label('Active')
                             ->disabled(fn (User $record): bool => $record->id === auth()->id())
+                            ->extraAttributes(['class' => 'icf-card-corner-status'])
                             ->grow(false),
                     ]),
                     Stack::make([

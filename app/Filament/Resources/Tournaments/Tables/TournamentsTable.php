@@ -42,6 +42,7 @@ class TournamentsTable
                                 default => 'gray',
                             })
                             ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                            ->extraAttributes(['class' => 'icf-card-corner-status'])
                             ->grow(false),
                     ]),
                     TextColumn::make('name')

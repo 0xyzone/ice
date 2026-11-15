@@ -101,6 +101,16 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         return false;
     }
 
+    public function canImpersonate(): bool
+    {
+        return $this->hasRole('super_admin');
+    }
+
+    public function canBeImpersonated(): bool
+    {
+        return $this->hasRole('player');
+    }
+
     public function gameInfos(): HasMany
     {
         return $this->hasMany(GameInfo::class);

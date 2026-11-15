@@ -55,6 +55,7 @@ class OwnTeamsTable
                         ])->space(1),
                         IconColumn::make('status')
                             ->boolean()
+                            ->extraAttributes(['class' => 'icf-card-corner-status'])
                             ->grow(false),
                     ]),
                     Stack::make([

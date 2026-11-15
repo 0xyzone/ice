@@ -325,6 +325,10 @@
 
 .fi-ta-content-grid > .fi-ta-record,
 .fi-ta-record-ctn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     background: var(--glass-bg-elevated) !important;
     -webkit-backdrop-filter: var(--glass-blur) !important;
     backdrop-filter: var(--glass-blur) !important;
@@ -337,6 +341,26 @@
                 box-shadow 0.22s ease !important;
 }
 
+.fi-ta-content-grid > .fi-ta-record:has(.fi-ta-record-checkbox),
+.fi-ta-content-grid > .fi-ta-record:has(.icf-card-corner-status) {
+    padding-top: 2.9rem !important;
+}
+
+.fi-ta-content-grid > .fi-ta-record .fi-ta-record-checkbox {
+    position: absolute;
+    top: 0.95rem;
+    left: 1.15rem;
+    z-index: 5;
+    margin: 0 !important;
+}
+
+.fi-ta-content-grid > .fi-ta-record .icf-card-corner-status {
+    position: absolute;
+    top: 0.95rem;
+    right: 1.15rem;
+    z-index: 5;
+}
+
 .fi-ta-content-grid > .fi-ta-record:hover {
     transform: translateY(-3px);
     border-color: var(--glass-border-hover) !important;
@@ -345,8 +369,8 @@
 
 /* Record actions footer inside cards */
 .fi-ta-record-actions {
-    margin-top: 0.75rem !important;
-    padding-top: 0.75rem !important;
+    margin-top: auto !important;
+    padding-top: 0.85rem !important;
     border-top: 1px solid var(--glass-border) !important;
     display: flex;
     flex-wrap: wrap;

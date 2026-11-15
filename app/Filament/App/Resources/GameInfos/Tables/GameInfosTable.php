@@ -50,6 +50,7 @@ class GameInfosTable
                                     ->success()
                                     ->send();
                             })
+                            ->extraAttributes(['class' => 'icf-card-corner-status'])
                             ->grow(false),
                     ]),
                     Stack::make([
