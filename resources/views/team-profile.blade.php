@@ -11,11 +11,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Vite Assets -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/filament-motion.js'])
 </head>
-<body class="bg-[#0b0f17] text-slate-100 font-sans antialiased min-h-screen py-8 md:py-12 px-4 sm:px-6 lg:px-8 subtle-mesh-bg overflow-x-hidden">
+<body class="bg-[#0b0f17] text-slate-100 font-sans antialiased min-h-dvh py-6 sm:py-10 px-4 sm:px-6 lg:px-8 subtle-mesh-bg overflow-x-hidden">
 
-    <div class="max-w-6xl mx-auto space-y-10">
+    <div class="relative z-10 max-w-6xl mx-auto space-y-8 sm:space-y-10">
 
         <!-- Top Navigation -->
         <nav class="flex items-center justify-between flex-wrap gap-4">
@@ -33,12 +33,12 @@
         <!-- =================================================================
              TEAM HERO BANNER
              ================================================================= -->
-        <header class="pro-card p-6 md:p-10 border border-slate-800/80 shadow-xl relative overflow-hidden">
-            
+        <header class="icf-3d-tilt pro-card p-5 sm:p-8 lg:p-10 border border-slate-800/80 shadow-xl relative overflow-hidden">
+
             <div class="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8">
-                
+
                 <!-- Team Crest / Logo -->
-                <div class="w-28 h-28 md:w-36 md:h-36 rounded-2xl bg-slate-900 border border-slate-800 p-3 flex items-center justify-center shrink-0 shadow-lg relative overflow-hidden">
+                <div class="w-28 h-28 md:w-36 md:h-36 aspect-square rounded-2xl bg-slate-900 border border-slate-800 p-3 flex items-center justify-center shrink-0 shadow-lg relative overflow-hidden">
                     @if($team->logo_image)
                         <img src="{{ asset('storage/' . $team->logo_image) }}" alt="{{ $team->name }}" class="w-full h-full object-contain" />
                     @else
@@ -47,14 +47,16 @@
                 </div>
 
                 <!-- Team Information -->
-                <div class="flex-grow text-center md:text-left space-y-4">
+                <div class="flex-1 min-w-0 text-center md:text-left space-y-4">
                     <div class="flex flex-wrap items-center justify-center md:justify-start gap-3">
-                        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
+                        <h1 class="text-[clamp(1.75rem,1.2rem+2.2vw,2.75rem)] font-extrabold tracking-tight text-white leading-tight">
                             {{ $team->name }}
                         </h1>
-                        <span class="px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/25 text-orange-300 text-xs font-semibold uppercase tracking-wider">
-                            {{ $team->short_name }}
-                        </span>
+                        @if($team->short_name)
+                            <span class="px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/25 text-orange-300 text-xs font-semibold uppercase tracking-wider">
+                                {{ $team->short_name }}
+                            </span>
+                        @endif
                     </div>
 
                     <p class="text-slate-400 text-sm font-medium flex items-center justify-center md:justify-start gap-2">
@@ -63,19 +65,19 @@
                     </p>
 
                     <!-- Key Metadata Grid -->
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 max-w-2xl text-xs">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs">
                         <div class="bg-slate-900/70 border border-slate-800/80 p-3 rounded-xl">
                             <span class="text-slate-400 font-medium text-[11px] block">Division Bracket</span>
                             <span class="text-white font-semibold text-sm mt-0.5 block capitalize">{{ $team->gender ?? 'Open Division' }}</span>
                         </div>
-                        <div class="bg-slate-900/70 border border-slate-800/80 p-3 rounded-xl col-span-2">
+                        <div class="bg-slate-900/70 border border-slate-800/80 p-3 rounded-xl min-w-0">
                             <span class="text-slate-400 font-medium text-[11px] block">Team Communications</span>
                             <span class="text-slate-200 font-semibold text-sm mt-0.5 block truncate">{{ $team->email ?? 'management@vidantaca.com.np' }}</span>
                         </div>
                         <div class="bg-slate-900/70 border border-slate-800/80 p-3 rounded-xl">
                             <span class="text-slate-400 font-medium text-[11px] block">Roster Status</span>
                             @if($team->status)
-                                <span class="text-emerald-400 font-semibold text-sm mt-0.5 flex items-center gap-1.5">
+                                <span class="text-emerald-400 font-semibold text-sm mt-0.5 inline-flex items-center gap-1.5">
                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Active
                                 </span>
                             @else
@@ -91,26 +93,26 @@
         </header>
 
         <!-- =================================================================
-             STATISTICS SUMMARY STRIP
+             STATISTICS SUMMARY STRIP (BALANCED 4-CARD GRID)
              ================================================================= -->
-        <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="pro-card p-5 text-center border border-slate-800/80">
                 <span class="text-slate-400 text-xs font-medium uppercase tracking-wider block mb-1">Matches Played</span>
                 <span class="text-2xl md:text-3xl font-bold text-white">{{ $totalPlayed }}</span>
             </div>
             <div class="pro-card p-5 text-center border border-slate-800/80">
-                <span class="text-slate-400 text-xs font-medium uppercase tracking-wider block mb-1">Matches Won</span>
-                <span class="text-2xl md:text-3xl font-bold text-emerald-400">{{ $totalWon }}</span>
-            </div>
-            <div class="pro-card p-5 text-center border border-slate-800/80">
-                <span class="text-slate-400 text-xs font-medium uppercase tracking-wider block mb-1">Matches Lost</span>
-                <span class="text-2xl md:text-3xl font-bold text-red-400">{{ $totalLost }}</span>
+                <span class="text-slate-400 text-xs font-medium uppercase tracking-wider block mb-1">Record (W / L)</span>
+                <div class="text-2xl md:text-3xl font-bold">
+                    <span class="text-emerald-400">{{ $totalWon }}W</span>
+                    <span class="text-slate-600 mx-1">/</span>
+                    <span class="text-red-400">{{ $totalLost }}L</span>
+                </div>
             </div>
             <div class="pro-card p-5 text-center border border-slate-800/80">
                 <span class="text-slate-400 text-xs font-medium uppercase tracking-wider block mb-1">Win Rate</span>
                 <span class="text-2xl md:text-3xl font-bold text-sky-400">{{ $winRate }}%</span>
             </div>
-            <div class="pro-card p-5 text-center border border-slate-800/80 col-span-2 sm:col-span-1">
+            <div class="pro-card p-5 text-center border border-slate-800/80">
                 <span class="text-slate-400 text-xs font-medium uppercase tracking-wider block mb-1">Total Points</span>
                 <span class="text-2xl md:text-3xl font-bold text-amber-400">{{ $totalPoints }}</span>
             </div>
@@ -260,18 +262,23 @@
                     </span>
                 </div>
 
-                <div class="space-y-5">
+                <div class="max-h-[640px] overflow-y-auto overscroll-contain pr-1 space-y-4" style="scrollbar-gutter: stable;">
                     @forelse($tournaments as $tournament)
-                        <div class="pro-card p-5 border border-slate-800/80 space-y-4">
-                            <div>
-                                <h3 class="font-bold text-white text-base tracking-tight mb-1">
-                                    {{ $tournament->name }}
-                                </h3>
-                                <p class="text-amber-400 text-xs font-semibold flex items-center gap-1.5">
-                                    <span>🏆</span>
-                                    <span>{{ $tournament->rank }}</span>
-                                </p>
-                            </div>
+                        <details class="group pro-card p-5 border border-slate-800/80" @if($loop->first) open @endif>
+                            <summary class="list-none cursor-pointer flex items-start justify-between gap-3">
+                                <div class="min-w-0">
+                                    <h3 class="font-bold text-white text-base tracking-tight mb-1 truncate">
+                                        {{ $tournament->name }}
+                                    </h3>
+                                    <p class="text-amber-400 text-xs font-semibold flex items-center gap-1.5">
+                                        <span>🏆</span>
+                                        <span>{{ $tournament->rank }}</span>
+                                    </p>
+                                </div>
+                                <svg class="w-4 h-4 text-slate-400 shrink-0 mt-1 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </summary>
+
+                            <div class="space-y-4 mt-4">
 
                             <!-- Tournament Stat Matrix -->
                             <div class="grid grid-cols-4 gap-2 text-center text-xs bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl">
@@ -400,7 +407,8 @@
                                     </div>
                                 </div>
                             @endif
-                        </div>
+                            </div>
+                        </details>
                     @empty
                         <div class="pro-card p-6 text-center text-slate-400 text-sm">
                             No tournament campaigns registered for this team.

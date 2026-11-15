@@ -303,10 +303,21 @@
                             <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
                                 Meet The Squad
                             </h2>
+                            <p class="text-slate-400 text-sm max-w-md font-normal mt-1.5">
+                                Profiles of competitive athletes representing IceCream Fried across competitive titles.
+                            </p>
                         </div>
-                        <p class="text-slate-400 text-sm max-w-md font-normal">
-                            Profiles of competitive athletes representing IceCream Fried across competitive titles.
-                        </p>
+
+                        @if($members->isNotEmpty())
+                            <div class="flex items-center gap-2 shrink-0">
+                                <button id="carousel-prev" type="button" aria-label="Previous athletes" class="w-10 h-10 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 hover:border-orange-500/50 flex items-center justify-center text-slate-200 hover:text-orange-400 transition-all shadow-sm">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                                </button>
+                                <button id="carousel-next" type="button" aria-label="Next athletes" class="w-10 h-10 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 hover:border-orange-500/50 flex items-center justify-center text-slate-200 hover:text-orange-400 transition-all shadow-sm">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                </button>
+                            </div>
+                        @endif
                     </div>
 
                     @if($members->isEmpty())
@@ -314,7 +325,7 @@
                             Roster profiles loading...
                         </div>
                     @else
-                        <div class="relative w-full overflow-hidden px-1">
+                        <div class="relative w-full overflow-hidden px-1 py-3 -my-3">
                             <!-- Carousel Track -->
                             <div id="squad-carousel" class="flex transition-transform duration-500 ease-out gap-5" style="transform: translateX(0px);">
                                 @foreach($members as $member)
@@ -322,56 +333,71 @@
                                         $user   = $member->user;
                                         $player = $user->player;
                                         $initials = collect(explode(' ', $user->name))->map(fn($w) => strtoupper($w[0]))->implode('');
+                                        $teamGame = $member->team?->game;
+                                        $matchedGameInfo = $teamGame
+                                            ? $user->gameInfos->firstWhere('game', $teamGame)
+                                            : $user->gameInfos->first();
+                                        $roleLabels = $matchedGameInfo ? $matchedGameInfo->getRoleLabels() : [];
                                     @endphp
-                                    <div class="carousel-item flex-none w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] pro-card p-5 flex flex-col justify-between border border-slate-800/80 hover:border-slate-700 transition-all">
-                                        
-                                        <div class="space-y-4">
+                                    <div class="carousel-item icf-3d-tilt flex-none w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] pro-card p-5 flex flex-col justify-between border border-slate-800/90 hover:border-orange-500/45 hover:-translate-y-1.5 transition-all relative overflow-hidden group">
+
+                                        <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-orange-500 via-amber-400 to-sky-400 opacity-75 group-hover:opacity-100 transition-opacity"></div>
+
+                                        <div class="space-y-4 pt-1">
                                             <!-- Avatar & Name -->
-                                            <div class="flex items-center gap-3.5">
+                                            <div class="flex items-center gap-4">
                                                 @if($user->avatar_url)
-                                                    <img src="{{ asset('storage/'.$user->avatar_url) }}" alt="{{ $user->name }}" class="w-12 h-12 rounded-xl object-cover border border-slate-700 shrink-0">
+                                                    <img src="{{ asset('storage/'.$user->avatar_url) }}" alt="{{ $user->name }}" class="w-16 h-16 aspect-square rounded-2xl object-cover border-2 border-slate-700 group-hover:border-orange-500/60 transition-colors shrink-0 shadow-md">
                                                 @elseif($user->google_avatar_url)
-                                                    <img src="{{ $user->google_avatar_url }}" alt="{{ $user->name }}" class="w-12 h-12 rounded-xl object-cover border border-slate-700 shrink-0">
+                                                    <img src="{{ $user->google_avatar_url }}" alt="{{ $user->name }}" class="w-16 h-16 aspect-square rounded-2xl object-cover border-2 border-slate-700 group-hover:border-orange-500/60 transition-colors shrink-0 shadow-md">
                                                 @else
-                                                    <div class="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0">
-                                                        <span class="font-bold text-orange-400 text-sm">{{ $initials }}</span>
+                                                    <div class="w-16 h-16 aspect-square rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-slate-700 group-hover:border-orange-500/60 transition-colors flex items-center justify-center shrink-0 shadow-md">
+                                                        <span class="font-extrabold text-orange-400 text-lg">{{ $initials }}</span>
                                                     </div>
                                                 @endif
 
-                                                <div class="min-w-0">
-                                                    <h3 class="font-bold text-white text-base tracking-tight truncate">
-                                                        {{ $user->name }}
-                                                    </h3>
+                                                <div class="min-w-0 flex-1">
+                                                    <div class="flex items-center gap-2 flex-wrap">
+                                                        <h3 class="font-bold text-white text-lg tracking-tight truncate group-hover:text-orange-300 transition-colors">
+                                                            {{ $user->name }}
+                                                        </h3>
+                                                        @if($member->role === 'captain')
+                                                            <span class="badge-captain px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider shrink-0">Captain</span>
+                                                        @endif
+                                                    </div>
                                                     @if($user->username)
-                                                        <span class="text-xs text-slate-400 font-medium">@ {{ $user->username }}</span>
+                                                        <span class="text-xs text-orange-400/90 font-medium block mt-0.5">&#64;{{ $user->username }}</span>
+                                                    @endif
+                                                    @if($matchedGameInfo?->in_game_username)
+                                                        <span class="text-[11px] text-slate-400 font-mono block mt-0.5 truncate">IGN: {{ $matchedGameInfo->in_game_username }}</span>
                                                     @endif
                                                 </div>
                                             </div>
 
-                                            <!-- Badges -->
+                                            <!-- Badges & Tactical Roles -->
                                             <div class="flex flex-wrap gap-1.5 text-xs">
                                                 @if($member->is_main_roster)
                                                     <span class="badge-main px-2.5 py-0.5 rounded text-[11px] font-semibold">Main Roster</span>
                                                 @else
                                                     <span class="badge-reserve px-2.5 py-0.5 rounded text-[11px] font-medium">Reserve</span>
                                                 @endif
-                                                @if($member->role === 'captain')
-                                                    <span class="badge-captain px-2.5 py-0.5 rounded text-[11px] font-semibold">Captain</span>
-                                                @endif
                                                 @if($member->team)
-                                                    <span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded text-[11px] truncate max-w-full">{{ $member->team->name }}</span>
+                                                    <span class="bg-slate-800/90 border border-slate-700/80 text-slate-200 px-2.5 py-0.5 rounded text-[11px] font-medium truncate max-w-full">{{ $member->team->name }}</span>
                                                 @endif
+                                                @foreach(array_slice($roleLabels, 0, 2) as $roleLabel)
+                                                    <span class="bg-sky-500/10 border border-sky-500/25 text-sky-300 px-2 py-0.5 rounded text-[11px] font-semibold">{{ $roleLabel }}</span>
+                                                @endforeach
                                             </div>
 
                                             <!-- Bio Preview -->
-                                            <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed font-normal">
+                                            <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed font-normal min-h-[2.25rem]">
                                                 {{ $player && $player->bio ? $player->bio : 'Active competitive athlete in the IceCream Fried roster.' }}
                                             </p>
                                         </div>
 
                                         <!-- Action Link -->
                                         <div class="pt-4 mt-4 border-t border-slate-800/60">
-                                            <a href="{{ route('player.profile.username', $user->username ?? $user->id) }}" class="w-full py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white font-semibold text-xs transition-all block text-center border border-slate-800 hover:border-slate-700">
+                                            <a href="{{ route('player.profile.username', $user->username ?? $user->id) }}" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-orange-600 text-slate-200 hover:text-white font-semibold text-xs transition-all block text-center border border-slate-800 hover:border-orange-500 shadow-sm">
                                                 View Athlete Profile &rarr;
                                             </a>
                                         </div>
@@ -379,14 +405,6 @@
                                     </div>
                                 @endforeach
                             </div>
-
-                            <!-- Carousel Controls -->
-                            <button id="carousel-prev" class="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-900/90 border border-slate-700 flex items-center justify-center text-white hover:text-orange-400 transition-all z-20 shadow-lg">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                            </button>
-                            <button id="carousel-next" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-900/90 border border-slate-700 flex items-center justify-center text-white hover:text-orange-400 transition-all z-20 shadow-lg">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                            </button>
 
                             <!-- Indicators -->
                             <div id="carousel-indicators" class="flex justify-center gap-1.5 mt-6"></div>

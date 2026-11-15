@@ -386,5 +386,14 @@ function bootMotion() {
     initGsapMotion();
 }
 
+if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+    navigator.serviceWorker
+        .getRegistrations()
+        .then((registrations) => {
+            registrations.forEach((registration) => registration.unregister());
+        })
+        .catch(() => {});
+}
+
 document.addEventListener('DOMContentLoaded', bootMotion);
 document.addEventListener('livewire:navigated', () => setTimeout(bootMotion, 60));
