@@ -581,7 +581,7 @@
 
                                 <div id="map-frame-lalitpur" class="w-full h-full transition-opacity duration-300 opacity-0 absolute inset-0 pointer-events-none p-2">
                                     <iframe 
-                                        src="https://maps.google.com/maps?q=Satdobato-Godavari+Rd,+Godawari+44700,+Lalitpur,+Nepal&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                                        src="https://maps.google.com/maps?q=Vidanta+Champions+Arena,+Satdobato-Godavari+Rd,+Lalitpur,+Nepal&t=&z=16&ie=UTF8&iwloc=&output=embed" 
                                         class="w-full h-full border-0 rounded-lg" 
                                         style="filter: invert(0.9) hue-rotate(180deg) saturate(1.4) brightness(0.95);"
                                         allowfullscreen="" 
