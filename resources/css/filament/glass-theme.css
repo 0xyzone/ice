@@ -116,8 +116,22 @@
 }
 
 .fi-sidebar-nav {
-    padding: 0.75rem 0.65rem !important;
-    gap: 0.65rem !important;
+    position: relative !important;
+    padding: 1.125rem 0.9rem !important;
+    gap: 1rem !important;
+}
+
+.fi-sidebar-nav-groups {
+    margin-inline: 0 !important;
+    gap: 1.15rem !important;
+}
+
+.fi-sidebar-group-btn {
+    padding: 0.35rem 0.75rem !important;
+}
+
+.fi-sidebar-group-items {
+    gap: 0.3rem !important;
 }
 
 .fi-sidebar-group-label {
@@ -128,20 +142,63 @@
     opacity: 0.72;
 }
 
-.fi-sidebar-item-button {
+.fi-sidebar-item-btn {
+    position: relative !important;
+    z-index: 1 !important;
     border-radius: 0.75rem !important;
-    padding: 0.5rem 0.75rem !important;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    padding: 0.625rem 0.875rem !important;
+    background: transparent !important;
+    transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-.fi-sidebar-item-button:hover {
+.fi-sidebar-nav:not(.icf-has-sidebar-motion) .fi-sidebar-item-btn:hover {
     background: var(--glass-bg-subtle) !important;
 }
 
-.fi-sidebar-item-active > .fi-sidebar-item-button {
+.fi-sidebar-nav:not(.icf-has-sidebar-motion) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
     background: linear-gradient(135deg, rgba(249, 115, 22, 0.16), rgba(245, 158, 11, 0.12)) !important;
     border: 1px solid rgba(249, 115, 22, 0.28) !important;
     box-shadow: 0 4px 12px -2px rgba(249, 115, 22, 0.15) !important;
+}
+
+.icf-sidebar-active-pill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(245, 158, 11, 0.13));
+    border: 1px solid rgba(249, 115, 22, 0.36);
+    box-shadow: 0 4px 16px -2px rgba(249, 115, 22, 0.2);
+    will-change: transform, width, height;
+}
+
+.icf-sidebar-hover-pill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: 0.75rem;
+    background: radial-gradient(
+        140px circle at var(--mx, 50%) var(--my, 50%),
+        rgba(249, 115, 22, 0.16),
+        rgba(255, 255, 255, 0.05) 70%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    will-change: transform, width, height, opacity;
+}
+
+/* ── Smooth SPA Page Transitions ────────────────────────────────────────── */
+.fi-main {
+    transition: opacity 0.2s cubic-bezier(0.22, 1, 0.36, 1), transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.icf-navigating .fi-main {
+    opacity: 0.45;
+    transform: translateY(4px);
 }
 
 /* ── Topbar Quick Links ─────────────────────────────────────────────────── */

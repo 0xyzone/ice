@@ -379,10 +379,169 @@ function initGsapMotion() {
     registerCleanup(() => mm.revert());
 }
 
+function measureInNav(nav, el) {
+    const navRect = nav.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+
+    return {
+        x: elRect.left - navRect.left + nav.scrollLeft,
+        y: elRect.top - navRect.top + nav.scrollTop,
+        width: elRect.width,
+        height: elRect.height,
+    };
+}
+
+function initSidebarMotion() {
+    const nav = document.querySelector('.fi-sidebar-nav');
+    if (!nav) {
+        return;
+    }
+
+    nav.classList.add('icf-has-sidebar-motion');
+
+    let activePill = nav.querySelector('.icf-sidebar-active-pill');
+    if (!activePill) {
+        activePill = document.createElement('div');
+        activePill.className = 'icf-sidebar-active-pill';
+        nav.prepend(activePill);
+    }
+
+    let hoverPill = nav.querySelector('.icf-sidebar-hover-pill');
+    if (!hoverPill) {
+        hoverPill = document.createElement('div');
+        hoverPill.className = 'icf-sidebar-hover-pill';
+        nav.prepend(hoverPill);
+    }
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const activeBtn = nav.querySelector('.fi-sidebar-item.fi-active > .fi-sidebar-item-btn');
+
+    const syncActivePill = (animate = true) => {
+        if (!activeBtn || activeBtn.offsetParent === null) {
+            activePill.style.opacity = '0';
+            return;
+        }
+
+        const target = measureInNav(nav, activeBtn);
+        activePill.style.opacity = '1';
+
+        const prev = window.__icfSidebarActiveRect;
+        window.__icfSidebarActiveRect = target;
+
+        if (!animate || reducedMotion || !prev) {
+            gsap.set(activePill, {
+                x: target.x,
+                y: target.y,
+                width: target.width,
+                height: target.height,
+            });
+            return;
+        }
+
+        gsap.fromTo(
+            activePill,
+            { x: prev.x, y: prev.y, width: prev.width, height: prev.height },
+            {
+                x: target.x,
+                y: target.y,
+                width: target.width,
+                height: target.height,
+                duration: 0.36,
+                ease: 'power3.out',
+                overwrite: 'auto',
+            }
+        );
+    };
+
+    syncActivePill(true);
+
+    if (nav.dataset.sidebarMotionBound !== '1') {
+        nav.dataset.sidebarMotionBound = '1';
+
+        let hoveredBtn = null;
+
+        const onPointerMove = (e) => {
+            if (reducedMotion) {
+                return;
+            }
+            const btn = e.target.closest('.fi-sidebar-item-btn');
+            if (!btn || !nav.contains(btn)) {
+                return;
+            }
+
+            const btnRect = btn.getBoundingClientRect();
+            const relX = e.clientX - btnRect.left;
+            const relY = e.clientY - btnRect.top;
+            hoverPill.style.setProperty('--mx', `${relX}px`);
+            hoverPill.style.setProperty('--my', `${relY}px`);
+
+            if (hoveredBtn !== btn) {
+                hoveredBtn = btn;
+                const pos = measureInNav(nav, btn);
+                gsap.to(hoverPill, {
+                    x: pos.x,
+                    y: pos.y,
+                    width: pos.width,
+                    height: pos.height,
+                    opacity: 1,
+                    duration: 0.24,
+                    ease: 'power2.out',
+                    overwrite: 'auto',
+                });
+            }
+        };
+
+        const onPointerLeave = () => {
+            hoveredBtn = null;
+            gsap.to(hoverPill, {
+                opacity: 0,
+                duration: 0.2,
+                ease: 'power2.out',
+                overwrite: 'auto',
+            });
+        };
+
+        const onClick = (e) => {
+            const btn = e.target.closest('.fi-sidebar-item-btn');
+            if (!btn || !nav.contains(btn) || reducedMotion) {
+                return;
+            }
+            const pos = measureInNav(nav, btn);
+            window.__icfSidebarActiveRect = pos;
+            gsap.to(activePill, {
+                x: pos.x,
+                y: pos.y,
+                width: pos.width,
+                height: pos.height,
+                opacity: 1,
+                duration: 0.32,
+                ease: 'power3.out',
+                overwrite: 'auto',
+            });
+        };
+
+        nav.addEventListener('pointermove', onPointerMove, { passive: true });
+        nav.addEventListener('pointerleave', onPointerLeave, { passive: true });
+        nav.addEventListener('click', onClick, { passive: true });
+
+        const onResize = () => syncActivePill(false);
+        window.addEventListener('resize', onResize, { passive: true });
+        registerCleanup(() => {
+            nav.removeEventListener('pointermove', onPointerMove);
+            nav.removeEventListener('pointerleave', onPointerLeave);
+            nav.removeEventListener('click', onClick);
+            window.removeEventListener('resize', onResize);
+            delete nav.dataset.sidebarMotionBound;
+        });
+    }
+}
+
 function bootMotion() {
+    document.documentElement.classList.remove('icf-navigating');
     runCleanups();
     initAmbientWebGL();
     initHeroCrestCanvases();
+    initSidebarMotion();
     initGsapMotion();
 }
 
@@ -395,5 +554,14 @@ if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
         .catch(() => {});
 }
 
+document.addEventListener('livewire:navigating', () => {
+    document.documentElement.classList.add('icf-navigating');
+    const nav = document.querySelector('.fi-sidebar-nav');
+    const activeBtn = nav?.querySelector('.fi-sidebar-item.fi-active > .fi-sidebar-item-btn');
+    if (nav && activeBtn && activeBtn.offsetParent !== null) {
+        window.__icfSidebarActiveRect = measureInNav(nav, activeBtn);
+    }
+});
+
 document.addEventListener('DOMContentLoaded', bootMotion);
-document.addEventListener('livewire:navigated', () => setTimeout(bootMotion, 60));
+document.addEventListener('livewire:navigated', () => setTimeout(bootMotion, 40));

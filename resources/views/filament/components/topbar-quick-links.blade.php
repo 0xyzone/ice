@@ -72,6 +72,7 @@
             @foreach ($links as $link)
                 <a
                     href="{{ $link['url'] }}"
+                    wire:navigate
                     class="fi-topbar-quick-link {{ $link['active'] ? 'is-active' : '' }}"
                 >
                     {{ $link['label'] }}

@@ -39,6 +39,7 @@ class MukhiyasPanelProvider extends PanelProvider
             ->default()
             ->id('mukhiyas')
             ->path('mukhiyas')
+            ->spa(hasPrefetching: true)
             ->brandLogo(fn () => view('filament.components.brand-logo'))
             ->brandLogoHeight('2.8rem')
             ->favicon(asset('favicon.ico').'?v='.filemtime(public_path('favicon.ico')))

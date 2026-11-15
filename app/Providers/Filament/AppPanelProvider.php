@@ -37,6 +37,7 @@ class AppPanelProvider extends PanelProvider
         return $panel
             ->id('app')
             ->path('app')
+            ->spa(hasPrefetching: true)
             ->brandLogo(fn () => view('filament.components.brand-logo'))
             ->brandLogoHeight('2.8rem')
             ->favicon(asset('favicon.ico').'?v='.filemtime(public_path('favicon.ico')))
