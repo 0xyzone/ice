@@ -8,13 +8,14 @@ use App\Filament\Resources\Admins\Pages\ListAdmins;
 use App\Filament\Resources\Admins\Schemas\AdminForm;
 use App\Filament\Resources\Admins\Tables\AdminsTable;
 use App\Models\User;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+use BackedEnum;
 use UnitEnum;
 
 class AdminResource extends Resource
@@ -62,9 +63,9 @@ class AdminResource extends Resource
     public static function getAuthorizationResponse(string|UnitEnum $action, ?Model $record = null): Response
     {
         $actionName = $action instanceof UnitEnum ? $action->name : $action;
-        $permission = ucfirst($actionName).':'.class_basename(static::class);
+        $permission = ucfirst($actionName) . ':' . class_basename(static::class);
 
-        $user = filament()->auth()->user();
+        $user = Auth::user();
 
         if ($user && ($user->hasRole(['super_admin', 'admin']) || $user->can($permission))) {
             return Response::allow();
