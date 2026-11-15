@@ -2,9 +2,12 @@
 
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\PlayerProfileController;
 use App\Http\Controllers\TeamProfileController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/changelog', ChangelogController::class)->name('changelog');
 
 Route::get('/player/{id}', [PlayerProfileController::class, 'show'])->name('player.profile')->where('id', '[0-9]+');
 Route::get('/player/{username}', [PlayerProfileController::class, 'showByUsername'])->name('player.profile.username');

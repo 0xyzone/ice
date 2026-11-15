@@ -30,10 +30,13 @@
                     <a href="/" class="w-16 h-16 rounded-2xl bg-slate-950/80 border border-slate-800 flex items-center justify-center p-2.5 mb-4 shadow-md hover:border-slate-700 transition-colors">
                         <img src="{{ asset('images/logo.png') }}" alt="IceCream Fried Esports Logo" class="max-w-full max-h-full object-contain">
                     </a>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-orange-500/10 text-orange-400 border border-orange-500/20 mb-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
-                        ICECREAM FRIED PORTAL
-                    </span>
+                    <div class="flex flex-wrap items-center justify-center gap-2 mb-2">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-orange-500/10 text-orange-400 border border-orange-500/20">
+                            <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                            ICECREAM FRIED PORTAL
+                        </span>
+                        <x-version-pill />
+                    </div>
                     <h1 class="text-2xl font-bold tracking-tight text-white mt-1">
                         Welcome Back
                     </h1>
