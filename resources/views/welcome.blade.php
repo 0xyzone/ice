@@ -14,7 +14,7 @@
         <!-- Vite Assets -->
         @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/filament-motion.js'])
     </head>
-    <body class="bg-[#0b0f17] text-slate-100 font-sans antialiased min-h-dvh relative flex flex-col overflow-x-hidden subtle-mesh-bg">
+    <body class="bg-[#0b0f17] text-slate-100 font-sans antialiased min-h-dvh relative flex flex-col overflow-x-clip subtle-mesh-bg">
 
         <!-- =================================================================
              NAVIGATION BAR
@@ -47,13 +47,13 @@
                 </nav>
 
                 <!-- Actions -->
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-3 shrink-0">
                     @auth
-                        <a href="{{ route('filament.mukhiyas.pages.dashboard') }}" class="px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-semibold text-xs transition-all shadow-sm">
+                        <a href="{{ auth()->user()->getDefaultPanelUrl() }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 active:scale-95 text-white font-semibold text-xs transition-all shadow-sm cursor-pointer">
                             Command Deck &rarr;
                         </a>
                     @else
-                        <a href="{{ route('login') }}" class="px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-semibold text-xs transition-all shadow-sm">
+                        <a href="{{ route('login') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 active:scale-95 text-white font-semibold text-xs transition-all shadow-sm cursor-pointer">
                             Portal Login &rarr;
                         </a>
                     @endauth
