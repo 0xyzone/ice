@@ -8,12 +8,12 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             @foreach ($divisions as $division)
                 <div class="icf-3d-tilt fi-section p-5 space-y-4">
-                    <div class="flex items-center justify-between gap-2">
-                        <div>
-                            <span class="text-[11px] font-bold uppercase tracking-wider text-orange-500">{{ $division['category'] }}</span>
-                            <h4 class="text-base font-bold leading-snug">{{ $division['name'] }}</h4>
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="min-w-0">
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-orange-500 block">{{ $division['category'] }}</span>
+                            <h4 class="text-sm font-bold leading-snug truncate" title="{{ $division['name'] }}">{{ $division['name'] }}</h4>
                         </div>
-                        <x-game-logo :game="$division['gameEnum']" size="lg" />
+                        <x-game-logo :game="$division['gameEnum']" size="md" />
                     </div>
 
                     <div class="grid grid-cols-3 gap-2 pt-2 border-t border-white/10 text-center">

@@ -66,7 +66,7 @@
     }
 @endphp
 
-<div class="flex items-center gap-2">
+<div class="fi-topbar-nav-group">
     @if (count($links))
         <nav aria-label="Quick navigation" class="fi-topbar-quick-links hidden lg:flex items-center">
             @foreach ($links as $link)
@@ -83,7 +83,7 @@
     <a
         href="{{ route('home') }}"
         title="Go to Public Homepage"
-        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-orange-500/30 bg-orange-500/10 text-orange-600 dark:text-orange-400 hover:bg-orange-500/20 transition-colors shrink-0"
+        class="fi-topbar-home-btn"
     >
         <x-filament::icon
             icon="heroicon-m-home"
