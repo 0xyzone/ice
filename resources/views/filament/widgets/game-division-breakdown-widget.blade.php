@@ -13,9 +13,7 @@
                             <span class="text-[11px] font-bold uppercase tracking-wider text-orange-500">{{ $division['category'] }}</span>
                             <h4 class="text-base font-bold leading-snug">{{ $division['name'] }}</h4>
                         </div>
-                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-orange-500/15 text-orange-500 border border-orange-500/30">
-                            {{ $division['short'] }}
-                        </span>
+                        <x-game-logo :game="$division['gameEnum']" size="lg" />
                     </div>
 
                     <div class="grid grid-cols-3 gap-2 pt-2 border-t border-white/10 text-center">

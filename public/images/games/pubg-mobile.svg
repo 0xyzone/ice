@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="PUBG Mobile">
+  <defs>
+    <linearGradient id="pubg-bg" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#27272A"/>
+      <stop offset="100%" stop-color="#09090B"/>
+    </linearGradient>
+    <linearGradient id="pubg-amber" x1="14" y1="10" x2="50" y2="54" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FDE047"/>
+      <stop offset="50%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+  </defs>
+  <!-- Tactical Shield Frame -->
+  <rect x="5" y="5" width="54" height="54" rx="14" fill="url(#pubg-bg)" stroke="url(#pubg-amber)" stroke-width="2.5"/>
+  <rect x="9.5" y="9.5" width="45" height="45" rx="10" stroke="#F59E0B" stroke-opacity="0.22" stroke-width="1"/>
+  <!-- Corner Crosshair Ticks -->
+  <path d="M32 10V14M32 50V54M10 32H14M50 32H54" stroke="#F59E0B" stroke-opacity="0.55" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Iconic Level 3 Helmet Silhouette -->
+  <path d="M20 28C20 19.5 25.4 15 32 15C38.6 15 44 19.5 44 28V35L47 41C47 44.5 41.5 48 32 48C22.5 48 17 44.5 17 41L20 35V28Z" fill="url(#pubg-amber)"/>
+  <!-- Helmet Visor Slit -->
+  <path d="M21 29.5H43V35.5C43 37.5 38.5 39 32 39C25.5 39 21 37.5 21 35.5V29.5Z" fill="#09090B"/>
+  <!-- Visor Eye Slit -->
+  <rect x="24" y="31.5" width="16" height="3.2" rx="1.6" fill="#FDE047"/>
+  <!-- Helmet Center Ridge -->
+  <path d="M32 15V29.5" stroke="#92400E" stroke-width="2" stroke-linecap="round"/>
+</svg>

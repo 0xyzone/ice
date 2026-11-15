@@ -59,10 +59,10 @@
                         @endif
                     </div>
 
-                    <p class="text-slate-400 text-sm font-medium flex items-center justify-center md:justify-start gap-2">
-                        <span class="text-orange-400">●</span>
-                        <span>{{ $team->gameLabel }}</span>
-                    </p>
+                    <div class="flex items-center justify-center md:justify-start gap-2">
+                        <x-game-logo :game="$team->game" size="md" />
+                        <span class="sr-only">{{ $team->gameLabel }}</span>
+                    </div>
 
                     <!-- Key Metadata Grid -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs">

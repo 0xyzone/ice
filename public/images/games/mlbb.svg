@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="Mobile Legends: Bang Bang">
+  <defs>
+    <linearGradient id="mlbb-bg" x1="8" y1="4" x2="56" y2="60" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1E3A8A"/>
+      <stop offset="55%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#172554"/>
+    </linearGradient>
+    <linearGradient id="mlbb-gold" x1="16" y1="12" x2="48" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FDE68A"/>
+      <stop offset="50%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+    <linearGradient id="mlbb-cyan" x1="20" y1="18" x2="44" y2="46" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+  </defs>
+  <!-- Hexagonal Crest -->
+  <path d="M32 3L57 16.5V47.5L32 61L7 47.5V16.5L32 3Z" fill="url(#mlbb-bg)" stroke="url(#mlbb-gold)" stroke-width="2.5"/>
+  <path d="M32 8L52 19V45L32 56L12 45V19L32 8Z" stroke="#38BDF8" stroke-opacity="0.28" stroke-width="1"/>
+  <!-- Crossed Blades -->
+  <path d="M19 45L43 17L46 15L44 19L22 47L19 45Z" fill="url(#mlbb-gold)"/>
+  <path d="M45 45L21 17L18 15L20 19L42 47L45 45Z" fill="url(#mlbb-gold)"/>
+  <!-- Center Land of Dawn Diamond -->
+  <path d="M32 14L42 30L32 46L22 30L32 14Z" fill="url(#mlbb-cyan)" stroke="url(#mlbb-gold)" stroke-width="2"/>
+  <path d="M32 19L37.5 30L32 41L26.5 30L32 19Z" fill="#E0F2FE" fill-opacity="0.85"/>
+  <!-- Top & Bottom Crown Accents -->
+  <path d="M27 11H37L32 6L27 11Z" fill="url(#mlbb-gold)"/>
+  <circle cx="32" cy="51.5" r="2.2" fill="#FDE68A"/>
+</svg>

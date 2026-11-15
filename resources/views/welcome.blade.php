@@ -199,9 +199,10 @@
                                                     <h3 class="font-bold text-lg sm:text-xl text-white group-hover:text-orange-300 transition-colors truncate">
                                                         {{ $team->name }}
                                                     </h3>
-                                                    <span class="text-xs text-slate-400 font-medium block mt-0.5">
-                                                        {{ $team->gameLabel }}
-                                                    </span>
+                                                    <div class="mt-1 flex items-center gap-1.5">
+                                                        <x-game-logo :game="$team->game" size="sm" />
+                                                        <span class="sr-only">{{ $team->gameLabel }}</span>
+                                                    </div>
                                                 </div>
                                             </div>
 

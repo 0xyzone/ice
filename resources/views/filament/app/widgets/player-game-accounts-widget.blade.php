@@ -12,15 +12,12 @@
                 @foreach ($accounts as $account)
                     <div class="icf-3d-tilt fi-section p-5 space-y-3">
                         <div class="flex items-center justify-between gap-2">
-                            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-orange-500/15 text-orange-500 border border-orange-500/30">
-                                {{ $account['short'] }}
-                            </span>
+                            <x-game-logo :game="$account['gameEnum']" size="md" />
                             <span class="text-xs opacity-65 font-mono">ID: {{ $account['uid'] }}</span>
                         </div>
 
                         <div>
                             <div class="text-base font-bold">{{ $account['ign'] }}</div>
-                            <div class="text-xs opacity-70">{{ $account['game'] }}</div>
                         </div>
 
                         @if (count($account['roles']))

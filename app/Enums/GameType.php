@@ -32,6 +32,20 @@ enum GameType: string implements HasColor, HasIcon, HasLabel
         };
     }
 
+    public function getLogoPath(): string
+    {
+        return match ($this) {
+            self::Mlbb => 'images/games/mlbb.svg',
+            self::PubgMobile => 'images/games/pubg-mobile.svg',
+            self::FreeFire => 'images/games/free-fire.svg',
+        };
+    }
+
+    public function getLogoUrl(): string
+    {
+        return asset($this->getLogoPath());
+    }
+
     public function getCategory(): string
     {
         return match ($this) {

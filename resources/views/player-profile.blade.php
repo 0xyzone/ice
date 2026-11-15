@@ -258,9 +258,7 @@
                                         <summary class="list-none cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                                             <div class="space-y-1 min-w-0">
                                                 <div class="flex items-center gap-2 flex-wrap">
-                                                    <span class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase bg-sky-500/10 text-sky-400 border border-sky-500/20">
-                                                        {{ $tGame?->getShortName() ?? 'GAME' }}
-                                                    </span>
+                                                    <x-game-logo :game="$tGame" size="sm" />
                                                     <h4 class="font-bold text-sm text-white">
                                                         {{ $stat->tournament->name }}
                                                     </h4>
@@ -473,9 +471,10 @@
                                         <h3 class="font-bold text-white text-base group-hover:text-orange-300 transition-colors truncate">
                                             {{ $membership->team->name }}
                                         </h3>
-                                        <p class="text-slate-400 text-xs font-medium mt-0.5">
-                                            {{ $membership->team->gameLabel }}
-                                        </p>
+                                        <div class="mt-1 flex items-center gap-1.5">
+                                            <x-game-logo :game="$membership->team->game" size="xs" />
+                                            <span class="sr-only">{{ $membership->team->gameLabel }}</span>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -539,16 +538,16 @@
                         <div class="pro-card p-5 space-y-3 border border-slate-800/80">
                             <div class="flex items-start justify-between gap-3">
                                 <div class="flex items-center gap-3 min-w-0">
-                                    <div class="w-11 h-11 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center p-2 shrink-0">
-                                        <span class="text-sky-400 font-extrabold text-xs tracking-wider uppercase">
-                                            {{ $gameInfo->game?->getShortName() ?? 'GAME' }}
-                                        </span>
+                                    <div class="w-11 h-11 rounded-xl bg-slate-900/90 border border-slate-700/80 flex items-center justify-center p-1.5 shrink-0">
+                                        <x-game-logo :game="$gameInfo->game" size="lg" class="w-full h-full" />
                                     </div>
                                     <div class="min-w-0">
                                         <h3 class="font-bold text-white text-base truncate">
                                             {{ $gameInfo->in_game_username ?? 'Unspecified' }}
                                         </h3>
-                                        <p class="text-xs text-slate-400 truncate">{{ $gameInfo->gameLabel }}</p>
+                                        @if($gameInfo->roleLabel)
+                                            <p class="text-xs text-slate-400 truncate">{{ $gameInfo->roleLabel }}</p>
+                                        @endif
                                     </div>
                                 </div>
 

@@ -41,6 +41,7 @@ class GameDivisionBreakdownWidget extends Widget
     {
         $divisions = collect(GameType::cases())->map(function (GameType $game): array {
             return [
+                'gameEnum' => $game,
                 'name' => $game->getLabel(),
                 'short' => $game->getShortName(),
                 'category' => $game->isMoba() ? 'MOBA 5v5' : 'Battle Royale',

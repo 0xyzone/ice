@@ -32,6 +32,7 @@ class PlayerGameAccountsWidget extends Widget
             ->orderBy('game')
             ->get()
             ->map(fn (GameInfo $info): array => [
+                'gameEnum' => $info->game,
                 'game' => $info->gameLabel,
                 'short' => $info->game?->getShortName() ?? 'GAME',
                 'ign' => $info->in_game_username,
