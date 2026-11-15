@@ -67,7 +67,7 @@
 @endphp
 
 @if (count($links))
-    <nav aria-label="Quick navigation" class="fi-topbar-quick-links hidden md:flex items-center gap-1.5 mr-3">
+    <nav aria-label="Quick navigation" class="fi-topbar-quick-links hidden lg:flex items-center">
         @foreach ($links as $link)
             <a
                 href="{{ $link['url'] }}"
