@@ -14,13 +14,16 @@ class LoginController extends Controller
     public function show(): View|RedirectResponse
     {
         if (Auth::check()) {
-            if (! Auth::user()->isActive()) {
+            /** @var User $user */
+            $user = Auth::user();
+
+            if (! $user->isActive()) {
                 Auth::logout();
 
                 return redirect()->route('auth.deactivated');
             }
 
-            return $this->redirectUser(Auth::user());
+            return $this->redirectUser($user);
         }
 
         return view('auth.login');
@@ -41,6 +44,7 @@ class LoginController extends Controller
         ];
 
         if (Auth::attempt($authData, $request->boolean('remember'))) {
+            /** @var User $user */
             $user = Auth::user();
 
             if (! $user->isActive()) {

@@ -125,7 +125,7 @@
                     <div class="pt-2">
                         <button 
                             type="submit" 
-                            class="w-full py-3.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-semibold text-sm shadow-lg shadow-orange-950/30 transition-all active:scale-[0.99] cursor-pointer tracking-wider"
+                            class="w-full py-3.5 rounded-xl bg-linear-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-semibold text-sm shadow-lg shadow-orange-950/30 transition-all active:scale-[0.99] cursor-pointer tracking-wider"
                         >
                             SIGN IN &amp; DECRYPT
                         </button>

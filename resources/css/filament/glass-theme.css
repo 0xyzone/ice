@@ -191,19 +191,7 @@
     will-change: transform, width, height, opacity;
 }
 
-/* ── Smooth SPA & View Transitions ──────────────────────────────────────── */
-@view-transition {
-    navigation: auto;
-}
-
-.fi-sidebar {
-    view-transition-name: fi-sidebar;
-}
-
-.fi-topbar-ctn {
-    view-transition-name: fi-topbar;
-}
-
+/* ── Smooth SPA Page Transitions ────────────────────────────────────────── */
 @keyframes icfPageEnter {
     from {
         opacity: 0;

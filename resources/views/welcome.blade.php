@@ -82,7 +82,7 @@
 
                             <h1 class="text-[clamp(2.15rem,1.4rem+3.2vw,3.75rem)] font-extrabold tracking-tight text-white leading-[1.08]">
                                 Elite Performance, <br>
-                                <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-yellow-200">
+                                <span class="text-transparent bg-clip-text bg-linear-to-r from-orange-400 via-amber-300 to-yellow-200">
                                     Next-Gen Esports
                                 </span>
                             </h1>
@@ -342,7 +342,7 @@
                                     @endphp
                                     <div class="carousel-item icf-3d-tilt flex-none w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] pro-card p-5 flex flex-col justify-between border border-slate-800/90 hover:border-orange-500/45 hover:-translate-y-1.5 transition-all relative overflow-hidden group">
 
-                                        <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-orange-500 via-amber-400 to-sky-400 opacity-75 group-hover:opacity-100 transition-opacity"></div>
+                                        <div class="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-orange-500 via-amber-400 to-sky-400 opacity-75 group-hover:opacity-100 transition-opacity"></div>
 
                                         <div class="space-y-4 pt-1">
                                             <!-- Avatar & Name -->
@@ -352,7 +352,7 @@
                                                 @elseif($user->google_avatar_url)
                                                     <img src="{{ $user->google_avatar_url }}" alt="{{ $user->name }}" class="w-16 h-16 aspect-square rounded-2xl object-cover border-2 border-slate-700 group-hover:border-orange-500/60 transition-colors shrink-0 shadow-md">
                                                 @else
-                                                    <div class="w-16 h-16 aspect-square rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-slate-700 group-hover:border-orange-500/60 transition-colors flex items-center justify-center shrink-0 shadow-md">
+                                                    <div class="w-16 h-16 aspect-square rounded-2xl bg-linear-to-br from-slate-800 to-slate-900 border-2 border-slate-700 group-hover:border-orange-500/60 transition-colors flex items-center justify-center shrink-0 shadow-md">
                                                         <span class="font-extrabold text-orange-400 text-lg">{{ $initials }}</span>
                                                     </div>
                                                 @endif
@@ -605,7 +605,7 @@
                                 </button>
                             </div>
 
-                            <div class="pro-card p-2 border border-slate-800 h-[340px] relative overflow-hidden">
+                            <div class="pro-card p-2 border border-slate-800 h-85 relative overflow-hidden">
                                 <div id="map-frame-kathmandu" class="w-full h-full transition-opacity duration-300 opacity-100 absolute inset-0 p-2">
                                     <iframe 
                                         src="https://maps.google.com/maps?q=Vidanta+Champions+Arena,+King+Birendra+Marg,+Kathmandu+44600,+Nepal&t=&z=16&ie=UTF8&iwloc=&output=embed" 

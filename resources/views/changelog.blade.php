@@ -116,7 +116,7 @@
                     </div>
                 </article>
             @empty
-                <div class="rounded-3xl bg-white/[0.04] backdrop-blur-xl border border-white/10 p-10 text-center text-slate-400">
+                <div class="rounded-3xl bg-white/4 backdrop-blur-xl border border-white/10 p-10 text-center text-slate-400">
                     No changelog entries found.
                 </div>
             @endforelse

@@ -246,7 +246,7 @@
                                 </span>
                             </div>
 
-                            <div class="max-h-[640px] overflow-y-auto overscroll-contain pr-1 space-y-3" style="scrollbar-gutter: stable;">
+                            <div class="max-h-160 overflow-y-auto overscroll-contain pr-1 space-y-3" style="scrollbar-gutter: stable;">
                                 @foreach($tournamentStats as $stat)
                                     @php
                                         $tGame = $stat->tournament->game;

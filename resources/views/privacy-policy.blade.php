@@ -18,8 +18,8 @@
     <body class="bg-[#0b0f17] text-slate-200 font-sans antialiased min-h-screen selection:bg-orange-500/30 selection:text-white flex flex-col">
 
         <!-- Subtle Ambient Background Glows -->
-        <div class="fixed top-0 left-1/4 w-[600px] h-[600px] bg-orange-500/5 rounded-full blur-[140px] pointer-events-none -z-10"></div>
-        <div class="fixed bottom-0 right-1/4 w-[600px] h-[600px] bg-sky-500/5 rounded-full blur-[140px] pointer-events-none -z-10"></div>
+        <div class="fixed top-0 left-1/4 w-150 h-150 bg-orange-500/5 rounded-full blur-[140px] pointer-events-none -z-10"></div>
+        <div class="fixed bottom-0 right-1/4 w-150 h-150 bg-sky-500/5 rounded-full blur-[140px] pointer-events-none -z-10"></div>
 
         <!-- Top Navigation -->
         <header class="sticky top-0 z-50 bg-[#0b0f17]/90 backdrop-blur-md border-b border-slate-800/80">

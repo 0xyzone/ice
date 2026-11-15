@@ -262,7 +262,7 @@
                     </span>
                 </div>
 
-                <div class="max-h-[640px] overflow-y-auto overscroll-contain px-2 py-3 -mx-2 -my-3 space-y-4" style="scrollbar-gutter: stable;">
+                <div class="max-h-160 overflow-y-auto overscroll-contain px-2 py-3 -mx-2 -my-3 space-y-4" style="scrollbar-gutter: stable;">
                     @forelse($tournaments as $tournament)
                         <details class="group pro-card p-5 border border-slate-800/80" @if($loop->first) open @endif>
                             <summary class="list-none cursor-pointer flex items-start justify-between gap-3">

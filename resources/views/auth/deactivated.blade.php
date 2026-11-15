@@ -76,7 +76,7 @@
                 <div class="space-y-3">
                     <a 
                         href="{{ url('/login') }}" 
-                        class="w-full py-3.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg shadow-orange-950/30 transition-all text-center"
+                        class="w-full py-3.5 rounded-xl bg-linear-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg shadow-orange-950/30 transition-all text-center"
                     >
                         <span>Return to Login</span>
                     </a>
