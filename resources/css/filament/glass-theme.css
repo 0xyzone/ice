@@ -341,14 +341,22 @@
                 box-shadow 0.22s ease !important;
 }
 
+.fi-ta-content-grid > .fi-ta-record .fi-ta-record-content,
+.fi-ta-content-grid > .fi-ta-record .fi-ta-stack,
+.fi-ta-content-grid > .fi-ta-record .fi-ta-split,
+.fi-ta-content-grid > .fi-ta-record .fi-ta-col,
+.fi-ta-content-grid > .fi-ta-record .fi-ta-col-wrp {
+    position: static !important;
+}
+
 .fi-ta-content-grid > .fi-ta-record:has(.fi-ta-record-checkbox),
 .fi-ta-content-grid > .fi-ta-record:has(.icf-card-corner-status) {
-    padding-top: 2.9rem !important;
+    padding-top: 3rem !important;
 }
 
 .fi-ta-content-grid > .fi-ta-record .fi-ta-record-checkbox {
     position: absolute;
-    top: 0.95rem;
+    top: 1rem;
     left: 1.15rem;
     z-index: 5;
     margin: 0 !important;
@@ -356,8 +364,9 @@
 
 .fi-ta-content-grid > .fi-ta-record .icf-card-corner-status {
     position: absolute;
-    top: 0.95rem;
+    top: 1rem;
     right: 1.15rem;
+    width: auto !important;
     z-index: 5;
 }
 
@@ -679,10 +688,15 @@
     .fi-ta-content-grid > .fi-ta-record,
     .fi-ta-record-ctn {
         position: relative;
-        padding: 0.95rem !important;
+        padding: 1rem !important;
         max-width: 100% !important;
         min-width: 0 !important;
         overflow: hidden !important;
+    }
+
+    .fi-ta-content-grid > .fi-ta-record:has(.fi-ta-record-checkbox),
+    .fi-ta-content-grid > .fi-ta-record:has(.icf-card-corner-status) {
+        padding-top: 2.9rem !important;
     }
 
     /* Ensure split/stack columns inside cards stack cleanly instead of squeezing badges */
