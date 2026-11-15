@@ -101,6 +101,40 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         return false;
     }
 
+    public function getDefaultPanelUrl(): string
+    {
+        $mukhiyasPanel = filament()->getPanel('mukhiyas');
+        if ($this->canAccessPanel($mukhiyasPanel)) {
+            return $mukhiyasPanel->getUrl();
+        }
+
+        $appPanel = filament()->getPanel('app');
+        if ($this->canAccessPanel($appPanel)) {
+            return $appPanel->getUrl();
+        }
+
+        return route('home');
+    }
+
+    public function canAccessIntendedUrl(?string $intendedUrl): bool
+    {
+        if (! $intendedUrl) {
+            return false;
+        }
+
+        $path = parse_url($intendedUrl, PHP_URL_PATH) ?? '';
+
+        if ($path === '/mukhiyas' || str_starts_with($path, '/mukhiyas/')) {
+            return $this->canAccessPanel(filament()->getPanel('mukhiyas'));
+        }
+
+        if ($path === '/app' || str_starts_with($path, '/app/')) {
+            return $this->canAccessPanel(filament()->getPanel('app'));
+        }
+
+        return false;
+    }
+
     public function canImpersonate(): bool
     {
         return $this->hasRole('super_admin');

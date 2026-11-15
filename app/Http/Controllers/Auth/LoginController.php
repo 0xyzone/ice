@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -70,12 +71,14 @@ class LoginController extends Controller
         return redirect()->to('/login');
     }
 
-    protected function redirectUser($user): RedirectResponse
+    protected function redirectUser(User $user): RedirectResponse
     {
-        if ($user->hasRole(['admin', 'super_admin'])) {
-            return redirect('/mukhiyas');
+        $intended = session()->pull('url.intended');
+
+        if ($user->canAccessIntendedUrl($intended)) {
+            return redirect()->to($intended);
         }
 
-        return redirect('/app');
+        return redirect()->to($user->getDefaultPanelUrl());
     }
 }

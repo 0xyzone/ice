@@ -219,14 +219,16 @@ class GoogleAuthController extends Controller
     }
 
     /**
-     * Redirect the user according to their assigned roles.
+     * Redirect the user according to their panel access & intended destination.
      */
     protected function redirectUser(User $user): RedirectResponse
     {
-        if ($user->hasRole(['admin', 'super_admin'])) {
-            return redirect('/mukhiyas');
+        $intended = session()->pull('url.intended');
+
+        if ($user->canAccessIntendedUrl($intended)) {
+            return redirect()->to($intended);
         }
 
-        return redirect('/app');
+        return redirect()->to($user->getDefaultPanelUrl());
     }
 }
