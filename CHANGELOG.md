@@ -2,6 +2,22 @@
 
 All notable changes to the **IceCream Fried Esports Portal** are documented in this file.
 
+## [v1.7.0] - 2026-11-16
+
+### Added
+- **Super Admin Player Impersonation**: Integrated `filament-impersonate` restricted to `super_admin` accounts, taking administrators directly into the `App` player panel.
+- **Official Publisher Game Logos**: Replaced plain game text badges and labels across the homepage, team dossiers, player profiles, and dashboard widgets with official **MLBB**, **PUBG Mobile**, and **Free Fire** publisher logos.
+- **Filament SPA & Animated Sidebar**: Enabled `->spa(hasPrefetching: true)` across `Mukhiyas` and `App` panels with smooth page entrance transitions, a GSAP sliding active highlighter, and cursor-following hover spotlight on sidebar items.
+- **Topbar Homepage Button**: Added a direct **Homepage** shortcut button to the Filament top bar across both panels.
+
+### Changed
+- **Public Homepage & Profiles Redesign**: Rebalanced responsive layouts across player and team profiles, highlighted athlete cards in the **Meet The Squad** carousel, added a 4-card KPI strip with collapsible/scrollable tournament accordions, and balanced the **Active Squads** grid.
+- **Admin Card & Navigation Polish**: Pinned status ticks and bulk-action checkboxes cleanly to card corners with proper spacing, fixed sidebar item/group padding, and removed redundant topbar quick-links.
+
+### Fixed
+- **Role-Based Auth & Panel Redirects**: Enforced `User::canAccessPanel()` and intended URL validation on password and Google OAuth logins, and redirected authenticated users away from unauthorized panels to their accessible panel instead of throwing `403`.
+- **Map Pins & Hover Clipping**: Corrected Google Maps embeds for Vidanta Champions Arena (Lalitpur) and Kathmandu HQ, fixed hover clipping on tournament and squad cards, and unregistered stale service workers.
+
 ## [v1.6.0] - 2026-11-15
 
 ### Added
