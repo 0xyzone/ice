@@ -17,15 +17,17 @@ class AdminForm
                 Section::make('Admin Credentials')
                     ->description('Manage administrator credentials and system access details.')
                     ->icon('heroicon-m-shield-check')
-                    ->columns(4)
+                    ->columns(2)
                     ->columnSpanFull()
                     ->schema([
                         TextInput::make('name')
+                            ->label('Full Name')
                             ->prefixIcon('heroicon-m-user')
                             ->required()
                             ->maxLength(255),
 
                         TextInput::make('email')
+                            ->label('Email Address')
                             ->prefixIcon('heroicon-m-envelope')
                             ->email()
                             ->required()

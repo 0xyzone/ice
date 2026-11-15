@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class OwnTeam extends Model
 {
@@ -27,12 +26,6 @@ class OwnTeam extends Model
 
     protected static function booted(): void
     {
-        static::saving(function (OwnTeam $ownTeam) {
-            if (empty($ownTeam->slug) && ! empty($ownTeam->name)) {
-                $ownTeam->slug = Str::slug($ownTeam->name);
-            }
-        });
-
         static::deleted(function (OwnTeam $ownTeam) {
             if ($ownTeam->logo_image) {
                 Storage::disk('public')->delete($ownTeam->logo_image);

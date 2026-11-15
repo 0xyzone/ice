@@ -25,21 +25,6 @@ class TeamProfileController extends Controller
         return $this->renderTeam($team);
     }
 
-    public function showBySlug(string $slug): View
-    {
-        $team = OwnTeam::with([
-            'members' => function ($query) {
-                $query->where('status', true)
-                    ->orderByDesc('is_main_roster')
-                    ->orderByRaw("CASE WHEN role = 'captain' THEN 0 ELSE 1 END")
-                    ->orderBy('created_at');
-            },
-            'members.user.player',
-        ])->where('slug', $slug)->firstOrFail();
-
-        return $this->renderTeam($team);
-    }
-
     private function renderTeam(OwnTeam $team): View
     {
         // Fetch all completed matches of this team

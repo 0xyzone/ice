@@ -14,12 +14,13 @@ class UserForm
         return $schema
             ->components([
                 Section::make('Account Credentials')
-                    ->description('Manage user credentials, status, and basic account information.')
+                    ->description('Manage player credentials, status, and basic account information.')
                     ->icon('heroicon-m-user-circle')
-                    ->columns(4)
+                    ->columns(2)
                     ->columnSpanFull()
                     ->schema([
                         TextInput::make('name')
+                            ->label('Full Name')
                             ->prefixIcon('heroicon-m-user')
                             ->required()
                             ->disabledOn('edit')
@@ -33,6 +34,7 @@ class UserForm
                             ->maxLength(255),
 
                         TextInput::make('email')
+                            ->label('Email Address')
                             ->prefixIcon('heroicon-m-envelope')
                             ->email()
                             ->disabledOn('edit')
@@ -50,6 +52,8 @@ class UserForm
                             ->helperText(fn (string $context): string => $context === 'edit' ? 'Leave blank to keep current password.' : ''),
 
                         TextInput::make('id')
+                            ->label('Player ID')
+                            ->hiddenOn('create')
                             ->disabled()
                             ->copyable(),
 

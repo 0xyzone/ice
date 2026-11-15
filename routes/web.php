@@ -10,7 +10,6 @@ Route::get('/player/{id}', [PlayerProfileController::class, 'show'])->name('play
 Route::get('/player/{username}', [PlayerProfileController::class, 'showByUsername'])->name('player.profile.username');
 
 Route::get('/team/{id}', [TeamProfileController::class, 'show'])->name('team.profile')->where('id', '[0-9]+');
-Route::get('/team/{slug}', [TeamProfileController::class, 'showBySlug'])->name('team.profile.slug');
 
 use App\Models\OwnTeam;
 use App\Models\TeamMember;

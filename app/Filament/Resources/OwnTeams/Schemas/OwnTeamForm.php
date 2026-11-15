@@ -47,11 +47,6 @@ class OwnTeamForm
                                         TextInput::make('name')
                                             ->required()
                                             ->maxLength(255),
-                                        TextInput::make('slug')
-                                            ->required()
-                                            ->unique(table: OwnTeam::class, column: 'slug', ignoreRecord: true)
-                                            ->maxLength(255)
-                                            ->alphaDash(),
                                         TextInput::make('short_name')
                                             ->label('Short Name')
                                             ->maxLength(50),

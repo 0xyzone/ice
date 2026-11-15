@@ -25,7 +25,6 @@ class PlayerTournamentStatTest extends TestCase
 
         $team = OwnTeam::create([
             'name' => 'Ice Cream Gaming',
-            'slug' => 'ice-cream-gaming',
             'status' => true,
             'game' => GameType::PubgMobile,
         ]);
@@ -191,7 +190,6 @@ class PlayerTournamentStatTest extends TestCase
 
         $team = OwnTeam::create([
             'name' => 'Ice Cream Gaming',
-            'slug' => 'ice-cream-gaming',
             'status' => true,
             'game' => GameType::PubgMobile,
         ]);
@@ -254,7 +252,6 @@ class PlayerTournamentStatTest extends TestCase
 
         $team = OwnTeam::create([
             'name' => 'MLBB Team',
-            'slug' => 'mlbb-team',
             'status' => true,
             'game' => GameType::Mlbb,
         ]);

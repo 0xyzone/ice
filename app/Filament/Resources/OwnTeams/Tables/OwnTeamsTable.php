@@ -91,7 +91,7 @@ class OwnTeamsTable
                     ->label('Profile')
                     ->icon('heroicon-m-arrow-top-right-on-square')
                     ->color('gray')
-                    ->url(fn (OwnTeam $record): string => url('/team/'.($record->slug ?: $record->id)), shouldOpenInNewTab: true),
+                    ->url(fn (OwnTeam $record): string => route('team.profile', $record->id), shouldOpenInNewTab: true),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

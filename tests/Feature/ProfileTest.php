@@ -49,7 +49,6 @@ class ProfileTest extends TestCase
     {
         $team = OwnTeam::create([
             'name' => 'Ice Cream Gaming',
-            'slug' => 'ice-cream-gaming',
             'status' => true,
             'game' => GameType::PubgMobile,
         ]);
@@ -58,18 +57,12 @@ class ProfileTest extends TestCase
         $response = $this->get("/team/{$team->id}");
         $response->assertStatus(200);
         $response->assertSee('Ice Cream Gaming');
-
-        // Test route by slug
-        $response = $this->get('/team/ice-cream-gaming');
-        $response->assertStatus(200);
-        $response->assertSee('Ice Cream Gaming');
     }
 
     public function test_team_profile_shows_correct_dynamic_statistics(): void
     {
         $team = OwnTeam::create([
             'name' => 'Ice Cream Gaming',
-            'slug' => 'ice-cream-gaming',
             'status' => true,
             'game' => GameType::Mlbb,
         ]);

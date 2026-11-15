@@ -254,7 +254,7 @@
 
                                 <!-- Card Action -->
                                 <div class="pt-6 mt-6 border-t border-slate-800/60">
-                                    <a href="{{ route('team.profile.slug', $team->slug ?? $team->id) }}" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-200 hover:text-white font-semibold text-xs transition-all block text-center">
+                                    <a href="{{ route('team.profile', $team->id) }}" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-200 hover:text-white font-semibold text-xs transition-all block text-center">
                                         View Division Dossier &rarr;
                                     </a>
                                 </div>

@@ -116,7 +116,6 @@ class GameArchitectureTest extends TestCase
 
         $team = OwnTeam::create([
             'name' => 'Chicken Hunters',
-            'slug' => 'chicken-hunters',
             'status' => true,
             'game' => GameType::PubgMobile,
         ]);
@@ -184,7 +183,6 @@ class GameArchitectureTest extends TestCase
 
         $team = OwnTeam::create([
             'name' => 'Icecream MLBB',
-            'slug' => 'icecream-mlbb',
             'status' => true,
             'game' => GameType::Mlbb,
         ]);

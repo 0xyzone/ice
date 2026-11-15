@@ -23,6 +23,8 @@ use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Arr;
@@ -150,135 +152,141 @@ class ManageProfile extends Page
                         ])
                         ->columnSpanFull(),
 
-                    Grid::make([
-                        'default' => 1,
-                        'lg' => 2,
-                    ])
-                        ->schema([
-                            Section::make('Personal Information')
-                                ->description('Manage your basic personal details and avatar.')
+                    Tabs::make('ProfileSections')
+                        ->persistTabInQueryString()
+                        ->columnSpanFull()
+                        ->tabs([
+                            Tab::make('Personal & Bio')
                                 ->icon('heroicon-m-user-circle')
-                                ->columns(2)
                                 ->schema([
-                                    FileUpload::make('avatar_url')
-                                        ->label('Profile Avatar')
-                                        ->image()
-                                        ->avatar()
-                                        ->disk('public')
-                                        ->visibility('public')
-                                        ->directory('avatars')
-                                        ->columnSpanFull()
-                                        ->alignCenter(),
-                                    TextInput::make('username')
-                                        ->label('Username')
-                                        ->prefixIcon('heroicon-m-at-symbol')
-                                        ->required()
-                                        ->alphaDash()
-                                        ->unique('users', 'username', ignorable: Auth::user()),
-                                    Select::make('gender')
-                                        ->prefixIcon('heroicon-m-user')
-                                        ->options([
-                                            'male' => 'Male',
-                                            'female' => 'Female',
-                                            'other' => 'Other',
-                                        ])
-                                        ->required()
-                                        ->native(false),
-                                    DatePicker::make('date_of_birth')
-                                        ->prefixIcon('heroicon-m-calendar')
-                                        ->required()
-                                        ->native(false),
-                                    TextInput::make('personal_contact_number')
-                                        ->prefixIcon('heroicon-m-phone')
-                                        ->required()
-                                        ->rules([
-                                            function ($get) {
-                                                return function (string $attribute, $value, \Closure $fail) use ($get) {
-                                                    if (empty($value)) {
-                                                        return;
-                                                    }
+                                    Section::make('Personal Information')
+                                        ->description('Manage your basic personal details and avatar.')
+                                        ->icon('heroicon-m-user-circle')
+                                        ->columns(2)
+                                        ->schema([
+                                            FileUpload::make('avatar_url')
+                                                ->label('Profile Avatar')
+                                                ->image()
+                                                ->avatar()
+                                                ->disk('public')
+                                                ->visibility('public')
+                                                ->directory('avatars')
+                                                ->columnSpanFull()
+                                                ->alignCenter(),
+                                            TextInput::make('username')
+                                                ->label('Username')
+                                                ->prefixIcon('heroicon-m-at-symbol')
+                                                ->required()
+                                                ->alphaDash()
+                                                ->unique('users', 'username', ignorable: Auth::user()),
+                                            Select::make('gender')
+                                                ->prefixIcon('heroicon-m-user')
+                                                ->options([
+                                                    'male' => 'Male',
+                                                    'female' => 'Female',
+                                                    'other' => 'Other',
+                                                ])
+                                                ->required()
+                                                ->native(false),
+                                            DatePicker::make('date_of_birth')
+                                                ->prefixIcon('heroicon-m-calendar')
+                                                ->required()
+                                                ->native(false),
+                                            TextInput::make('personal_contact_number')
+                                                ->prefixIcon('heroicon-m-phone')
+                                                ->required()
+                                                ->rules([
+                                                    function ($get) {
+                                                        return function (string $attribute, $value, \Closure $fail) use ($get) {
+                                                            if (empty($value)) {
+                                                                return;
+                                                            }
 
-                                                    $otherFields = [
-                                                        $get('alt_personal_contact_number'),
-                                                        $get('emergency_contact_number'),
-                                                    ];
-                                                    if (in_array($value, array_filter($otherFields))) {
-                                                        $fail('This contact number must not be identical to your other contact numbers.');
+                                                            $otherFields = [
+                                                                $get('alt_personal_contact_number'),
+                                                                $get('emergency_contact_number'),
+                                                            ];
+                                                            if (in_array($value, array_filter($otherFields))) {
+                                                                $fail('This contact number must not be identical to your other contact numbers.');
 
-                                                        return;
-                                                    }
+                                                                return;
+                                                            }
 
-                                                    $userId = Auth::id();
-                                                    $exists = PlayerDetail::query()
-                                                        ->where('user_id', '!=', $userId)
-                                                        ->where(function ($query) use ($value) {
-                                                            $query->where('personal_contact_number', $value)
-                                                                ->orWhere('alt_personal_contact_number', $value)
-                                                                ->orWhere('emergency_contact_number', $value);
-                                                        })
-                                                        ->exists();
+                                                            $userId = Auth::id();
+                                                            $exists = PlayerDetail::query()
+                                                                ->where('user_id', '!=', $userId)
+                                                                ->where(function ($query) use ($value) {
+                                                                    $query->where('personal_contact_number', $value)
+                                                                        ->orWhere('alt_personal_contact_number', $value)
+                                                                        ->orWhere('emergency_contact_number', $value);
+                                                                })
+                                                                ->exists();
 
-                                                    if ($exists) {
-                                                        $fail('This contact number has already been taken by another player.');
-                                                    }
-                                                };
-                                            },
+                                                            if ($exists) {
+                                                                $fail('This contact number has already been taken by another player.');
+                                                            }
+                                                        };
+                                                    },
+                                                ]),
+                                            TextInput::make('alt_personal_contact_number')
+                                                ->prefixIcon('heroicon-m-device-phone-mobile')
+                                                ->label('Alternative Contact')
+                                                ->hint('(Optional)')
+                                                ->columnSpanFull()
+                                                ->rules([
+                                                    function ($get) {
+                                                        return function (string $attribute, $value, \Closure $fail) use ($get) {
+                                                            if (empty($value)) {
+                                                                return;
+                                                            }
+
+                                                            $otherFields = [
+                                                                $get('personal_contact_number'),
+                                                                $get('emergency_contact_number'),
+                                                            ];
+                                                            if (in_array($value, array_filter($otherFields))) {
+                                                                $fail('This contact number must not be identical to your other contact numbers.');
+
+                                                                return;
+                                                            }
+
+                                                            $userId = Auth::id();
+                                                            $exists = PlayerDetail::query()
+                                                                ->where('user_id', '!=', $userId)
+                                                                ->where(function ($query) use ($value) {
+                                                                    $query->where('personal_contact_number', $value)
+                                                                        ->orWhere('alt_personal_contact_number', $value)
+                                                                        ->orWhere('emergency_contact_number', $value);
+                                                                })
+                                                                ->exists();
+
+                                                            if ($exists) {
+                                                                $fail('This contact number has already been taken by another player.');
+                                                            }
+                                                        };
+                                                    },
+                                                ]),
+                                            Textarea::make('bio')
+                                                ->maxLength(300)
+                                                ->rows(4)
+                                                ->placeholder('Tell us about yourself, your gaming style, custom tactics...')
+                                                ->hint('Max 300 characters')
+                                                ->columnSpanFull(),
                                         ]),
-                                    TextInput::make('alt_personal_contact_number')
-                                        ->prefixIcon('heroicon-m-device-phone-mobile')
-                                        ->label('Alternative Contact')
-                                        ->hint('(Optional)')
-                                        ->rules([
-                                            function ($get) {
-                                                return function (string $attribute, $value, \Closure $fail) use ($get) {
-                                                    if (empty($value)) {
-                                                        return;
-                                                    }
-
-                                                    $otherFields = [
-                                                        $get('personal_contact_number'),
-                                                        $get('emergency_contact_number'),
-                                                    ];
-                                                    if (in_array($value, array_filter($otherFields))) {
-                                                        $fail('This contact number must not be identical to your other contact numbers.');
-
-                                                        return;
-                                                    }
-
-                                                    $userId = Auth::id();
-                                                    $exists = PlayerDetail::query()
-                                                        ->where('user_id', '!=', $userId)
-                                                        ->where(function ($query) use ($value) {
-                                                            $query->where('personal_contact_number', $value)
-                                                                ->orWhere('alt_personal_contact_number', $value)
-                                                                ->orWhere('emergency_contact_number', $value);
-                                                        })
-                                                        ->exists();
-
-                                                    if ($exists) {
-                                                        $fail('This contact number has already been taken by another player.');
-                                                    }
-                                                };
-                                            },
-                                        ]),
-                                    Textarea::make('bio')
-                                        ->maxLength(300)
-                                        ->rows(3)
-                                        ->placeholder('Tell us about yourself, your gaming style, custom tactics...')
-                                        ->hint('Max 300 characters')
-                                        ->columnSpanFull(),
                                 ]),
 
-                            Section::make('Emergency Contact')
-                                ->description('Who should we contact in case of emergency?')
+                            Tab::make('Emergency Contact')
                                 ->icon('heroicon-m-shield-check')
-                                ->columns(1)
                                 ->schema([
-                                    TextInput::make('emergency_contact_name')
-                                        ->prefixIcon('heroicon-m-identification')
-                                        ->required(),
-                                    Grid::make(2)
+                                    Section::make('Emergency Contact')
+                                        ->description('Who should we contact in case of emergency?')
+                                        ->icon('heroicon-m-shield-check')
+                                        ->columns(2)
                                         ->schema([
+                                            TextInput::make('emergency_contact_name')
+                                                ->prefixIcon('heroicon-m-identification')
+                                                ->required()
+                                                ->columnSpanFull(),
                                             TextInput::make('emergency_contact_number')
                                                 ->prefixIcon('heroicon-m-phone-arrow-up-right')
                                                 ->required()
@@ -329,219 +337,228 @@ class ManageProfile extends Page
                                                 ->native(false),
                                         ]),
                                 ]),
-                        ]),
 
-                    Section::make('Social Media Profiles')
-                        ->description('Add your social profiles and gaming handles.')
-                        ->icon('heroicon-m-share')
-                        ->columns(2)
-                        ->schema([
-                            TextInput::make('facebook')
-                                ->prefixIcon('heroicon-m-globe-alt')
-                                ->placeholder('https://facebook.com/username')
-                                ->url(),
-                            TextInput::make('instagram')
-                                ->prefixIcon('heroicon-m-globe-alt')
-                                ->placeholder('https://instagram.com/username')
-                                ->url(),
-                            TextInput::make('snapchat')
-                                ->prefixIcon('heroicon-m-globe-alt')
-                                ->placeholder('Snapchat username'),
-                            TextInput::make('discord')
-                                ->prefixIcon('heroicon-m-chat-bubble-left-right')
-                                ->placeholder('Discord Username or ID'),
-                            TextInput::make('linkedin')
-                                ->prefixIcon('heroicon-m-globe-alt')
-                                ->placeholder('https://linkedin.com/in/username')
-                                ->url(),
-                        ]),
-
-                    Section::make('Photoshoot Gallery')
-                        ->description('Upload multiple photos from your photoshoot to showcase on your public profile.')
-                        ->icon('heroicon-m-photo')
-                        ->schema([
-                            FileUpload::make('galleries')
-                                ->label('')
-                                ->multiple()
-                                ->image()
-                                ->disk('public')
-                                ->visibility('public')
-                                ->panelLayout('grid')
-                                ->reorderable()
-                                ->appendFiles()
-                                ->directory('galleries')
-                                ->previewable()
-                                ->openable()
-                                ->downloadable()
-                                ->extraAttributes(['class' => 'compact-file-upload'])
-                                ->columnSpanFull(),
-                        ]),
-
-                    Section::make('Legal Information (Nepal)')
-                        ->description('This information is strictly confidential and will not be displayed on your public profile.')
-                        ->icon('heroicon-m-document-text')
-                        ->schema([
-                            Fieldset::make('Citizenship Details')
+                            Tab::make('Socials & Gallery')
+                                ->icon('heroicon-m-photo')
                                 ->schema([
-                                    Grid::make(2)
-                                        ->columnSpanFull()
+                                    Section::make('Social Media Profiles')
+                                        ->description('Add your social profiles and gaming handles.')
+                                        ->icon('heroicon-m-share')
+                                        ->columns(2)
                                         ->schema([
-                                            TextInput::make('citizenship_number')
-                                                ->label('Citizenship Number')
-                                                ->prefixIcon('heroicon-m-identification'),
-                                            Grid::make(2)
-                                                ->schema([
-                                                    DatePicker::make('citizenship_issued_date')
-                                                        ->label('Issued Date')
-                                                        ->native(false)
-                                                        ->prefixIcon('heroicon-m-calendar'),
-                                                    TextInput::make('citizenship_issued_place')
-                                                        ->label('Issued Place')
-                                                        ->prefixIcon('heroicon-m-map-pin'),
-                                                ]),
-                                            Grid::make(2)
-                                                ->schema([
-                                                    FileUpload::make('citizenship_front_image')
-                                                        ->label('Citizenship (Front)')
-                                                        ->image()
-                                                        ->openable()
-                                                        ->downloadable()
-                                                        ->disk('public')
-                                                        ->visibility('private')
-                                                        ->directory('legal_docs'),
-                                                    FileUpload::make('citizenship_back_image')
-                                                        ->label('Citizenship (Back)')
-                                                        ->image()
-                                                        ->openable()
-                                                        ->downloadable()
-                                                        ->disk('public')
-                                                        ->visibility('private')
-                                                        ->directory('legal_docs'),
-                                                ])->columnSpanFull(),
+                                            TextInput::make('facebook')
+                                                ->prefixIcon('heroicon-m-globe-alt')
+                                                ->placeholder('https://facebook.com/username')
+                                                ->url(),
+                                            TextInput::make('instagram')
+                                                ->prefixIcon('heroicon-m-globe-alt')
+                                                ->placeholder('https://instagram.com/username')
+                                                ->url(),
+                                            TextInput::make('snapchat')
+                                                ->prefixIcon('heroicon-m-globe-alt')
+                                                ->placeholder('Snapchat username'),
+                                            TextInput::make('discord')
+                                                ->prefixIcon('heroicon-m-chat-bubble-left-right')
+                                                ->placeholder('Discord Username or ID'),
+                                            TextInput::make('linkedin')
+                                                ->prefixIcon('heroicon-m-globe-alt')
+                                                ->placeholder('https://linkedin.com/in/username')
+                                                ->url()
+                                                ->columnSpanFull(),
                                         ]),
-                                ]),
 
-                            Fieldset::make('Passport Details')
-                                ->schema([
-                                    Grid::make(2)
-                                        ->columnSpanFull()
+                                    Section::make('Photoshoot Gallery')
+                                        ->description('Upload multiple photos from your photoshoot to showcase on your public profile.')
+                                        ->icon('heroicon-m-photo')
                                         ->schema([
-                                            Group::make()
-                                                ->schema([
-                                                    TextInput::make('passport_number')
-                                                        ->label('Passport Number')
-                                                        ->prefixIcon('heroicon-m-identification'),
-                                                    FileUpload::make('passport_image')
-                                                        ->label('Passport Image')
-                                                        ->image()
-                                                        ->openable()
-                                                        ->downloadable()
-                                                        ->disk('public')
-                                                        ->visibility('private')
-                                                        ->directory('legal_docs'),
-                                                ]),
-                                            Grid::make(2)
-                                                ->schema([
-                                                    DatePicker::make('passport_issued_date')
-                                                        ->label('Issued Date')
-                                                        ->native(false)
-                                                        ->prefixIcon('heroicon-m-calendar'),
-                                                    DatePicker::make('passport_expiry_date')
-                                                        ->label('Expiry Date')
-                                                        ->native(false)
-                                                        ->prefixIcon('heroicon-m-calendar'),
-                                                    TextInput::make('passport_issued_place')
-                                                        ->label('Issued Place')
-                                                        ->prefixIcon('heroicon-m-map-pin')
-                                                        ->columnSpanFull(),
-                                                ]),
-                                        ]),
-                                ]),
-
-                            Fieldset::make('National ID (NID) Details')
-                                ->schema([
-                                    Grid::make(2)
-                                        ->columnSpanFull()
-                                        ->schema([
-                                            TextInput::make('nid_number')
-                                                ->label('National ID (NID) Number')
-                                                ->prefixIcon('heroicon-m-identification'),
-                                            Grid::make(2)
-                                                ->schema([
-                                                    DatePicker::make('nid_issued_date')
-                                                        ->label('Issued Date')
-                                                        ->native(false)
-                                                        ->prefixIcon('heroicon-m-calendar'),
-                                                    TextInput::make('nid_issued_place')
-                                                        ->label('Issued Place')
-                                                        ->prefixIcon('heroicon-m-map-pin'),
-                                                ]),
-                                            FileUpload::make('nid_image')
-                                                ->label('NID Image')
+                                            FileUpload::make('galleries')
+                                                ->label('')
+                                                ->multiple()
                                                 ->image()
+                                                ->disk('public')
+                                                ->visibility('public')
+                                                ->panelLayout('grid')
+                                                ->reorderable()
+                                                ->appendFiles()
+                                                ->directory('galleries')
+                                                ->previewable()
                                                 ->openable()
                                                 ->downloadable()
-                                                ->disk('public')
-                                                ->visibility('private')
-                                                ->directory('legal_docs')
+                                                ->extraAttributes(['class' => 'compact-file-upload'])
                                                 ->columnSpanFull(),
                                         ]),
                                 ]),
 
-                            Fieldset::make('PAN Details')
+                            Tab::make('Legal Documents')
+                                ->icon('heroicon-m-document-text')
                                 ->schema([
-                                    Grid::make(2)
-                                        ->columnSpanFull()
+                                    Section::make('Legal Information (Nepal)')
+                                        ->description('This information is strictly confidential and will not be displayed on your public profile.')
+                                        ->icon('heroicon-m-document-text')
                                         ->schema([
-                                            TextInput::make('pan_number')
-                                                ->label('PAN Number')
-                                                ->prefixIcon('heroicon-m-credit-card'),
-                                            FileUpload::make('pan_image')
-                                                ->label('PAN Card Image')
-                                                ->image()
-                                                ->openable()
-                                                ->downloadable()
-                                                ->disk('public')
-                                                ->visibility('private')
-                                                ->directory('legal_docs'),
-                                        ]),
-                                ]),
+                                            Fieldset::make('Citizenship Details')
+                                                ->schema([
+                                                    Grid::make(2)
+                                                        ->columnSpanFull()
+                                                        ->schema([
+                                                            TextInput::make('citizenship_number')
+                                                                ->label('Citizenship Number')
+                                                                ->prefixIcon('heroicon-m-identification'),
+                                                            Grid::make(2)
+                                                                ->schema([
+                                                                    DatePicker::make('citizenship_issued_date')
+                                                                        ->label('Issued Date')
+                                                                        ->native(false)
+                                                                        ->prefixIcon('heroicon-m-calendar'),
+                                                                    TextInput::make('citizenship_issued_place')
+                                                                        ->label('Issued Place')
+                                                                        ->prefixIcon('heroicon-m-map-pin'),
+                                                                ]),
+                                                            Grid::make(2)
+                                                                ->schema([
+                                                                    FileUpload::make('citizenship_front_image')
+                                                                        ->label('Citizenship (Front)')
+                                                                        ->image()
+                                                                        ->openable()
+                                                                        ->downloadable()
+                                                                        ->disk('public')
+                                                                        ->visibility('private')
+                                                                        ->directory('legal_docs'),
+                                                                    FileUpload::make('citizenship_back_image')
+                                                                        ->label('Citizenship (Back)')
+                                                                        ->image()
+                                                                        ->openable()
+                                                                        ->downloadable()
+                                                                        ->disk('public')
+                                                                        ->visibility('private')
+                                                                        ->directory('legal_docs'),
+                                                                ])->columnSpanFull(),
+                                                        ]),
+                                                ]),
 
-                            Fieldset::make('SSF Details')
-                                ->schema([
-                                    Grid::make(2)
-                                        ->columnSpanFull()
-                                        ->schema([
-                                            TextInput::make('ssf_number')
-                                                ->label('SSF Number')
-                                                ->prefixIcon('heroicon-m-briefcase'),
-                                            FileUpload::make('ssf_image')
-                                                ->label('SSF Document Image')
-                                                ->image()
-                                                ->openable()
-                                                ->downloadable()
-                                                ->disk('public')
-                                                ->visibility('private')
-                                                ->directory('legal_docs'),
-                                        ]),
-                                ]),
+                                            Fieldset::make('Passport Details')
+                                                ->schema([
+                                                    Grid::make(2)
+                                                        ->columnSpanFull()
+                                                        ->schema([
+                                                            Group::make()
+                                                                ->schema([
+                                                                    TextInput::make('passport_number')
+                                                                        ->label('Passport Number')
+                                                                        ->prefixIcon('heroicon-m-identification'),
+                                                                    FileUpload::make('passport_image')
+                                                                        ->label('Passport Image')
+                                                                        ->image()
+                                                                        ->openable()
+                                                                        ->downloadable()
+                                                                        ->disk('public')
+                                                                        ->visibility('private')
+                                                                        ->directory('legal_docs'),
+                                                                ]),
+                                                            Grid::make(2)
+                                                                ->schema([
+                                                                    DatePicker::make('passport_issued_date')
+                                                                        ->label('Issued Date')
+                                                                        ->native(false)
+                                                                        ->prefixIcon('heroicon-m-calendar'),
+                                                                    DatePicker::make('passport_expiry_date')
+                                                                        ->label('Expiry Date')
+                                                                        ->native(false)
+                                                                        ->prefixIcon('heroicon-m-calendar'),
+                                                                    TextInput::make('passport_issued_place')
+                                                                        ->label('Issued Place')
+                                                                        ->prefixIcon('heroicon-m-map-pin')
+                                                                        ->columnSpanFull(),
+                                                                ]),
+                                                        ]),
+                                                ]),
 
-                            Fieldset::make('Driving License Details')
-                                ->schema([
-                                    Grid::make(2)
-                                        ->columnSpanFull()
-                                        ->schema([
-                                            TextInput::make('driving_license_number')
-                                                ->label('Driving License Number')
-                                                ->prefixIcon('heroicon-m-truck'),
-                                            FileUpload::make('driving_license_image')
-                                                ->label('Driving License Image')
-                                                ->image()
-                                                ->openable()
-                                                ->downloadable()
-                                                ->disk('public')
-                                                ->visibility('private')
-                                                ->directory('legal_docs'),
+                                            Fieldset::make('National ID (NID) Details')
+                                                ->schema([
+                                                    Grid::make(2)
+                                                        ->columnSpanFull()
+                                                        ->schema([
+                                                            TextInput::make('nid_number')
+                                                                ->label('National ID (NID) Number')
+                                                                ->prefixIcon('heroicon-m-identification'),
+                                                            Grid::make(2)
+                                                                ->schema([
+                                                                    DatePicker::make('nid_issued_date')
+                                                                        ->label('Issued Date')
+                                                                        ->native(false)
+                                                                        ->prefixIcon('heroicon-m-calendar'),
+                                                                    TextInput::make('nid_issued_place')
+                                                                        ->label('Issued Place')
+                                                                        ->prefixIcon('heroicon-m-map-pin'),
+                                                                ]),
+                                                            FileUpload::make('nid_image')
+                                                                ->label('NID Image')
+                                                                ->image()
+                                                                ->openable()
+                                                                ->downloadable()
+                                                                ->disk('public')
+                                                                ->visibility('private')
+                                                                ->directory('legal_docs')
+                                                                ->columnSpanFull(),
+                                                        ]),
+                                                ]),
+
+                                            Fieldset::make('PAN Details')
+                                                ->schema([
+                                                    Grid::make(2)
+                                                        ->columnSpanFull()
+                                                        ->schema([
+                                                            TextInput::make('pan_number')
+                                                                ->label('PAN Number')
+                                                                ->prefixIcon('heroicon-m-credit-card'),
+                                                            FileUpload::make('pan_image')
+                                                                ->label('PAN Card Image')
+                                                                ->image()
+                                                                ->openable()
+                                                                ->downloadable()
+                                                                ->disk('public')
+                                                                ->visibility('private')
+                                                                ->directory('legal_docs'),
+                                                        ]),
+                                                ]),
+
+                                            Fieldset::make('SSF Details')
+                                                ->schema([
+                                                    Grid::make(2)
+                                                        ->columnSpanFull()
+                                                        ->schema([
+                                                            TextInput::make('ssf_number')
+                                                                ->label('SSF Number')
+                                                                ->prefixIcon('heroicon-m-briefcase'),
+                                                            FileUpload::make('ssf_image')
+                                                                ->label('SSF Document Image')
+                                                                ->image()
+                                                                ->openable()
+                                                                ->downloadable()
+                                                                ->disk('public')
+                                                                ->visibility('private')
+                                                                ->directory('legal_docs'),
+                                                        ]),
+                                                ]),
+
+                                            Fieldset::make('Driving License Details')
+                                                ->schema([
+                                                    Grid::make(2)
+                                                        ->columnSpanFull()
+                                                        ->schema([
+                                                            TextInput::make('driving_license_number')
+                                                                ->label('Driving License Number')
+                                                                ->prefixIcon('heroicon-m-truck'),
+                                                            FileUpload::make('driving_license_image')
+                                                                ->label('Driving License Image')
+                                                                ->image()
+                                                                ->openable()
+                                                                ->downloadable()
+                                                                ->disk('public')
+                                                                ->visibility('private')
+                                                                ->directory('legal_docs'),
+                                                        ]),
+                                                ]),
                                         ]),
                                 ]),
                         ]),

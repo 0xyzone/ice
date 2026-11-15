@@ -10,6 +10,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Http\Responses\Auth\Contracts\LogoutResponse as LogoutResponseContract;
+use Filament\Support\Enums\Width;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
@@ -34,9 +35,9 @@ class AppServiceProvider extends ServiceProvider
             $component->firstDayOfWeek(0);
         });
 
-        // Globally configure Create, Edit, and View actions to open in Slide-Overs
-        CreateAction::configureUsing(fn (CreateAction $action): CreateAction => $action->slideOver());
-        EditAction::configureUsing(fn (EditAction $action): EditAction => $action->slideOver());
-        ViewAction::configureUsing(fn (ViewAction $action): ViewAction => $action->slideOver());
+        // Globally configure Create, Edit, and View actions to open in 7xl Slide-Overs
+        CreateAction::configureUsing(fn (CreateAction $action): CreateAction => $action->slideOver()->modalWidth(Width::SevenExtraLarge));
+        EditAction::configureUsing(fn (EditAction $action): EditAction => $action->slideOver()->modalWidth(Width::SevenExtraLarge));
+        ViewAction::configureUsing(fn (ViewAction $action): ViewAction => $action->slideOver()->modalWidth(Width::SevenExtraLarge));
     }
 }

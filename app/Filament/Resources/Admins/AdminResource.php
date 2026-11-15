@@ -63,7 +63,7 @@ class AdminResource extends Resource
 
         $user = Auth::user();
 
-        if ($user && ($user->hasRole(['super_admin', 'admin']) || $user->can($permission))) {
+        if ($user && ($user->hasRole('super_admin') || $user->can($permission))) {
             return Response::allow();
         }
 

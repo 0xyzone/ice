@@ -17,7 +17,6 @@ class TeamRosterTest extends TestCase
     {
         $team = OwnTeam::create([
             'name' => 'Alpha Squad',
-            'slug' => 'alpha-squad',
             'status' => true,
             'game' => GameType::PubgMobile,
         ]);
@@ -59,7 +58,6 @@ class TeamRosterTest extends TestCase
     {
         $team = OwnTeam::create([
             'name' => 'Ice Tigers',
-            'slug' => 'ice-tigers',
             'status' => true,
             'game' => GameType::Mlbb,
         ]);
@@ -85,7 +83,7 @@ class TeamRosterTest extends TestCase
             'joined_at' => now(),
         ]);
 
-        $response = $this->get('/team/ice-tigers');
+        $response = $this->get("/team/{$team->id}");
 
         $response->assertStatus(200);
         $response->assertSee('Main Roster Lineup');
@@ -100,7 +98,6 @@ class TeamRosterTest extends TestCase
     {
         $team = OwnTeam::create([
             'name' => 'Cyber Wolves',
-            'slug' => 'cyber-wolves',
             'status' => true,
             'game' => GameType::FreeFire,
         ]);
@@ -141,7 +138,6 @@ class TeamRosterTest extends TestCase
     {
         $team = OwnTeam::create([
             'name' => 'Viper Core',
-            'slug' => 'viper-core',
             'status' => true,
             'game' => GameType::Mlbb,
         ]);

@@ -17,7 +17,67 @@ class ShieldSeeder extends Seeder
         $tenants = '[]';
         $users = '[]';
         $userTenantPivot = '[]';
-        $rolesWithPermissions = '[{"name":"super_admin","guard_name":"web","permissions":["ViewAny:Role","View:Role","Create:Role","Update:Role","Delete:Role","DeleteAny:Role","Restore:Role","ForceDelete:Role","ForceDeleteAny:Role","RestoreAny:Role","Replicate:Role","Reorder:Role","ViewAny:Game","View:Game","Create:Game","Update:Game","Delete:Game","DeleteAny:Game","Restore:Game","ForceDelete:Game","ForceDeleteAny:Game","RestoreAny:Game","Replicate:Game","Reorder:Game","ViewAny:OwnTeam","View:OwnTeam","Create:OwnTeam","Update:OwnTeam","Delete:OwnTeam","DeleteAny:OwnTeam","Restore:OwnTeam","ForceDelete:OwnTeam","ForceDeleteAny:OwnTeam","RestoreAny:OwnTeam","Replicate:OwnTeam","Reorder:OwnTeam","ViewAny:User","View:User","Create:User","Update:User","Delete:User","DeleteAny:User","Restore:User","ForceDelete:User","ForceDeleteAny:User","RestoreAny:User","Replicate:User","Reorder:User","ViewAny:GameInfo","View:GameInfo","Create:GameInfo","Update:GameInfo","Delete:GameInfo","DeleteAny:GameInfo","Restore:GameInfo","ForceDelete:GameInfo","ForceDeleteAny:GameInfo","RestoreAny:GameInfo","Replicate:GameInfo","Reorder:GameInfo","View:ManageProfile"]},{"name":"player","guard_name":"web","permissions":["ViewAny:GameInfo","View:GameInfo","Create:GameInfo","Update:GameInfo","Delete:GameInfo","DeleteAny:GameInfo","Restore:GameInfo","ForceDelete:GameInfo","ForceDeleteAny:GameInfo","RestoreAny:GameInfo","Replicate:GameInfo","Reorder:GameInfo"]},{"name":"admin","guard_name":"web","permissions":["ViewAny:Game","View:Game","Create:Game","Update:Game","Delete:Game","DeleteAny:Game","Restore:Game","ForceDelete:Game","ForceDeleteAny:Game","RestoreAny:Game","Replicate:Game","Reorder:Game","ViewAny:OwnTeam","View:OwnTeam","Create:OwnTeam","Update:OwnTeam","Delete:OwnTeam","DeleteAny:OwnTeam","Restore:OwnTeam","ForceDelete:OwnTeam","ForceDeleteAny:OwnTeam","RestoreAny:OwnTeam","Replicate:OwnTeam","Reorder:OwnTeam","ViewAny:User","View:User","Create:User","Update:User","Delete:User","DeleteAny:User","Restore:User","ForceDelete:User","ForceDeleteAny:User","RestoreAny:User","Replicate:User","Reorder:User","ViewAny:GameInfo","View:GameInfo","Create:GameInfo","Update:GameInfo","Delete:GameInfo","DeleteAny:GameInfo","Restore:GameInfo","ForceDelete:GameInfo","ForceDeleteAny:GameInfo","RestoreAny:GameInfo","Replicate:GameInfo","Reorder:GameInfo"]}]';
+        $resourceActions = [
+            'ViewAny',
+            'View',
+            'Create',
+            'Update',
+            'Delete',
+            'DeleteAny',
+            'Restore',
+            'ForceDelete',
+            'ForceDeleteAny',
+            'RestoreAny',
+            'Replicate',
+            'Reorder',
+        ];
+
+        $buildResourcePermissions = static fn (array $resources): array => collect($resources)
+            ->flatMap(fn (string $resource): array => array_map(
+                fn (string $action): string => "{$action}:{$resource}",
+                $resourceActions
+            ))
+            ->values()
+            ->all();
+
+        $adminEsportsPermissions = $buildResourcePermissions([
+            'UserResource',
+            'OwnTeamResource',
+            'TournamentResource',
+            'MatchResource',
+        ]);
+
+        $superAdminPermissions = array_merge(
+            $buildResourcePermissions(['RoleResource', 'AdminResource']),
+            $adminEsportsPermissions
+        );
+
+        $playerPermissions = array_merge(
+            $buildResourcePermissions(['GameInfoResource']),
+            [
+                'View:ManageProfile',
+                'ViewAny:TournamentResource',
+                'View:TournamentResource',
+            ]
+        );
+
+        $rolesWithPermissions = json_encode([
+            [
+                'name' => 'super_admin',
+                'guard_name' => 'web',
+                'permissions' => $superAdminPermissions,
+            ],
+            [
+                'name' => 'admin',
+                'guard_name' => 'web',
+                'permissions' => $adminEsportsPermissions,
+            ],
+            [
+                'name' => 'player',
+                'guard_name' => 'web',
+                'permissions' => $playerPermissions,
+            ],
+        ], JSON_THROW_ON_ERROR);
         $directPermissions = '[]';
 
         // 1. Seed tenants first (if present)

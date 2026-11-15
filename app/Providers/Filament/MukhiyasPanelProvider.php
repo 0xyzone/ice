@@ -2,8 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\App\Pages\ManageProfile;
-use App\Filament\App\Resources\GameInfos\GameInfoResource;
 use App\Filament\Widgets\MukhiyasStatsOverview;
 use App\Filament\Widgets\PlayersRegistrationChart;
 use App\Filament\Widgets\RecentPlayersWidget;
@@ -52,10 +50,6 @@ class MukhiyasPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 Dashboard::class,
-                ManageProfile::class,
-            ])
-            ->resources([
-                GameInfoResource::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
