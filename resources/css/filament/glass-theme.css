@@ -419,3 +419,150 @@
         width: calc(50% - 0.5em) !important;
     }
 }
+
+/* ── Mobile & Small Screen Optimization (< 768px / < 640px) ─────────────── */
+@media (max-width: 767px) {
+    .fi-main,
+    .fi-page {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+    }
+
+    .fi-page-header {
+        gap: 0.75rem !important;
+    }
+
+    /* Horizontally swipeable glass tab bar on mobile */
+    .fi-tabs {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 0.25rem !important;
+        max-width: 100% !important;
+    }
+
+    .fi-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .fi-tabs-item {
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
+    }
+
+    /* Edge-to-edge slide-overs on mobile */
+    .fi-modal-slide-over .fi-modal-window {
+        width: 100vw !important;
+        max-width: 100vw !important;
+        border-radius: 0 !important;
+        border-left: none !important;
+    }
+}
+
+@media (max-width: 639px) {
+    /* Prevent topbar search from overlapping avatar or notifications */
+    .fi-topbar {
+        padding-left: 0.65rem !important;
+        padding-right: 0.65rem !important;
+        gap: 0.4rem !important;
+    }
+
+    .fi-topbar .fi-global-search-ctn,
+    .fi-topbar .fi-global-search-field {
+        min-width: 0 !important;
+        max-width: calc(100vw - 8.5rem) !important;
+        flex: 1 1 auto !important;
+    }
+
+    /* Prevent horizontal overflow in table containers and record cards */
+    .fi-ta-ctn {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+        border-radius: 1rem !important;
+    }
+
+    .fi-ta-header-ctn {
+        padding: 0.85rem !important;
+        gap: 0.65rem !important;
+    }
+
+    .fi-ta-header-toolbar {
+        flex-wrap: wrap !important;
+        gap: 0.5rem !important;
+        width: 100% !important;
+    }
+
+    .fi-ta-search-field {
+        width: 100% !important;
+        flex: 1 1 100% !important;
+    }
+
+    .fi-ta-content-grid {
+        padding: 0.75rem !important;
+        gap: 0.85rem !important;
+    }
+
+    .fi-ta-content-grid > .fi-ta-record,
+    .fi-ta-record-ctn {
+        position: relative;
+        padding: 0.95rem !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        overflow: hidden !important;
+    }
+
+    /* Ensure split/stack columns inside cards wrap instead of clipping */
+    .fi-ta-record *,
+    .fi-ta-split,
+    .fi-ta-stack,
+    .fi-ta-col-wrp {
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .fi-ta-split {
+        flex-wrap: wrap !important;
+        gap: 0.65rem !important;
+    }
+
+    .fi-ta-text,
+    .fi-ta-text-item,
+    .fi-ta-text-item-label {
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+        word-break: break-word !important;
+    }
+
+    .fi-ta-record .fi-badge {
+        max-width: 100% !important;
+        white-space: normal !important;
+        text-align: left !important;
+        line-height: 1.3 !important;
+    }
+
+    /* Clean bottom action bar on mobile cards */
+    .fi-ta-record-actions {
+        justify-content: flex-start !important;
+        gap: 0.45rem 0.75rem !important;
+        padding-top: 0.7rem !important;
+    }
+
+    .fi-ta-record-actions .fi-link,
+    .fi-ta-record-actions .fi-btn {
+        min-height: 2rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.5rem;
+        background: var(--glass-bg-subtle);
+        border: 1px solid var(--glass-border);
+    }
+
+    /* Clean centered pagination on mobile */
+    .fi-pagination {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 0.5rem !important;
+        padding: 0.75rem !important;
+    }
+}

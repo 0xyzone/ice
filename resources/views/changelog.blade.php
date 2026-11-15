@@ -20,20 +20,20 @@
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         <!-- Top Navigation Bar -->
-        <header class="flex items-center justify-between gap-4 px-5 py-3.5 rounded-2xl bg-white/[0.04] backdrop-blur-xl border border-white/10 shadow-xl mb-10">
-            <a href="{{ url('/') }}" class="flex items-center gap-3 group">
-                <img src="{{ asset('images/logo.png') }}" alt="IceCream Fried Esports Logo" class="h-9 object-contain">
-                <span class="text-sm sm:text-base font-bold tracking-tight text-white group-hover:text-orange-400 transition-colors">
+        <header class="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl bg-white/[0.04] backdrop-blur-xl border border-white/10 shadow-xl mb-8 sm:mb-10">
+            <a href="{{ url('/') }}" class="flex items-center gap-2.5 group">
+                <img src="{{ asset('images/logo.png') }}" alt="IceCream Fried Esports Logo" class="h-8 sm:h-9 object-contain">
+                <span class="hidden sm:inline text-sm sm:text-base font-bold tracking-tight text-white group-hover:text-orange-400 transition-colors">
                     IceCream Fried
                 </span>
             </a>
 
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-2 sm:gap-2.5">
                 <x-version-pill />
-                <a href="{{ url('/') }}" class="px-3.5 py-1.5 rounded-xl text-xs font-medium bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-slate-200 transition-all">
+                <a href="{{ url('/') }}" class="px-3 py-1.5 rounded-xl text-xs font-medium bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-slate-200 transition-all">
                     Home
                 </a>
-                <a href="{{ route('login') }}" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white shadow-lg shadow-orange-500/25 transition-all">
+                <a href="{{ route('login') }}" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white shadow-lg shadow-orange-500/25 transition-all">
                     Portal
                 </a>
             </div>

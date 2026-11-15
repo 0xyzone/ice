@@ -23,7 +23,7 @@
         <!-- Main Card Wrapper -->
         <div class="relative z-10 w-full max-w-md my-8">
             
-            <div class="bg-slate-900/80 backdrop-blur-xl rounded-3xl p-8 sm:p-10 border border-slate-800/80 shadow-2xl shadow-black/60">
+            <div class="bg-slate-900/80 backdrop-blur-xl rounded-3xl p-6 sm:p-10 border border-slate-800/80 shadow-2xl shadow-black/60">
                 
                 <!-- Brand Header -->
                 <div class="flex flex-col items-center text-center pb-6 border-b border-slate-800/80 mb-6">
