@@ -80,11 +80,31 @@
 .fi-sidebar-header {
     background: transparent !important;
     border-bottom: 1px solid var(--glass-border) !important;
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+}
+
+.fi-sidebar-nav {
+    padding: 0.75rem 0.65rem !important;
+    gap: 0.65rem !important;
+}
+
+.fi-sidebar-group-label {
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    opacity: 0.72;
 }
 
 .fi-sidebar-item-button {
     border-radius: 0.75rem !important;
+    padding: 0.5rem 0.75rem !important;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.fi-sidebar-item-button:hover {
+    background: var(--glass-bg-subtle) !important;
 }
 
 .fi-sidebar-item-active > .fi-sidebar-item-button {
@@ -93,11 +113,42 @@
     box-shadow: 0 4px 12px -2px rgba(249, 115, 22, 0.15) !important;
 }
 
+/* ── Topbar Quick Links ─────────────────────────────────────────────────── */
+.fi-topbar-quick-links {
+    padding: 0.2rem;
+    border-radius: 9999px;
+    background: var(--glass-bg-subtle);
+    border: 1px solid var(--glass-border);
+}
+
+.fi-topbar-quick-link {
+    padding: 0.32rem 0.78rem;
+    border-radius: 9999px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: inherit;
+    opacity: 0.78;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+}
+
+.fi-topbar-quick-link:hover {
+    opacity: 1;
+    background: var(--glass-bg-elevated);
+}
+
+.fi-topbar-quick-link.is-active {
+    opacity: 1;
+    font-weight: 600;
+    color: #f97316;
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.16), rgba(245, 158, 11, 0.12));
+    border: 1px solid rgba(249, 115, 22, 0.28);
+}
+
 /* ── Glass Sections, Widgets & Containers ───────────────────────────────── */
 .fi-section,
 .fi-wi-stats-overview-stat,
 .fi-wi-chart,
-.fi-wi-table .fi-ta-ctn,
 .fi-fo-tabs,
 .fi-in-section {
     background: var(--glass-bg) !important;
@@ -107,6 +158,19 @@
     border-radius: 1.15rem !important;
     box-shadow: var(--glass-shadow) !important;
     transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+/* Prevent double-glass nesting inside widgets */
+.fi-wi-table .fi-ta-ctn,
+.fi-section .fi-ta-ctn,
+.fi-wi-stats-overview,
+.fi-wi-stats-overview .fi-section {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
 }
 
 .fi-wi-stats-overview-stat:hover {

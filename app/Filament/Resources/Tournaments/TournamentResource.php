@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class TournamentResource extends Resource
 {
@@ -21,6 +22,10 @@ class TournamentResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTrophy;
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::Trophy;
+
+    protected static UnitEnum|string|null $navigationGroup = 'Esports';
+
+    protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema
     {

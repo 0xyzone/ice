@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\App\Pages\ManageProfile;
 use App\Filament\Widgets\MukhiyasStatsOverview;
 use App\Filament\Widgets\PlayersRegistrationChart;
 use App\Filament\Widgets\RecentPlayersWidget;
@@ -12,11 +13,13 @@ use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Width;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -43,6 +46,14 @@ class MukhiyasPanelProvider extends PanelProvider
             ->sidebarCollapsibleOnDesktop()
             ->maxContentWidth(Width::Full)
             ->font('Poppins')
+            ->navigationGroups([
+                NavigationGroup::make('Esports'),
+                NavigationGroup::make('People & Access'),
+            ])
+            ->renderHook(
+                PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
+                fn () => view('filament.components.topbar-quick-links'),
+            )
 
             ->passwordReset()
             ->emailVerification()
@@ -50,6 +61,7 @@ class MukhiyasPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 Dashboard::class,
+                ManageProfile::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
@@ -73,6 +85,10 @@ class MukhiyasPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentShieldPlugin::make()
+                    ->navigationGroup('People & Access')
+                    ->navigationLabel('Roles & Permissions')
+                    ->navigationIcon('heroicon-o-key')
+                    ->activeNavigationIcon('heroicon-s-key')
                     ->gridColumns([
                         'default' => 1,
                         'sm' => 2,

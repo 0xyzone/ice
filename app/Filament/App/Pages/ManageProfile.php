@@ -42,7 +42,14 @@ class ManageProfile extends Page
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::User;
 
-    protected static ?string $navigationLabel = 'Profile';
+    protected static ?string $navigationLabel = 'Manage Profile';
+
+    protected static ?int $navigationSort = 99;
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->can('View:ManageProfile') ?? false;
+    }
 
     /**
      * @var array<string, mixed> | null

@@ -13,14 +13,21 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class OwnTeamResource extends Resource
 {
     protected static ?string $model = OwnTeam::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTrophy;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShieldCheck;
 
-    protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::Trophy;
+    protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::ShieldCheck;
+
+    protected static UnitEnum|string|null $navigationGroup = 'Esports';
+
+    protected static ?string $navigationLabel = 'Teams';
+
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'name';
 

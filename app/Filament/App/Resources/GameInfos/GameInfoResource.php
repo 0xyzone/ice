@@ -21,6 +21,10 @@ class GameInfoResource extends Resource
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::PuzzlePiece;
 
+    protected static ?string $navigationLabel = 'My Games';
+
+    protected static ?int $navigationSort = 1;
+
     protected static ?string $recordTitleAttribute = 'in_game_id';
 
     public static function form(Schema $schema): Schema

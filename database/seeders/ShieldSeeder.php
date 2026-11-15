@@ -40,12 +40,15 @@ class ShieldSeeder extends Seeder
             ->values()
             ->all();
 
-        $adminEsportsPermissions = $buildResourcePermissions([
-            'UserResource',
-            'OwnTeamResource',
-            'TournamentResource',
-            'MatchResource',
-        ]);
+        $adminEsportsPermissions = array_merge(
+            $buildResourcePermissions([
+                'UserResource',
+                'OwnTeamResource',
+                'TournamentResource',
+                'MatchResource',
+            ]),
+            ['View:ManageProfile']
+        );
 
         $superAdminPermissions = array_merge(
             $buildResourcePermissions(['RoleResource', 'AdminResource']),

@@ -24,7 +24,9 @@ class AdminResource extends Resource
 
     protected static string|BackedEnum|null $activeNavigationIcon = Heroicon::UserCircle;
 
-    protected static UnitEnum|string|null $navigationGroup = 'User Management';
+    protected static UnitEnum|string|null $navigationGroup = 'People & Access';
+
+    protected static ?int $navigationSort = 2;
 
     protected static ?string $modelLabel = 'Admin';
 

@@ -48,12 +48,12 @@ class PanelArchitectureAndPermissionsTest extends TestCase
             ->assertNotFound();
     }
 
-    public function test_mukhiyas_panel_hides_game_infos_and_manage_profile(): void
+    public function test_mukhiyas_panel_hides_game_infos_and_includes_manage_profile(): void
     {
         $panel = Filament::getPanel('mukhiyas');
 
         $this->assertNotContains(GameInfoResource::class, $panel->getResources());
-        $this->assertNotContains(ManageProfile::class, $panel->getPages());
+        $this->assertContains(ManageProfile::class, $panel->getPages());
     }
 
     public function test_strict_three_tier_role_and_permission_segregation(): void
@@ -97,7 +97,7 @@ class PanelArchitectureAndPermissionsTest extends TestCase
         $this->assertTrue($superAdmin->can('viewAny', Tournament::class));
         $this->assertTrue($superAdmin->can('viewAny', EsportsMatch::class));
         $this->assertFalse($superAdmin->hasPermissionTo('ViewAny:GameInfoResource'));
-        $this->assertFalse($superAdmin->hasPermissionTo('View:ManageProfile'));
+        $this->assertTrue($superAdmin->hasPermissionTo('View:ManageProfile'));
 
         // Admin: esports & players only, no RoleResource / AdminResource / GameInfo
         $this->actingAs($admin);
@@ -108,7 +108,7 @@ class PanelArchitectureAndPermissionsTest extends TestCase
         $this->assertTrue($admin->can('viewAny', Tournament::class));
         $this->assertTrue($admin->can('viewAny', EsportsMatch::class));
         $this->assertFalse($admin->can('viewAny', GameInfo::class));
-        $this->assertFalse($admin->can('View:ManageProfile'));
+        $this->assertTrue($admin->can('View:ManageProfile'));
 
         // Player: GameInfo, ManageProfile, view Tournament only
         $this->actingAs($player);
