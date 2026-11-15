@@ -53,8 +53,8 @@
 
 .fi-topbar {
     background: var(--glass-overlay-bg) !important;
-    backdrop-filter: var(--glass-overlay-blur) !important;
     -webkit-backdrop-filter: var(--glass-overlay-blur) !important;
+    backdrop-filter: var(--glass-overlay-blur) !important;
     border-bottom: 1px solid var(--glass-border) !important;
     box-shadow: 0 8px 28px -6px rgba(0, 0, 0, 0.18) !important;
     z-index: 30 !important;
@@ -69,8 +69,8 @@
 /* ── Floating Glass Sidebar ─────────────────────────────────────────────── */
 .fi-sidebar {
     background: var(--glass-overlay-bg) !important;
-    backdrop-filter: var(--glass-overlay-blur) !important;
     -webkit-backdrop-filter: var(--glass-overlay-blur) !important;
+    backdrop-filter: var(--glass-overlay-blur) !important;
     border-right: 1px solid var(--glass-border) !important;
     box-shadow: var(--glass-shadow) !important;
     z-index: 40 !important;
@@ -175,8 +175,8 @@
     color: #fb923c;
     background: linear-gradient(135deg, rgba(249, 115, 22, 0.16), rgba(245, 158, 11, 0.1));
     border: 1px solid rgba(249, 115, 22, 0.35);
-    backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
     box-shadow: 0 2px 10px -2px rgba(249, 115, 22, 0.22);
     transition: all 0.2s ease;
     white-space: nowrap;
@@ -204,8 +204,8 @@
 .fi-wi-chart,
 .fi-in-section {
     background: var(--glass-bg) !important;
-    backdrop-filter: var(--glass-blur) !important;
     -webkit-backdrop-filter: var(--glass-blur) !important;
+    backdrop-filter: var(--glass-blur) !important;
     border: 1px solid var(--glass-border) !important;
     border-radius: 1.15rem !important;
     box-shadow: var(--glass-shadow) !important;
@@ -218,8 +218,8 @@
 .fi-wi-stats-overview,
 .fi-wi-stats-overview .fi-section {
     background: transparent !important;
-    backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
     border: none !important;
     border-radius: 0 !important;
     box-shadow: none !important;
@@ -234,8 +234,8 @@
 /* ── Table Container & Card Grid Layout ─────────────────────────────────── */
 .fi-ta-ctn {
     background: var(--glass-bg-subtle) !important;
-    backdrop-filter: var(--glass-blur) !important;
     -webkit-backdrop-filter: var(--glass-blur) !important;
+    backdrop-filter: var(--glass-blur) !important;
     border: 1px solid var(--glass-border) !important;
     border-radius: 1.25rem !important;
     box-shadow: var(--glass-shadow) !important;
@@ -257,8 +257,8 @@
 .fi-ta-content-grid > .fi-ta-record,
 .fi-ta-record-ctn {
     background: var(--glass-bg-elevated) !important;
-    backdrop-filter: var(--glass-blur) !important;
     -webkit-backdrop-filter: var(--glass-blur) !important;
+    backdrop-filter: var(--glass-blur) !important;
     border: 1px solid var(--glass-border) !important;
     border-radius: 1.1rem !important;
     box-shadow: var(--glass-shadow) !important;
@@ -301,8 +301,8 @@
 /* ── Glass Slide-Over Drawers & Modals ──────────────────────────────────── */
 .fi-modal-window {
     background: var(--glass-bg-elevated) !important;
-    backdrop-filter: blur(24px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
     border: 1px solid var(--glass-border) !important;
     box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.35) !important;
 }
@@ -336,8 +336,8 @@
 .fi-select-input-ctn .choices__list--dropdown,
 .fi-select-panel {
     background: var(--glass-overlay-bg) !important;
-    backdrop-filter: var(--glass-overlay-blur) !important;
     -webkit-backdrop-filter: var(--glass-overlay-blur) !important;
+    backdrop-filter: var(--glass-overlay-blur) !important;
     border: 1px solid var(--glass-border) !important;
     border-radius: 1rem !important;
     box-shadow: 0 20px 44px -10px rgba(0, 0, 0, 0.45) !important;
@@ -350,8 +350,8 @@
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
-    backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
 }
 
 .fi-sc-tabs-tab {
@@ -360,8 +360,8 @@
 
 .fi-tabs {
     background: var(--glass-bg-subtle) !important;
-    backdrop-filter: var(--glass-blur) !important;
     -webkit-backdrop-filter: var(--glass-blur) !important;
+    backdrop-filter: var(--glass-blur) !important;
     border: 1px solid var(--glass-border) !important;
     border-radius: 1rem !important;
     padding: 0.35rem !important;
@@ -386,8 +386,8 @@
     border-radius: 9999px;
     background: var(--glass-bg-subtle);
     border: 1px solid var(--glass-border);
-    backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
 }
 
 .fi-tabs-shuttle.hidden {
@@ -471,8 +471,8 @@
 /* ── Auth / Login Card ──────────────────────────────────────────────────── */
 .fi-simple-main {
     background: var(--glass-bg-elevated) !important;
-    backdrop-filter: blur(24px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
     border: 1px solid var(--glass-border) !important;
     border-radius: 1.5rem !important;
     box-shadow: var(--glass-shadow-hover) !important;
@@ -518,8 +518,6 @@
         display: flex !important;
         flex-wrap: nowrap !important;
         overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
         gap: 0.25rem !important;
         max-width: 100% !important;
     }

@@ -48,7 +48,10 @@ class ManageProfile extends Page
 
     public static function canAccess(): bool
     {
-        return auth()->user()?->can('View:ManageProfile') ?? false;
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user?->can('View:ManageProfile') ?? false;
     }
 
     /**
@@ -130,28 +133,31 @@ class ManageProfile extends Page
 
     public function form(Schema $schema): Schema
     {
+        /** @var User $authUser */
+        $authUser = Auth::user();
+
         return $schema
             ->components([
                 Form::make([
                     Hidden::make('user_id')
-                        ->default(Auth::user()->id),
+                        ->default($authUser->id),
 
                     Section::make('Account Overview')
                         ->schema([
                             TextEntry::make('user_name')
                                 ->label('Player Name')
-                                ->state(Auth::user()->name),
+                                ->state($authUser->name),
                             TextEntry::make('user_email')
                                 ->label('Email Address')
-                                ->state(Auth::user()->email),
+                                ->state($authUser->email),
                             TextEntry::make('user_id')
                                 ->label('Player ID')
-                                ->state(Auth::user()->id),
+                                ->state($authUser->id),
                             TextEntry::make('google_status')
                                 ->label('Google Account')
                                 ->badge()
-                                ->color(fn () => Auth::user()->hasGoogleLinked() ? 'success' : 'gray')
-                                ->state(fn () => Auth::user()->hasGoogleLinked() ? 'Connected' : 'Not Linked'),
+                                ->color(fn () => $authUser->hasGoogleLinked() ? 'success' : 'gray')
+                                ->state(fn () => $authUser->hasGoogleLinked() ? 'Connected' : 'Not Linked'),
                         ])
                         ->columns([
                             'default' => 2,

@@ -17,6 +17,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 
 class GameInfoForm
 {
@@ -37,7 +38,7 @@ class GameInfoForm
                                     ->native(false)
                                     ->default(GameType::Mlbb->value),
                                 Hidden::make('user_id')
-                                    ->default($forcedUserId ?? auth()->id()),
+                                    ->default($forcedUserId ?? Auth::id()),
                                 TextInput::make('in_game_username')
                                     ->label('In-Game Name (IGN)')
                                     ->placeholder('e.g. ApexPredator')

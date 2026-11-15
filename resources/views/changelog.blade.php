@@ -13,14 +13,14 @@
 <body class="min-h-screen bg-[#07070c] text-slate-100 font-['Poppins',sans-serif] antialiased selection:bg-orange-500/30 selection:text-orange-200">
     <!-- Ambient Glass Background Glows -->
     <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div class="absolute -top-40 left-1/4 w-[520px] h-[520px] rounded-full bg-orange-500/15 blur-[130px]"></div>
-        <div class="absolute top-1/3 -right-32 w-[440px] h-[440px] rounded-full bg-amber-500/10 blur-[130px]"></div>
-        <div class="absolute -bottom-40 left-1/3 w-[480px] h-[480px] rounded-full bg-indigo-500/10 blur-[140px]"></div>
+        <div class="absolute -top-40 left-1/4 w-130 h-130 rounded-full bg-orange-500/15 blur-[130px]"></div>
+        <div class="absolute top-1/3 -right-32 w-110 h-110 rounded-full bg-amber-500/10 blur-[130px]"></div>
+        <div class="absolute -bottom-40 left-1/3 w-120 h-120 rounded-full bg-indigo-500/10 blur-[140px]"></div>
     </div>
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         <!-- Top Navigation Bar -->
-        <header class="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl bg-white/[0.04] backdrop-blur-xl border border-white/10 shadow-xl mb-8 sm:mb-10">
+        <header class="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl bg-white/4 backdrop-blur-xl border border-white/10 shadow-xl mb-8 sm:mb-10">
             <a href="{{ url('/') }}" class="flex items-center gap-2.5 group">
                 <img src="{{ asset('images/logo.png') }}" alt="IceCream Fried Esports Logo" class="h-8 sm:h-9 object-contain">
                 <span class="hidden sm:inline text-sm sm:text-base font-bold tracking-tight text-white group-hover:text-orange-400 transition-colors">
@@ -30,17 +30,17 @@
 
             <div class="flex items-center gap-2 sm:gap-2.5">
                 <x-version-pill />
-                <a href="{{ url('/') }}" class="px-3 py-1.5 rounded-xl text-xs font-medium bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-slate-200 transition-all">
+                <a href="{{ url('/') }}" class="px-3 py-1.5 rounded-xl text-xs font-medium bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 transition-all">
                     Home
                 </a>
-                <a href="{{ route('login') }}" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white shadow-lg shadow-orange-500/25 transition-all">
+                <a href="{{ route('login') }}" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-linear-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white shadow-lg shadow-orange-500/25 transition-all">
                     Portal
                 </a>
             </div>
         </header>
 
         <!-- Hero Card -->
-        <section class="relative overflow-hidden rounded-3xl bg-white/[0.045] backdrop-blur-2xl border border-white/10 p-7 sm:p-9 shadow-2xl mb-10">
+        <section class="relative overflow-hidden rounded-3xl bg-white/4.5 backdrop-blur-2xl border border-white/10 p-7 sm:p-9 shadow-2xl mb-10">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
                 <div>
                     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-orange-500/15 text-orange-300 border border-orange-500/30 mb-3">
@@ -55,7 +55,7 @@
                     </p>
                 </div>
 
-                <div class="shrink-0 flex flex-col items-start sm:items-end justify-center px-5 py-4 rounded-2xl bg-white/[0.04] border border-white/10">
+                <div class="shrink-0 flex flex-col items-start sm:items-end justify-center px-5 py-4 rounded-2xl bg-white/4 border border-white/10">
                     <span class="text-[11px] uppercase tracking-widest text-slate-400 font-semibold">Current Version</span>
                     <span class="mt-1 text-2xl font-extrabold text-orange-400">{{ $currentVersion }}</span>
                     @if (! empty($releases[0]['date']))
@@ -68,10 +68,10 @@
         <!-- Releases Timeline -->
         <main class="space-y-6">
             @forelse ($releases as $release)
-                <article class="rounded-3xl bg-white/[0.04] backdrop-blur-xl border {{ $release['is_latest'] ? 'border-orange-500/35 shadow-lg shadow-orange-500/10' : 'border-white/10' }} p-6 sm:p-8 transition-all hover:border-white/20">
+                <article class="rounded-3xl bg-white/4 backdrop-blur-xl border {{ $release['is_latest'] ? 'border-orange-500/35 shadow-lg shadow-orange-500/10' : 'border-white/10' }} p-6 sm:p-8 transition-all hover:border-white/20">
                     <div class="flex flex-wrap items-center justify-between gap-3 pb-5 mb-5 border-b border-white/10">
                         <div class="flex items-center gap-3">
-                            <span class="px-3.5 py-1 rounded-full text-sm font-bold {{ $release['is_latest'] ? 'bg-gradient-to-r from-orange-600 to-orange-500 text-white shadow-md shadow-orange-500/25' : 'bg-white/10 text-slate-200 border border-white/10' }}">
+                            <span class="px-3.5 py-1 rounded-full text-sm font-bold {{ $release['is_latest'] ? 'bg-linear-to-r from-orange-600 to-orange-500 text-white shadow-md shadow-orange-500/25' : 'bg-white/10 text-slate-200 border border-white/10' }}">
                                 {{ $release['version'] }}
                             </span>
                             @if ($release['is_latest'])
