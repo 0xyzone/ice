@@ -9,11 +9,11 @@
         : (is_string($game) ? \App\Enums\GameType::tryFrom($game) : null);
 
     $sizeClasses = match ($size) {
-        'xs' => 'w-5 h-5',
-        'sm' => 'w-6 h-6',
-        'lg' => 'w-10 h-10',
-        'xl' => 'w-12 h-12',
-        default => 'w-7 h-7',
+        'xs' => 'h-4 w-auto max-w-[100px]',
+        'sm' => 'h-5 w-auto max-w-[120px]',
+        'lg' => 'h-7 w-auto max-w-[150px]',
+        'xl' => 'h-9 w-auto max-w-[180px]',
+        default => 'h-6 w-auto max-w-[135px]',
     };
 @endphp
 

@@ -35,9 +35,9 @@ enum GameType: string implements HasColor, HasIcon, HasLabel
     public function getLogoPath(): string
     {
         return match ($this) {
-            self::Mlbb => 'images/games/mlbb.svg',
+            self::Mlbb => 'images/games/mlbb.png',
             self::PubgMobile => 'images/games/pubg-mobile.svg',
-            self::FreeFire => 'images/games/free-fire.svg',
+            self::FreeFire => 'images/games/free-fire.png',
         };
     }
 

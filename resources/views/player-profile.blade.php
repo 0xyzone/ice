@@ -538,8 +538,8 @@
                         <div class="pro-card p-5 space-y-3 border border-slate-800/80">
                             <div class="flex items-start justify-between gap-3">
                                 <div class="flex items-center gap-3 min-w-0">
-                                    <div class="w-11 h-11 rounded-xl bg-slate-900/90 border border-slate-700/80 flex items-center justify-center p-1.5 shrink-0">
-                                        <x-game-logo :game="$gameInfo->game" size="lg" class="w-full h-full" />
+                                    <div class="h-11 px-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 flex items-center justify-center shrink-0">
+                                        <x-game-logo :game="$gameInfo->game" size="sm" />
                                     </div>
                                     <div class="min-w-0">
                                         <h3 class="font-bold text-white text-base truncate">
