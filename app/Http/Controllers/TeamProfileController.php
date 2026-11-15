@@ -14,13 +14,13 @@ class TeamProfileController extends Controller
     {
         $team = OwnTeam::with([
             'members' => function ($query) {
-                $query->where('status', true)
-                    ->orderByDesc('is_main_roster')
-                    ->orderByRaw("CASE WHEN role = 'captain' THEN 0 ELSE 1 END")
-                    ->orderBy('created_at');
+                $query->where('status', true);
             },
             'members.user.player',
+            'members.user.gameInfos',
         ])->findOrFail($id);
+
+        $team->sortMembersRelation();
 
         return $this->renderTeam($team);
     }

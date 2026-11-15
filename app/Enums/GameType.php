@@ -80,6 +80,15 @@ enum GameType: string implements HasColor, HasIcon, HasLabel
         };
     }
 
+    public function getRoleRank(?string $role): int
+    {
+        return match ($this) {
+            self::Mlbb => MlbbRole::rankFor($role),
+            self::PubgMobile => PubgRole::rankFor($role),
+            self::FreeFire => FreeFireRole::rankFor($role),
+        };
+    }
+
     /**
      * @return array<string, string>
      */

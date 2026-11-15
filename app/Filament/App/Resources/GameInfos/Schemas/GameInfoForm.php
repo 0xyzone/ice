@@ -71,14 +71,16 @@ class GameInfoForm
 
                         Grid::make(2)
                             ->schema([
-                                Select::make('role')
-                                    ->label('Primary Tactical Role')
+                                Select::make('roles')
+                                    ->label('Tactical Roles')
+                                    ->multiple()
                                     ->options(fn (callable $get): array => match ($get('game')) {
                                         GameType::Mlbb->value, 'mlbb' => MlbbRole::options(),
                                         GameType::PubgMobile->value, 'pubg_mobile' => PubgRole::options(),
                                         GameType::FreeFire->value, 'free_fire' => FreeFireRole::options(),
                                         default => [],
                                     })
+                                    ->helperText('Select one or more roles. Ordered automatically by tactical priority.')
                                     ->native(false)
                                     ->searchable(),
 

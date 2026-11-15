@@ -2,6 +2,16 @@
 
 All notable changes to the **IceCream Fried Esports Portal** are documented in this file.
 
+## [v1.5.0] - 2026-11-15
+
+### Added
+- Multi-select tactical roles (`roles`) across **PUBG Mobile**, **Free Fire**, and **MLBB** with expanded international tournament roles (`IGL`, `Fragger`, `Assaulter`, `Scout`, `Primary/Secondary Rusher`, `Bomber/Nader`, `Flanker`, `Flex/Utility`).
+- Priority ranking on every game role plus manual `sort_order` & drag-to-reorder in Team Members (`MembersRelationManager`), powering automatic + manual roster ordering on public team views.
+
+### Fixed
+- Strengthened frosted glass opacity and `26px` backdrop blur on overlapping UI layers (topbar, sidebar, dropdowns, modals) so scrolled content beneath never bleeds through.
+- Stacked mobile record card headers vertically so game/role badges never wrap mid-letter on small screens.
+
 ## [v1.4.0] - 2026-11-15
 
 ### Added

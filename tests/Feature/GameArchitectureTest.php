@@ -37,7 +37,7 @@ class GameArchitectureTest extends TestCase
         // Test roles
         $this->assertArrayHasKey(MlbbRole::GoldLane->value, GameType::Mlbb->getRoles());
         $this->assertArrayHasKey(PubgRole::Assaulter->value, GameType::PubgMobile->getRoles());
-        $this->assertArrayHasKey(FreeFireRole::Rusher->value, GameType::FreeFire->getRoles());
+        $this->assertArrayHasKey(FreeFireRole::PrimaryRusher->value, GameType::FreeFire->getRoles());
 
         // Test maps
         $this->assertArrayHasKey('Sanctum Island', GameType::Mlbb->getMaps());
@@ -81,7 +81,7 @@ class GameArchitectureTest extends TestCase
             'game' => GameType::FreeFire,
             'in_game_id' => '987654321',
             'in_game_username' => 'KetanFF',
-            'role' => FreeFireRole::Rusher->value,
+            'role' => FreeFireRole::PrimaryRusher->value,
             'status' => true,
         ]);
 
@@ -90,10 +90,10 @@ class GameArchitectureTest extends TestCase
         $this->assertContains('Beatrix', $mlbbInfo->main_heroes);
 
         $this->assertEquals('PUBG Mobile', $pubgInfo->gameLabel);
-        $this->assertEquals('Assaulter / Entry', $pubgInfo->roleLabel);
+        $this->assertEquals('Assaulter', $pubgInfo->roleLabel);
 
         $this->assertEquals('Free Fire', $ffInfo->gameLabel);
-        $this->assertEquals('Rusher / Entry Frag', $ffInfo->roleLabel);
+        $this->assertEquals('Primary Rusher', $ffInfo->roleLabel);
 
         // Verify profile route renders the multi-game accounts
         $response = $this->get("/player/{$user->id}");
@@ -102,8 +102,8 @@ class GameArchitectureTest extends TestCase
         $response->assertSee('KetanPUBG');
         $response->assertSee('KetanFF');
         $response->assertSee('Gold Laner');
-        $response->assertSee('Assaulter / Entry');
-        $response->assertSee('Rusher / Entry Frag');
+        $response->assertSee('Assaulter');
+        $response->assertSee('Primary Rusher');
         $response->assertSee('Beatrix');
     }
 

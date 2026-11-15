@@ -35,6 +35,7 @@ class GameInfosTable
                         TextColumn::make('game')
                             ->badge(),
                         TextColumn::make('roleLabel')
+                            ->state(fn ($record): array => $record->getRoleLabels())
                             ->badge()
                             ->color('info')
                             ->placeholder('No Role'),

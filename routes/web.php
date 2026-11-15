@@ -22,13 +22,11 @@ use Illuminate\Support\Facades\DB;
 Route::get('/', function () {
     $teams = OwnTeam::with([
         'members' => function ($query) {
-            $query->where('status', true)
-                ->orderByDesc('is_main_roster')
-                ->orderByRaw("CASE WHEN role = 'captain' THEN 0 ELSE 1 END")
-                ->orderBy('created_at');
+            $query->where('status', true);
         },
         'members.user.player',
-    ])->where('status', true)->get();
+        'members.user.gameInfos',
+    ])->where('status', true)->get()->each->sortMembersRelation();
 
     $squadsCount = OwnTeam::where('status', true)->count();
     $athletesCount = TeamMember::where('status', true)->count();

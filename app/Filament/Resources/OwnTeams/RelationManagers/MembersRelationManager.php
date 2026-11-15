@@ -10,6 +10,7 @@ use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -65,6 +66,13 @@ class MembersRelationManager extends RelationManager
                     ->onColor('success')
                     ->offColor('gray'),
 
+                TextInput::make('sort_order')
+                    ->label('Display Order')
+                    ->numeric()
+                    ->minValue(1)
+                    ->placeholder('Auto (by game role rank)')
+                    ->helperText('Optional manual rank (1 = first). Leave blank to sort automatically by game role priority.'),
+
                 Toggle::make('status')
                     ->label('Is Active Member')
                     ->onIcon('heroicon-m-check')
@@ -94,8 +102,16 @@ class MembersRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('role')
-            ->defaultSort('is_main_roster', 'desc')
+            ->reorderable('sort_order')
+            ->defaultSort('sort_order')
             ->columns([
+                TextColumn::make('sort_order')
+                    ->label('#')
+                    ->placeholder('Auto')
+                    ->sortable()
+                    ->badge()
+                    ->color('gray'),
+
                 TextColumn::make('user.name')
                     ->label('Player')
                     ->searchable()

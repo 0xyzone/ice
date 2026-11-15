@@ -12,6 +12,7 @@ class TeamMember extends Model
         'user_id',
         'role',
         'is_main_roster',
+        'sort_order',
         'status',
         'joined_at',
         'left_at',
@@ -24,6 +25,7 @@ class TeamMember extends Model
     {
         return [
             'is_main_roster' => 'boolean',
+            'sort_order' => 'integer',
             'status' => 'boolean',
             'joined_at' => 'date',
             'left_at' => 'date',
