@@ -45,7 +45,7 @@ Route::get('/', function () {
         ->get();
 
     return view('welcome', compact('teams', 'squadsCount', 'athletesCount', 'tournamentsCount', 'winRate', 'members'));
-});
+})->name('home');
 
 Route::get('/login', [LoginController::class, 'show'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);

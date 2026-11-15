@@ -66,15 +66,29 @@
     }
 @endphp
 
-@if (count($links))
-    <nav aria-label="Quick navigation" class="fi-topbar-quick-links hidden lg:flex items-center">
-        @foreach ($links as $link)
-            <a
-                href="{{ $link['url'] }}"
-                class="fi-topbar-quick-link {{ $link['active'] ? 'is-active' : '' }}"
-            >
-                {{ $link['label'] }}
-            </a>
-        @endforeach
-    </nav>
-@endif
+<div class="flex items-center gap-2">
+    @if (count($links))
+        <nav aria-label="Quick navigation" class="fi-topbar-quick-links hidden lg:flex items-center">
+            @foreach ($links as $link)
+                <a
+                    href="{{ $link['url'] }}"
+                    class="fi-topbar-quick-link {{ $link['active'] ? 'is-active' : '' }}"
+                >
+                    {{ $link['label'] }}
+                </a>
+            @endforeach
+        </nav>
+    @endif
+
+    <a
+        href="{{ route('home') }}"
+        title="Go to Public Homepage"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-orange-500/30 bg-orange-500/10 text-orange-600 dark:text-orange-400 hover:bg-orange-500/20 transition-colors shrink-0"
+    >
+        <x-filament::icon
+            icon="heroicon-m-home"
+            class="w-4 h-4"
+        />
+        <span class="hidden sm:inline">Homepage</span>
+    </a>
+</div>
