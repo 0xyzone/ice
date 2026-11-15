@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\OwnTeams;
 
-use App\Filament\Resources\OwnTeams\Pages\CreateOwnTeam;
 use App\Filament\Resources\OwnTeams\Pages\EditOwnTeam;
 use App\Filament\Resources\OwnTeams\Pages\ListOwnTeams;
 use App\Filament\Resources\OwnTeams\RelationManagers\MembersRelationManager;
@@ -46,7 +45,6 @@ class OwnTeamResource extends Resource
     {
         return [
             'index' => ListOwnTeams::route('/'),
-            'create' => CreateOwnTeam::route('/create'),
             'edit' => EditOwnTeam::route('/{record}/edit'),
         ];
     }

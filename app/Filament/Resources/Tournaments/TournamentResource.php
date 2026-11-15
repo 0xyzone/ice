@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Tournaments;
 
-use App\Filament\Resources\Tournaments\Pages\CreateTournament;
 use App\Filament\Resources\Tournaments\Pages\EditTournament;
 use App\Filament\Resources\Tournaments\Pages\ListTournaments;
 use App\Filament\Resources\Tournaments\RelationManagers\MatchesRelationManager;
@@ -44,7 +43,6 @@ class TournamentResource extends Resource
     {
         return [
             'index' => ListTournaments::route('/'),
-            'create' => CreateTournament::route('/create'),
             'edit' => EditTournament::route('/{record}/edit'),
         ];
     }

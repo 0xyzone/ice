@@ -1,0 +1,274 @@
+/* ==========================================================================
+   IceCream Esports - Glassmorphism Design System for Filament v5
+   Supports Light Mode & Dark Mode with Orange/Amber Esports Accent
+   ========================================================================== */
+
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.68);
+    --glass-bg-elevated: rgba(255, 255, 255, 0.84);
+    --glass-bg-subtle: rgba(255, 255, 255, 0.48);
+    --glass-border: rgba(226, 232, 240, 0.85);
+    --glass-border-hover: rgba(249, 115, 22, 0.45);
+    --glass-shadow: 0 8px 32px -8px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+    --glass-shadow-hover: 0 16px 40px -12px rgba(249, 115, 22, 0.16), 0 4px 12px rgba(15, 23, 42, 0.06);
+    --glass-blur: blur(18px) saturate(160%);
+    --ambient-canvas: radial-gradient(circle at 12% 10%, rgba(251, 146, 60, 0.14), transparent 42%),
+                      radial-gradient(circle at 88% 18%, rgba(245, 158, 11, 0.11), transparent 40%),
+                      radial-gradient(circle at 50% 90%, rgba(99, 102, 241, 0.07), transparent 45%),
+                      #f8fafc;
+}
+
+.dark {
+    --glass-bg: rgba(15, 23, 42, 0.58);
+    --glass-bg-elevated: rgba(15, 23, 42, 0.78);
+    --glass-bg-subtle: rgba(30, 41, 59, 0.42);
+    --glass-border: rgba(255, 255, 255, 0.09);
+    --glass-border-hover: rgba(249, 115, 22, 0.48);
+    --glass-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    --glass-shadow-hover: 0 20px 44px -10px rgba(249, 115, 22, 0.18), 0 8px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    --ambient-canvas: radial-gradient(circle at 10% 8%, rgba(249, 115, 22, 0.16), transparent 40%),
+                      radial-gradient(circle at 90% 14%, rgba(245, 158, 11, 0.11), transparent 38%),
+                      radial-gradient(circle at 50% 92%, rgba(56, 189, 248, 0.08), transparent 44%),
+                      #060913;
+}
+
+/* ── Ambient Canvas Backdrop ────────────────────────────────────────────── */
+.fi-body {
+    background: var(--ambient-canvas) fixed !important;
+    min-height: 100vh;
+}
+
+.fi-main-ctn,
+.fi-main {
+    background: transparent !important;
+}
+
+/* ── Floating Glass Topbar ──────────────────────────────────────────────── */
+.fi-topbar {
+    background: var(--glass-bg-elevated) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border-bottom: 1px solid var(--glass-border) !important;
+    box-shadow: 0 4px 24px -6px rgba(0, 0, 0, 0.08) !important;
+}
+
+.fi-topbar nav {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* ── Floating Glass Sidebar ─────────────────────────────────────────────── */
+.fi-sidebar {
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border-right: 1px solid var(--glass-border) !important;
+    box-shadow: var(--glass-shadow) !important;
+}
+
+@media (min-width: 1024px) {
+    .fi-sidebar {
+        margin: 0.75rem 0 0.75rem 0.75rem;
+        border-radius: 1.25rem;
+        border: 1px solid var(--glass-border) !important;
+        height: calc(100vh - 1.5rem) !important;
+        top: 0.75rem !important;
+    }
+}
+
+.fi-sidebar-header {
+    background: transparent !important;
+    border-bottom: 1px solid var(--glass-border) !important;
+}
+
+.fi-sidebar-item-button {
+    border-radius: 0.75rem !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.fi-sidebar-item-active > .fi-sidebar-item-button {
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.16), rgba(245, 158, 11, 0.12)) !important;
+    border: 1px solid rgba(249, 115, 22, 0.28) !important;
+    box-shadow: 0 4px 12px -2px rgba(249, 115, 22, 0.15) !important;
+}
+
+/* ── Glass Sections, Widgets & Containers ───────────────────────────────── */
+.fi-section,
+.fi-wi-stats-overview-stat,
+.fi-wi-chart,
+.fi-wi-table .fi-ta-ctn,
+.fi-fo-tabs,
+.fi-in-section {
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 1.15rem !important;
+    box-shadow: var(--glass-shadow) !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.fi-wi-stats-overview-stat:hover {
+    border-color: var(--glass-border-hover) !important;
+    box-shadow: var(--glass-shadow-hover) !important;
+    transform: translateY(-2px);
+}
+
+/* ── Table Container & Card Grid Layout ─────────────────────────────────── */
+.fi-ta-ctn {
+    background: var(--glass-bg-subtle) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 1.25rem !important;
+    box-shadow: var(--glass-shadow) !important;
+    overflow: hidden;
+}
+
+.fi-ta-header-ctn {
+    background: transparent !important;
+    border-bottom: 1px solid var(--glass-border) !important;
+    padding: 1rem 1.25rem !important;
+}
+
+/* Grid Cards inside Filament Tables (contentGrid) */
+.fi-ta-content-grid {
+    padding: 1.25rem !important;
+    gap: 1.125rem !important;
+}
+
+.fi-ta-content-grid > .fi-ta-record,
+.fi-ta-record-ctn {
+    background: var(--glass-bg-elevated) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 1.1rem !important;
+    box-shadow: var(--glass-shadow) !important;
+    padding: 1.25rem !important;
+    transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.22s ease,
+                box-shadow 0.22s ease !important;
+}
+
+.fi-ta-content-grid > .fi-ta-record:hover {
+    transform: translateY(-3px);
+    border-color: var(--glass-border-hover) !important;
+    box-shadow: var(--glass-shadow-hover) !important;
+}
+
+/* Record actions footer inside cards */
+.fi-ta-record-actions {
+    margin-top: 0.75rem !important;
+    padding-top: 0.75rem !important;
+    border-top: 1px solid var(--glass-border) !important;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+/* Standard table rows fallback (Relation Managers / Widgets) */
+.fi-ta-table thead {
+    background: var(--glass-bg-subtle) !important;
+}
+
+.fi-ta-table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.fi-ta-table tbody tr:hover {
+    background: rgba(249, 115, 22, 0.05) !important;
+}
+
+/* ── Glass Slide-Over Drawers & Modals ──────────────────────────────────── */
+.fi-modal-window {
+    background: var(--glass-bg-elevated) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border: 1px solid var(--glass-border) !important;
+    box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.35) !important;
+}
+
+.fi-modal-slide-over .fi-modal-window {
+    border-left: 1px solid var(--glass-border) !important;
+    border-top-left-radius: 1.25rem !important;
+    border-bottom-left-radius: 1.25rem !important;
+}
+
+.fi-modal-header,
+.fi-modal-footer {
+    background: transparent !important;
+    border-color: var(--glass-border) !important;
+}
+
+/* ── Inputs, Selects & Dropdowns ────────────────────────────────────────── */
+.fi-input-wrp {
+    background: var(--glass-bg-subtle) !important;
+    border-color: var(--glass-border) !important;
+    border-radius: 0.75rem !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.fi-input-wrp:focus-within {
+    border-color: rgba(249, 115, 22, 0.65) !important;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15) !important;
+}
+
+.fi-dropdown-panel {
+    background: var(--glass-bg-elevated) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 1rem !important;
+    box-shadow: var(--glass-shadow-hover) !important;
+}
+
+/* ── Tabs & Pagination ──────────────────────────────────────────────────── */
+.fi-tabs {
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 1rem !important;
+    padding: 0.35rem !important;
+}
+
+.fi-pagination {
+    background: transparent !important;
+    border-top: 1px solid var(--glass-border) !important;
+    padding: 0.85rem 1.25rem !important;
+}
+
+/* ── Auth / Login Card ──────────────────────────────────────────────────── */
+.fi-simple-main {
+    background: var(--glass-bg-elevated) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 1.5rem !important;
+    box-shadow: var(--glass-shadow-hover) !important;
+}
+
+/* ── Compact File Upload Previews ───────────────────────────────────────── */
+.compact-file-upload .filepond--item {
+    width: calc(20% - 0.5em) !important;
+}
+
+@media (max-width: 1024px) {
+    .compact-file-upload .filepond--item {
+        width: calc(25% - 0.5em) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .compact-file-upload .filepond--item {
+        width: calc(33.33% - 0.5em) !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .compact-file-upload .filepond--item {
+        width: calc(50% - 0.5em) !important;
+    }
+}

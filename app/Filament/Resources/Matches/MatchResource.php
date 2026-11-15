@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\Matches;
 
-use App\Filament\Resources\Matches\Pages\CreateMatch;
-use App\Filament\Resources\Matches\Pages\EditMatch;
 use App\Filament\Resources\Matches\Pages\ListMatches;
 use App\Filament\Resources\Matches\Schemas\MatchForm;
 use App\Filament\Resources\Matches\Tables\MatchesTable;
@@ -56,8 +54,6 @@ class MatchResource extends Resource
     {
         return [
             'index' => ListMatches::route('/'),
-            'create' => CreateMatch::route('/create'),
-            'edit' => EditMatch::route('/{record}/edit'),
         ];
     }
 }

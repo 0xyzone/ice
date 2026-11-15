@@ -1,11 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Users\Tables;
 
+use App\Filament\Resources\Users\UserResource;
+use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Support\Enums\FontWeight;
+use Filament\Support\Enums\TextSize;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\TernaryFilter;
@@ -22,30 +32,51 @@ class UsersTable
                     $query->where('name', 'player');
                 });
             })
+            ->contentGrid([
+                'md' => 2,
+                'xl' => 3,
+            ])
             ->columns([
-                TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('email')
-                    ->label('Email address')
-                    ->searchable(),
-                ToggleColumn::make('is_active')
-                    ->label('Active Status')
-                    ->sortable(),
-                TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('roles.name')
-                    ->badge()
-                    ->formatStateUsing(fn ($state) => ucfirst($state))
-                    ->color(fn ($state) => $state == 'admin' ? 'success' : 'gray'),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Stack::make([
+                    Split::make([
+                        ImageColumn::make('avatar_full_url')
+                            ->circular()
+                            ->imageSize(48)
+                            ->grow(false),
+                        Stack::make([
+                            TextColumn::make('name')
+                                ->weight(FontWeight::Bold)
+                                ->size(TextSize::Medium)
+                                ->searchable(),
+                            TextColumn::make('username')
+                                ->prefix('@')
+                                ->color('primary')
+                                ->size(TextSize::Small)
+                                ->searchable(),
+                        ])->space(1),
+                        ToggleColumn::make('is_active')
+                            ->label('Active')
+                            ->grow(false),
+                    ]),
+                    Stack::make([
+                        TextColumn::make('email')
+                            ->icon('heroicon-m-envelope')
+                            ->color('gray')
+                            ->size(TextSize::Small)
+                            ->searchable(),
+                        Split::make([
+                            TextColumn::make('roles.name')
+                                ->badge()
+                                ->formatStateUsing(fn ($state) => ucfirst($state))
+                                ->color('info'),
+                            TextColumn::make('created_at')
+                                ->since()
+                                ->color('gray')
+                                ->size(TextSize::Small)
+                                ->grow(false),
+                        ]),
+                    ])->space(1),
+                ])->space(3),
             ])
             ->filters([
                 TernaryFilter::make('is_active')
@@ -55,8 +86,16 @@ class UsersTable
                     ->falseLabel('Deactivated Players'),
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->slideOver(),
+                EditAction::make('quick_edit')
+                    ->label('Quick Edit')
+                    ->url(null)
+                    ->slideOver(),
+                Action::make('manage')
+                    ->label('Manage')
+                    ->icon('heroicon-m-cog-6-tooth')
+                    ->color('warning')
+                    ->url(fn (User $record): string => UserResource::getUrl('edit', ['record' => $record])),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

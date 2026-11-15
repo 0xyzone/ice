@@ -17,6 +17,7 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\Width;
 use Filament\Widgets\AccountWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -37,8 +38,11 @@ class AppPanelProvider extends PanelProvider
             ->favicon(asset('favicon.ico').'?v='.filemtime(public_path('favicon.ico')))
             ->viteTheme('resources/css/filament/app/theme.css')
             ->colors([
-                'primary' => Color::Violet,
+                'primary' => Color::Orange,
+                'amber' => Color::Amber,
             ])
+            ->sidebarCollapsibleOnDesktop()
+            ->maxContentWidth(Width::Full)
             ->font('Poppins')
 
             // ->registration()

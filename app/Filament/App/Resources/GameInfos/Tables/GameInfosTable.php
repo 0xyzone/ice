@@ -1,72 +1,86 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\App\Resources\GameInfos\Tables;
 
 use App\Enums\GameType;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
+use Filament\Support\Enums\FontFamily;
+use Filament\Support\Enums\FontWeight;
+use Filament\Support\Enums\TextSize;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use TinusG\FilamentHoverImageColumn\HoverImageColumn;
 
 class GameInfosTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->contentGrid([
+                'md' => 2,
+                'xl' => 3,
+            ])
             ->columns([
-                TextColumn::make('game')
-                    ->label('Game')
-                    ->badge()
-                    ->sortable(),
-                TextColumn::make('user.name')
-                    ->label('Player')
-                    ->searchable(),
-                TextColumn::make('in_game_username')
-                    ->label('IGN')
-                    ->searchable(),
-                TextColumn::make('in_game_id')
-                    ->label('ID / UID')
-                    ->searchable(),
-                TextColumn::make('server_id')
-                    ->label('Zone/Server')
-                    ->placeholder('-')
-                    ->searchable(),
-                TextColumn::make('roleLabel')
-                    ->label('Role')
-                    ->badge()
-                    ->placeholder('-'),
-                HoverImageColumn::make('profile_image'),
-                ToggleColumn::make('status')
-                    ->onIcon('heroicon-o-check-circle')
-                    ->offIcon('heroicon-o-x-circle')
-                    ->onColor('success')
-                    ->offColor('danger')
-                    ->afterStateUpdated(function ($record) {
-                        Notification::make()
-                            ->title('Status updated')
-                            ->success()
-                            ->send();
-                    }),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Stack::make([
+                    Split::make([
+                        TextColumn::make('game')
+                            ->badge(),
+                        TextColumn::make('roleLabel')
+                            ->badge()
+                            ->color('info')
+                            ->placeholder('No Role'),
+                        ToggleColumn::make('status')
+                            ->onIcon('heroicon-o-check-circle')
+                            ->offIcon('heroicon-o-x-circle')
+                            ->onColor('success')
+                            ->offColor('danger')
+                            ->afterStateUpdated(function ($record) {
+                                Notification::make()
+                                    ->title('Status updated')
+                                    ->success()
+                                    ->send();
+                            })
+                            ->grow(false),
+                    ]),
+                    Stack::make([
+                        TextColumn::make('in_game_username')
+                            ->weight(FontWeight::Bold)
+                            ->size(TextSize::Large)
+                            ->searchable(),
+                        Split::make([
+                            TextColumn::make('in_game_id')
+                                ->prefix('ID: #')
+                                ->fontFamily(FontFamily::Mono)
+                                ->color('gray')
+                                ->size(TextSize::Small)
+                                ->searchable(),
+                            TextColumn::make('server_id')
+                                ->prefix('Zone: ')
+                                ->fontFamily(FontFamily::Mono)
+                                ->color('gray')
+                                ->size(TextSize::Small)
+                                ->placeholder('')
+                                ->grow(false),
+                        ]),
+                    ])->space(1),
+                ])->space(3),
             ])
             ->filters([
                 SelectFilter::make('game')
                     ->options(GameType::class),
             ])
             ->recordActions([
-                EditAction::make(),
+                ViewAction::make()->slideOver(),
+                EditAction::make()->slideOver(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

@@ -1,11 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Admins\Tables;
 
 use App\Models\User;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Support\Enums\FontWeight;
+use Filament\Support\Enums\TextSize;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\TernaryFilter;
@@ -22,31 +29,46 @@ class AdminsTable
                     $query->whereIn('name', ['admin', 'super_admin']);
                 });
             })
+            ->contentGrid([
+                'md' => 2,
+                'xl' => 3,
+            ])
             ->columns([
-                TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('email')
-                    ->label('Email address')
-                    ->searchable(),
-                ToggleColumn::make('is_active')
-                    ->label('Active Status')
-                    ->disabled(fn (User $record) => $record->id === auth()->id())
-                    ->sortable(),
-                TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('roles.name')
-                    ->badge()
-                    ->formatStateUsing(fn ($state) => ucfirst($state))
-                    ->color(fn ($state) => in_array($state, ['admin', 'super_admin']) ? 'success' : 'gray'),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Stack::make([
+                    Split::make([
+                        ImageColumn::make('avatar_full_url')
+                            ->circular()
+                            ->imageSize(48)
+                            ->grow(false),
+                        Stack::make([
+                            TextColumn::make('name')
+                                ->weight(FontWeight::Bold)
+                                ->size(TextSize::Medium)
+                                ->searchable(),
+                            TextColumn::make('roles.name')
+                                ->badge()
+                                ->formatStateUsing(fn ($state) => ucfirst(str_replace('_', ' ', (string) $state)))
+                                ->color(fn ($state) => in_array($state, ['admin', 'super_admin']) ? 'success' : 'gray'),
+                        ])->space(1),
+                        ToggleColumn::make('is_active')
+                            ->label('Active')
+                            ->disabled(fn (User $record): bool => $record->id === auth()->id())
+                            ->grow(false),
+                    ]),
+                    Stack::make([
+                        TextColumn::make('email')
+                            ->icon('heroicon-m-envelope')
+                            ->color('gray')
+                            ->size(TextSize::Small)
+                            ->searchable(),
+                        TextColumn::make('email_verified_at')
+                            ->icon('heroicon-m-check-badge')
+                            ->dateTime('M d, Y')
+                            ->placeholder('Unverified')
+                            ->color('gray')
+                            ->size(TextSize::Small),
+                    ])->space(1),
+                ])->space(3),
             ])
             ->filters([
                 TernaryFilter::make('is_active')
@@ -56,7 +78,7 @@ class AdminsTable
                     ->falseLabel('Deactivated Admins'),
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()->slideOver(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

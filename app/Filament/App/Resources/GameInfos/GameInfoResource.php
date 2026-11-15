@@ -2,8 +2,6 @@
 
 namespace App\Filament\App\Resources\GameInfos;
 
-use App\Filament\App\Resources\GameInfos\Pages\CreateGameInfo;
-use App\Filament\App\Resources\GameInfos\Pages\EditGameInfo;
 use App\Filament\App\Resources\GameInfos\Pages\ListGameInfos;
 use App\Filament\App\Resources\GameInfos\Schemas\GameInfoForm;
 use App\Filament\App\Resources\GameInfos\Tables\GameInfosTable;
@@ -46,8 +44,6 @@ class GameInfoResource extends Resource
     {
         return [
             'index' => ListGameInfos::route('/'),
-            'create' => CreateGameInfo::route('/create'),
-            'edit' => EditGameInfo::route('/{record}/edit'),
         ];
     }
 

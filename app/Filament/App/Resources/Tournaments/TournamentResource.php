@@ -3,7 +3,6 @@
 namespace App\Filament\App\Resources\Tournaments;
 
 use App\Filament\App\Resources\Tournaments\Pages\ListTournaments;
-use App\Filament\App\Resources\Tournaments\Pages\ViewTournament;
 use App\Filament\Resources\Tournaments\Schemas\TournamentForm;
 use App\Filament\Resources\Tournaments\Tables\TournamentsTable;
 use App\Models\Tournament;
@@ -33,11 +32,8 @@ class TournamentResource extends Resource
         $table = TournamentsTable::configure($table);
 
         return $table
-            ->actions([
-                ViewAction::make(),
-            ])
             ->recordActions([
-                ViewAction::make(),
+                ViewAction::make()->slideOver(),
             ])
             ->toolbarActions([]);
     }
@@ -51,7 +47,6 @@ class TournamentResource extends Resource
     {
         return [
             'index' => ListTournaments::route('/'),
-            'view' => ViewTournament::route('/{record}'),
         ];
     }
 
