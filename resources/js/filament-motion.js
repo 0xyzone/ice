@@ -537,11 +537,10 @@ function initSidebarMotion() {
 }
 
 function bootMotion() {
-    document.documentElement.classList.remove('icf-navigating');
     runCleanups();
+    initSidebarMotion();
     initAmbientWebGL();
     initHeroCrestCanvases();
-    initSidebarMotion();
     initGsapMotion();
 }
 
@@ -555,7 +554,6 @@ if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
 }
 
 document.addEventListener('livewire:navigating', () => {
-    document.documentElement.classList.add('icf-navigating');
     const nav = document.querySelector('.fi-sidebar-nav');
     const activeBtn = nav?.querySelector('.fi-sidebar-item.fi-active > .fi-sidebar-item-btn');
     if (nav && activeBtn && activeBtn.offsetParent !== null) {
@@ -564,4 +562,12 @@ document.addEventListener('livewire:navigating', () => {
 });
 
 document.addEventListener('DOMContentLoaded', bootMotion);
-document.addEventListener('livewire:navigated', () => setTimeout(bootMotion, 40));
+document.addEventListener('livewire:navigated', () => {
+    runCleanups();
+    initSidebarMotion();
+    requestAnimationFrame(() => {
+        initAmbientWebGL();
+        initHeroCrestCanvases();
+        initGsapMotion();
+    });
+});
