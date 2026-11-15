@@ -12,9 +12,9 @@
         <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
         <!-- Vite Assets -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/filament-motion.js'])
     </head>
-    <body class="bg-[#0b0f17] text-slate-100 font-sans antialiased min-h-screen relative flex flex-col overflow-x-hidden subtle-mesh-bg">
+    <body class="bg-[#0b0f17] text-slate-100 font-sans antialiased min-h-dvh relative flex flex-col overflow-x-hidden subtle-mesh-bg">
 
         <!-- =================================================================
              NAVIGATION BAR
@@ -67,20 +67,20 @@
              ================================================================= -->
         <main class="flex-grow z-10">
 
-            <section class="relative pt-12 md:pt-20 pb-16 md:pb-24 px-4 sm:px-6 lg:px-8">
+            <section class="relative pt-10 md:pt-16 pb-12 md:pb-18 px-4 sm:px-6 lg:px-8">
                 <div class="max-w-6xl mx-auto">
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-12 items-center">
-                        
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+
                         <!-- Left Content -->
-                        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-                            
+                        <div class="lg:col-span-7 space-y-5 text-center lg:text-left min-w-0">
+
                             <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/25 text-orange-300 text-xs font-medium">
                                 <span class="w-2 h-2 rounded-full bg-orange-400 animate-pulse"></span>
                                 <span>Official Competitive Hub &bull; Vidanta Champions Arena</span>
                             </div>
 
-                            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-[1.1]">
+                            <h1 class="text-[clamp(2.15rem,1.4rem+3.2vw,3.75rem)] font-extrabold tracking-tight text-white leading-[1.08]">
                                 Elite Performance, <br>
                                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-yellow-200">
                                     Next-Gen Esports
@@ -103,15 +103,21 @@
                         </div>
 
                         <!-- Right Live Matrix Card -->
-                        <div class="lg:col-span-5">
-                            <div class="pro-card p-6 md:p-8 border border-slate-800/80 shadow-xl space-y-6">
-                                
-                                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                                    <div class="flex items-center gap-2.5">
-                                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                                        <h3 class="font-bold text-sm text-white">System Telemetry</h3>
+                        <div class="lg:col-span-5 min-w-0">
+                            <div class="icf-3d-tilt pro-card p-5 sm:p-7 border border-slate-800/80 shadow-xl space-y-5">
+
+                                <div class="flex items-center justify-between border-b border-slate-800 pb-4 gap-3">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <div class="icf-3d-crest-canvas w-12 h-12 shrink-0 cursor-grab active:cursor-grabbing" aria-hidden="true"></div>
+                                        <div class="min-w-0">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+                                                <h3 class="font-bold text-sm text-white truncate">System Telemetry</h3>
+                                            </div>
+                                            <span class="text-xs text-slate-400 font-medium block">Active Season</span>
+                                        </div>
                                     </div>
-                                    <span class="text-xs text-slate-400 font-medium">Active Season</span>
+                                    <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-[11px] font-semibold shrink-0">Live</span>
                                 </div>
 
                                 <div class="grid grid-cols-2 gap-3.5">
@@ -156,8 +162,8 @@
             <!-- =================================================================
                  ACTIVE DIVISIONS & SQUADS SECTION
                  ================================================================= -->
-            <section id="squads" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-800/80">
-                <div class="max-w-6xl mx-auto space-y-10">
+            <section id="squads" class="py-12 md:py-16 px-4 sm:px-6 lg:px-8 border-t border-slate-800/80">
+                <div class="max-w-6xl mx-auto space-y-8">
                     
                     <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div>
@@ -273,7 +279,7 @@
             <!-- =================================================================
                  MEET THE SQUAD ATHLETES CAROUSEL
                  ================================================================= -->
-            <section id="roster" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-800/80 bg-slate-950/20">
+            <section id="roster" class="py-12 md:py-16 px-4 sm:px-6 lg:px-8 border-t border-slate-800/80 bg-slate-950/20">
                 <div class="max-w-6xl mx-auto space-y-10">
                     
                     <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -378,7 +384,7 @@
             <!-- =================================================================
                  TACTICAL INTEL & SPECIALTIES
                  ================================================================= -->
-            <section id="heroes" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-800/80">
+            <section id="heroes" class="py-12 md:py-16 px-4 sm:px-6 lg:px-8 border-t border-slate-800/80">
                 <div class="max-w-6xl mx-auto">
                     
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-center">
@@ -472,7 +478,7 @@
             <!-- =================================================================
                  STATISTICS OVERVIEW
                  ================================================================= -->
-            <section id="stats" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-800/80 bg-slate-950/20">
+            <section id="stats" class="py-12 md:py-16 px-4 sm:px-6 lg:px-8 border-t border-slate-800/80 bg-slate-950/20">
                 <div class="max-w-6xl mx-auto">
                     
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
@@ -507,7 +513,7 @@
             <!-- =================================================================
                  VIDANTA HQ SECTION
                  ================================================================= -->
-            <section id="vidanta" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-800/80">
+            <section id="vidanta" class="py-12 md:py-16 px-4 sm:px-6 lg:px-8 border-t border-slate-800/80">
                 <div class="max-w-6xl mx-auto">
                     
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-center">

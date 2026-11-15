@@ -11,14 +11,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Vite Assets -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/filament-motion.js'])
 
     <!-- JSZip Library for multi-select compression downloads -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
-<body class="bg-[#0b0f17] text-slate-100 font-sans antialiased min-h-screen py-8 md:py-12 px-4 sm:px-6 lg:px-8 subtle-mesh-bg overflow-x-hidden">
+<body class="bg-[#0b0f17] text-slate-100 font-sans antialiased min-h-dvh py-6 sm:py-10 px-4 sm:px-6 lg:px-8 subtle-mesh-bg overflow-x-hidden">
 
-    <div class="max-w-6xl mx-auto space-y-10">
+    <div class="relative z-10 max-w-6xl mx-auto space-y-8 sm:space-y-10">
 
         <!-- Top Navigation -->
         <nav class="flex items-center justify-between flex-wrap gap-4">
@@ -36,77 +36,86 @@
         <!-- =================================================================
              ATHLETE HERO DOSSIER
              ================================================================= -->
-        <header class="pro-card p-6 md:p-10 border border-slate-800/80 shadow-xl relative overflow-hidden">
-            
-            <div class="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-10">
-                
-                <!-- Avatar Frame -->
-                <div class="relative shrink-0">
-                    <div class="w-32 h-32 md:w-40 md:h-40 rounded-2xl bg-slate-900 border-2 border-slate-800 p-1.5 flex items-center justify-center overflow-hidden shadow-xl">
-                        @if($player->avatar_url)
-                            <img src="{{ asset('storage/' . $player->avatar_url) }}" alt="{{ $player->name }}" class="w-full h-full object-cover rounded-xl">
-                        @elseif($player->google_avatar_url)
-                            <img src="{{ $player->google_avatar_url }}" alt="{{ $player->name }}" class="w-full h-full object-cover rounded-xl">
-                        @else
-                            <div class="text-orange-400 font-bold text-4xl uppercase select-none">
-                                {{ strtoupper(substr($player->name, 0, 2)) }}
+        <header class="icf-3d-tilt pro-card p-5 sm:p-8 lg:p-10 border border-slate-800/80 shadow-xl relative overflow-hidden">
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+
+                <div class="lg:col-span-9 flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 min-w-0">
+
+                    <!-- Avatar Frame -->
+                    <div class="relative shrink-0">
+                        <div class="w-28 h-28 sm:w-36 sm:h-36 aspect-square rounded-2xl bg-slate-900 border-2 border-slate-800 p-1.5 flex items-center justify-center overflow-hidden shadow-xl">
+                            @if($player->avatar_url)
+                                <img src="{{ asset('storage/' . $player->avatar_url) }}" alt="{{ $player->name }}" class="w-full h-full object-cover rounded-xl">
+                            @elseif($player->google_avatar_url)
+                                <img src="{{ $player->google_avatar_url }}" alt="{{ $player->name }}" class="w-full h-full object-cover rounded-xl">
+                            @else
+                                <div class="text-orange-400 font-bold text-4xl uppercase select-none">
+                                    {{ strtoupper(substr($player->name, 0, 2)) }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Info Block -->
+                    <div class="flex-1 min-w-0 text-center sm:text-left space-y-4">
+
+                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                            @if($player->username)
+                                <span class="px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/25 text-orange-300 text-xs font-semibold">
+                                    &#64;{{ $player->username }}
+                                </span>
+                            @endif
+                            @if($player->player?->gender)
+                                <span class="px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs font-medium capitalize">
+                                    {{ $player->player->gender }}
+                                </span>
+                            @endif
+                            @if($player->player?->date_of_birth)
+                                <span class="px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs font-medium">
+                                    Age: {{ \Carbon\Carbon::parse($player->player->date_of_birth)->age }}
+                                </span>
+                            @endif
+                        </div>
+
+                        <div>
+                            <h1 class="text-[clamp(1.85rem,1.2rem+2.5vw,3rem)] font-extrabold tracking-tight text-white leading-tight">
+                                {{ $player->name }}
+                            </h1>
+                            <p class="text-slate-400 text-sm sm:text-base mt-2 max-w-2xl font-normal leading-relaxed">
+                                {{ $player->player?->bio ?? 'Active competitive esports athlete in the IceCream Fried roster. Specializing in mechanical execution, team coordination, and tournament synergy.' }}
+                            </p>
+                        </div>
+
+                        <!-- Quick Stats Pill Bar -->
+                        @if($totalPlayed > 0)
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-slate-800/80">
+                                <div class="bg-slate-900/70 border border-slate-800/80 p-3 rounded-xl text-center sm:text-left">
+                                    <span class="text-slate-400 text-[11px] font-medium uppercase tracking-wider block">Win Rate</span>
+                                    <span class="text-lg font-bold text-sky-400 mt-0.5 block">{{ $winRate }}%</span>
+                                </div>
+                                <div class="bg-slate-900/70 border border-slate-800/80 p-3 rounded-xl text-center sm:text-left">
+                                    <span class="text-slate-400 text-[11px] font-medium uppercase tracking-wider block">Matches</span>
+                                    <span class="text-lg font-bold text-white mt-0.5 block">{{ $totalPlayed }}</span>
+                                </div>
+                                <div class="bg-slate-900/70 border border-slate-800/80 p-3 rounded-xl text-center sm:text-left">
+                                    <span class="text-slate-400 text-[11px] font-medium uppercase tracking-wider block">Wins / Losses</span>
+                                    <span class="text-lg font-bold text-emerald-400 mt-0.5 block">{{ $totalWon }}W / {{ $totalLost }}L</span>
+                                </div>
+                                <div class="bg-slate-900/70 border border-slate-800/80 p-3 rounded-xl text-center sm:text-left">
+                                    <span class="text-slate-400 text-[11px] font-medium uppercase tracking-wider block">KDA Ratio</span>
+                                    <span class="text-lg font-bold text-orange-400 mt-0.5 block">{{ number_format($kda, 2) }}</span>
+                                </div>
                             </div>
                         @endif
+
                     </div>
+
                 </div>
 
-                <!-- Info Block -->
-                <div class="flex-grow text-center md:text-left space-y-4">
-                    
-                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-2.5">
-                        @if($player->username)
-                            <span class="px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/25 text-orange-300 text-xs font-semibold">
-                                @ {{ $player->username }}
-                            </span>
-                        @endif
-                        @if($player->player?->gender)
-                            <span class="px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs font-medium capitalize">
-                                {{ $player->player->gender }}
-                            </span>
-                        @endif
-                        @if($player->player?->date_of_birth)
-                            <span class="px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs font-medium">
-                                Age: {{ \Carbon\Carbon::parse($player->player->date_of_birth)->age }}
-                            </span>
-                        @endif
-                    </div>
-                    
-                    <div>
-                        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
-                            {{ $player->name }}
-                        </h1>
-                        <p class="text-slate-400 text-sm sm:text-base mt-2 max-w-2xl font-normal leading-relaxed">
-                            {{ $player->player?->bio ?? 'Active competitive esports athlete in the IceCream Fried roster. Specializing in mechanical execution, team coordination, and tournament synergy.' }}
-                        </p>
-                    </div>
-
-                    <!-- Quick Stats Pill Bar -->
-                    @if($totalPlayed > 0)
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-slate-800/80 max-w-2xl">
-                            <div class="bg-slate-900/70 border border-slate-800/80 p-3 rounded-xl text-center md:text-left">
-                                <span class="text-slate-400 text-[11px] font-medium uppercase tracking-wider block">Win Rate</span>
-                                <span class="text-lg font-bold text-sky-400 mt-0.5 block">{{ $winRate }}%</span>
-                            </div>
-                            <div class="bg-slate-900/70 border border-slate-800/80 p-3 rounded-xl text-center md:text-left">
-                                <span class="text-slate-400 text-[11px] font-medium uppercase tracking-wider block">Matches</span>
-                                <span class="text-lg font-bold text-white mt-0.5 block">{{ $totalPlayed }}</span>
-                            </div>
-                            <div class="bg-slate-900/70 border border-slate-800/80 p-3 rounded-xl text-center md:text-left">
-                                <span class="text-slate-400 text-[11px] font-medium uppercase tracking-wider block">Wins / Losses</span>
-                                <span class="text-lg font-bold text-emerald-400 mt-0.5 block">{{ $totalWon }}W / {{ $totalLost }}L</span>
-                            </div>
-                            <div class="bg-slate-900/70 border border-slate-800/80 p-3 rounded-xl text-center md:text-left">
-                                <span class="text-slate-400 text-[11px] font-medium uppercase tracking-wider block">KDA Ratio</span>
-                                <span class="text-lg font-bold text-orange-400 mt-0.5 block">{{ number_format($kda, 2) }}</span>
-                            </div>
-                        </div>
-                    @endif
-
+                <!-- 3D Crest Accent (Desktop) -->
+                <div class="hidden lg:flex lg:col-span-3 items-center justify-center">
+                    <div class="icf-3d-crest-canvas w-44 h-44 cursor-grab active:cursor-grabbing" aria-hidden="true"></div>
                 </div>
 
             </div>
@@ -424,7 +433,89 @@
                     </div>
                 @endif
 
-                <!-- Active Game Accounts -->
+            </section>
+
+            <!-- RIGHT COLUMN: TEAM ROSTER CAMPAIGNS & GAME ACCOUNTS (SPAN 5) -->
+            <section class="lg:col-span-5 space-y-8 min-w-0">
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div class="flex items-center gap-3">
+                            <span class="w-2.5 h-6 rounded-md bg-amber-500 block"></span>
+                            <h2 class="text-lg md:text-xl font-bold text-white tracking-tight">
+                                Team Affiliations &amp; Roster History
+                            </h2>
+                        </div>
+                        <span class="text-xs font-medium text-slate-400">
+                            {{ $player->teamMemberships->count() }} Teams
+                        </span>
+                    </div>
+
+                    <div class="space-y-4">
+                        @forelse($player->teamMemberships as $membership)
+                            <a href="{{ route('team.profile', $membership->team) }}" class="pro-card p-5 block border border-slate-800 hover:border-slate-700 transition-all group">
+
+                                <div class="flex items-center gap-4 mb-3">
+                                    <div class="w-12 h-12 aspect-square rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center p-2 shrink-0">
+                                        @if($membership->team->logo_image)
+                                            <img src="{{ asset('storage/' . $membership->team->logo_image) }}" alt="{{ $membership->team->name }}" class="w-full h-full object-contain">
+                                        @else
+                                            <span class="text-amber-400 font-bold text-sm">T</span>
+                                        @endif
+                                    </div>
+
+                                    <div class="min-w-0">
+                                        <h3 class="font-bold text-white text-base group-hover:text-orange-300 transition-colors truncate">
+                                            {{ $membership->team->name }}
+                                        </h3>
+                                        <p class="text-slate-400 text-xs font-medium mt-0.5">
+                                            {{ $membership->team->gameLabel }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-wrap items-center justify-between gap-3 text-xs border-t border-slate-800 pt-3">
+                                    <div class="space-y-1">
+                                        <span class="text-slate-400 text-[11px] block">Role &amp; Lineup</span>
+                                        <div class="flex items-center gap-1.5 flex-wrap">
+                                            @if($membership->is_main_roster)
+                                                <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded badge-main inline-flex items-center gap-1">
+                                                    ⚡ MAIN ROSTER
+                                                </span>
+                                            @else
+                                                <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded badge-reserve inline-flex items-center gap-1">
+                                                    🛡️ RESERVE
+                                                </span>
+                                            @endif
+                                            <span class="text-[11px] font-medium px-2 py-0.5 rounded bg-slate-800 text-slate-300 capitalize">
+                                                {{ ucwords(str_replace('_', ' ', $membership->role)) }}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-left sm:text-right space-y-1">
+                                        <span class="text-slate-400 text-[11px] block">Campaign Duration</span>
+                                        <span class="text-slate-200 text-xs font-semibold block">
+                                            {{ \Carbon\Carbon::parse($membership->joined_at)->format('M Y') }}
+                                            &bull;
+                                            @if($membership->status)
+                                                <span class="text-emerald-400">Present</span>
+                                            @else
+                                                {{ $membership->left_at ? \Carbon\Carbon::parse($membership->left_at)->format('M Y') : 'Past' }}
+                                            @endif
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </a>
+                        @empty
+                            <div class="pro-card p-6 text-center text-slate-400 text-sm">
+                                No team affiliations recorded for this player.
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                <!-- Active Game Accounts (Balanced in Right Column) -->
                 <div class="space-y-4">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                         <div class="flex items-center gap-3">
@@ -439,144 +530,63 @@
                     </div>
 
                     @forelse($player->gameInfos as $gameInfo)
-                        <div class="pro-card p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-800/80">
-                            <div class="flex items-start gap-4">
-                                <div class="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center p-2 shrink-0">
-                                    <span class="text-sky-400 font-extrabold text-sm tracking-wider uppercase">
-                                        {{ $gameInfo->game?->getShortName() ?? 'GAME' }}
-                                    </span>
-                                </div>
-
-                                <div class="space-y-1">
-                                    <div class="flex items-center gap-2 flex-wrap">
-                                        <h3 class="font-bold text-white text-base">
-                                            {{ $gameInfo->gameLabel }}
+                        <div class="pro-card p-5 space-y-3 border border-slate-800/80">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <div class="w-11 h-11 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center p-2 shrink-0">
+                                        <span class="text-sky-400 font-extrabold text-xs tracking-wider uppercase">
+                                            {{ $gameInfo->game?->getShortName() ?? 'GAME' }}
+                                        </span>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h3 class="font-bold text-white text-base truncate">
+                                            {{ $gameInfo->in_game_username ?? 'Unspecified' }}
                                         </h3>
-                                        @if($gameInfo->roleLabel)
-                                            <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-sky-500/10 text-sky-400 border border-sky-500/20">
-                                                {{ $gameInfo->roleLabel }}
-                                            </span>
-                                        @endif
+                                        <p class="text-xs text-slate-400 truncate">{{ $gameInfo->gameLabel }}</p>
                                     </div>
-
-                                    <div class="flex flex-wrap items-center gap-2 text-xs">
-                                        <span class="text-slate-300 font-medium">IGN: <strong class="text-white">{{ $gameInfo->in_game_username ?? 'Unspecified' }}</strong></span>
-                                        <span class="text-slate-400">&bull;</span>
-                                        <span class="text-slate-400 font-mono">ID: #{{ $gameInfo->in_game_id ?? 'N/A' }}</span>
-                                        @if($gameInfo->server_id)
-                                            <span class="text-slate-400">&bull;</span>
-                                            <span class="text-slate-400 font-mono">Zone: ({{ $gameInfo->server_id }})</span>
-                                        @endif
-                                        @if($gameInfo->device_type)
-                                            <span class="text-slate-400">&bull;</span>
-                                            <span class="text-slate-400">{{ $gameInfo->device_type }}</span>
-                                        @endif
-                                    </div>
-
-                                    @if(!empty($gameInfo->main_heroes) && is_array($gameInfo->main_heroes))
-                                        <div class="flex items-center gap-1.5 flex-wrap pt-1 text-[11px]">
-                                            <span class="text-slate-400">Signature:</span>
-                                            @foreach($gameInfo->main_heroes as $heroName)
-                                                <span class="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">
-                                                    {{ $heroName }}
-                                                </span>
-                                            @endforeach
-                                        </div>
-                                    @endif
                                 </div>
-                            </div>
 
-                            <div>
                                 @if($gameInfo->status)
-                                    <span class="px-2.5 py-1 rounded-full badge-main text-xs font-semibold">Active Roster</span>
+                                    <span class="px-2.5 py-1 rounded-full badge-main text-[11px] font-semibold shrink-0">Active Roster</span>
                                 @else
-                                    <span class="px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 text-xs font-medium">Standby</span>
+                                    <span class="px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 text-[11px] font-medium shrink-0">Standby</span>
                                 @endif
                             </div>
+
+                            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400 pt-2 border-t border-slate-800/80">
+                                <span class="font-mono">ID: #{{ $gameInfo->in_game_id ?? 'N/A' }}</span>
+                                @if($gameInfo->server_id)
+                                    <span class="font-mono">Zone: ({{ $gameInfo->server_id }})</span>
+                                @endif
+                                @if($gameInfo->device_type)
+                                    <span>{{ $gameInfo->device_type }}</span>
+                                @endif
+                            </div>
+
+                            @if($gameInfo->roleLabel)
+                                <div class="flex flex-wrap gap-1.5">
+                                    @foreach($gameInfo->getRoleLabels() as $roleBadge)
+                                        <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                                            {{ $roleBadge }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            @endif
+
+                            @if(!empty($gameInfo->main_heroes) && is_array($gameInfo->main_heroes))
+                                <div class="flex items-center gap-1.5 flex-wrap pt-1 text-[11px]">
+                                    <span class="text-slate-400">Signature:</span>
+                                    @foreach($gameInfo->main_heroes as $heroName)
+                                        <span class="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">
+                                            {{ $heroName }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            @endif
                         </div>
                     @empty
                         <div class="pro-card p-6 text-center text-slate-400 text-sm">
                             No active game accounts registered to this player.
-                        </div>
-                    @endforelse
-                </div>
-
-            </section>
-
-            <!-- RIGHT COLUMN: TEAM ROSTER CAMPAIGNS (SPAN 5) -->
-            <section class="lg:col-span-5 space-y-6">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                    <div class="flex items-center gap-3">
-                        <span class="w-2.5 h-6 rounded-md bg-amber-500 block"></span>
-                        <h2 class="text-lg md:text-xl font-bold text-white tracking-tight">
-                            Team Affiliations &amp; Roster History
-                        </h2>
-                    </div>
-                    <span class="text-xs font-medium text-slate-400">
-                        {{ $player->teamMemberships->count() }} Teams
-                    </span>
-                </div>
-
-                <div class="space-y-4">
-                    @forelse($player->teamMemberships as $membership)
-                        <a href="{{ route('team.profile', $membership->team) }}" class="pro-card p-5 block border border-slate-800 hover:border-slate-700 transition-all group">
-                            
-                            <div class="flex items-center gap-4 mb-3">
-                                <div class="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center p-2 shrink-0">
-                                    @if($membership->team->logo_image)
-                                        <img src="{{ asset('storage/' . $membership->team->logo_image) }}" alt="{{ $membership->team->name }}" class="w-full h-full object-contain">
-                                    @else
-                                        <span class="text-amber-400 font-bold text-sm">T</span>
-                                    @endif
-                                </div>
-                                
-                                <div>
-                                    <h3 class="font-bold text-white text-base group-hover:text-orange-300 transition-colors">
-                                        {{ $membership->team->name }}
-                                    </h3>
-                                    <p class="text-slate-400 text-xs font-medium mt-0.5">
-                                        {{ $membership->team->gameLabel }}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="flex flex-wrap items-center justify-between gap-3 text-xs border-t border-slate-800 pt-3">
-                                <div class="space-y-1">
-                                    <span class="text-slate-400 text-[11px] block">Role &amp; Lineup</span>
-                                    <div class="flex items-center gap-1.5 flex-wrap">
-                                        @if($membership->is_main_roster)
-                                            <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded badge-main inline-flex items-center gap-1">
-                                                ⚡ MAIN ROSTER
-                                            </span>
-                                        @else
-                                            <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded badge-reserve inline-flex items-center gap-1">
-                                                🛡️ RESERVE
-                                            </span>
-                                        @endif
-                                        <span class="text-[11px] font-medium px-2 py-0.5 rounded bg-slate-800 text-slate-300 capitalize">
-                                            {{ ucwords(str_replace('_', ' ', $membership->role)) }}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div class="text-right space-y-1">
-                                    <span class="text-slate-400 text-[11px] block">Campaign Duration</span>
-                                    <span class="text-slate-200 text-xs font-semibold block">
-                                        {{ \Carbon\Carbon::parse($membership->joined_at)->format('M Y') }} 
-                                        &bull; 
-                                        @if($membership->status)
-                                            <span class="text-emerald-400">Present</span>
-                                        @else
-                                            {{ $membership->left_at ? \Carbon\Carbon::parse($membership->left_at)->format('M Y') : 'Past' }}
-                                        @endif
-                                    </span>
-                                </div>
-                            </div>
-
-                        </a>
-                    @empty
-                        <div class="pro-card p-6 text-center text-slate-400 text-sm">
-                            No team affiliations recorded for this player.
                         </div>
                     @endforelse
                 </div>
