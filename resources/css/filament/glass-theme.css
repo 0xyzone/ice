@@ -146,7 +146,6 @@
 
 /* ── Topbar Quick Links ─────────────────────────────────────────────────── */
 .fi-topbar-quick-links {
-    display: inline-flex;
     align-items: center;
     gap: 0.25rem;
     padding: 0.25rem;
@@ -155,6 +154,12 @@
     background: var(--glass-bg-subtle);
     border: 1px solid var(--glass-border);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+@media (max-width: 1023px) {
+    .fi-topbar-quick-links {
+        display: none !important;
+    }
 }
 
 .fi-topbar-quick-link {
