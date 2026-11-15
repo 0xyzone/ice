@@ -107,15 +107,12 @@
                             <div class="icf-3d-tilt pro-card p-5 sm:p-7 border border-slate-800/80 shadow-xl space-y-5">
 
                                 <div class="flex items-center justify-between border-b border-slate-800 pb-4 gap-3">
-                                    <div class="flex items-center gap-3 min-w-0">
-                                        <div class="icf-3d-crest-canvas w-12 h-12 shrink-0 cursor-grab active:cursor-grabbing" aria-hidden="true"></div>
-                                        <div class="min-w-0">
-                                            <div class="flex items-center gap-2">
-                                                <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
-                                                <h3 class="font-bold text-sm text-white truncate">System Telemetry</h3>
-                                            </div>
-                                            <span class="text-xs text-slate-400 font-medium block">Active Season</span>
+                                    <div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+                                            <h3 class="font-bold text-sm text-white truncate">System Telemetry</h3>
                                         </div>
+                                        <span class="text-xs text-slate-400 font-medium block mt-0.5">Active Season</span>
                                     </div>
                                     <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-[11px] font-semibold shrink-0">Live</span>
                                 </div>
