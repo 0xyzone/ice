@@ -47,6 +47,10 @@
 }
 
 /* ── Floating Glass Topbar ──────────────────────────────────────────────── */
+.fi-topbar-ctn {
+    z-index: 30 !important;
+}
+
 .fi-topbar {
     background: var(--glass-overlay-bg) !important;
     backdrop-filter: var(--glass-overlay-blur) !important;
@@ -74,11 +78,12 @@
 
 @media (min-width: 1024px) {
     .fi-sidebar {
-        margin: 0.75rem 0 0.75rem 0.75rem;
+        z-index: 15 !important;
+        margin: 0 0 0.75rem 0.75rem;
         border-radius: 1.25rem;
         border: 1px solid var(--glass-border) !important;
-        height: calc(100vh - 1.5rem) !important;
-        top: 0.75rem !important;
+        height: calc(100vh - 5.5rem) !important;
+        top: 4.75rem !important;
     }
 }
 
