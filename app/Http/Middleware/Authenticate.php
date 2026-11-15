@@ -2,8 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate as FilamentAuthenticate;
+use Filament\Models\Contracts\FilamentUser;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
 
 class Authenticate extends FilamentAuthenticate
@@ -20,8 +23,17 @@ class Authenticate extends FilamentAuthenticate
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
 
-                redirect()->route('auth.deactivated')->send();
-                exit;
+                throw new HttpResponseException(
+                    redirect()->route('auth.deactivated')
+                );
+            }
+
+            $panel = Filament::getCurrentOrDefaultPanel();
+
+            if ($user instanceof FilamentUser && $user instanceof User && ! $user->canAccessPanel($panel)) {
+                throw new HttpResponseException(
+                    redirect()->to($user->getDefaultPanelUrl())
+                );
             }
         }
 

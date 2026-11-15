@@ -93,4 +93,37 @@ class LoginRedirectTest extends TestCase
 
         $response->assertRedirect(route('home'));
     }
+
+    public function test_authenticated_player_accessing_mukhiyas_is_redirected_to_app(): void
+    {
+        $user = User::factory()->create(['is_active' => true]);
+        $user->assignRole('player');
+
+        $this->actingAs($user)
+            ->get('/mukhiyas')
+            ->assertRedirect(url('/app'));
+    }
+
+    public function test_authenticated_super_admin_accessing_app_is_redirected_to_mukhiyas(): void
+    {
+        $user = User::factory()->create(['is_active' => true]);
+        $user->assignRole('super_admin');
+
+        $this->actingAs($user)
+            ->get('/app')
+            ->assertRedirect(url('/mukhiyas'));
+    }
+
+    public function test_authenticated_user_without_panel_role_is_redirected_to_homepage(): void
+    {
+        $user = User::factory()->create(['is_active' => true]);
+
+        $this->actingAs($user)
+            ->get('/app')
+            ->assertRedirect(route('home'));
+
+        $this->actingAs($user)
+            ->get('/mukhiyas')
+            ->assertRedirect(route('home'));
+    }
 }
