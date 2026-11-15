@@ -237,11 +237,16 @@
 
                         <!-- Tournament Breakdown List -->
                         <div class="pro-card p-5 border border-slate-800/80 space-y-4">
-                            <span class="text-xs font-bold text-slate-300 uppercase tracking-wider border-b border-slate-800 pb-2 block">
-                                Tournament Performance Records
-                            </span>
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                                <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                                    Tournament Performance Records
+                                </span>
+                                <span class="text-[11px] font-medium text-slate-400">
+                                    {{ count($tournamentStats) }} {{ Str::plural('Event', count($tournamentStats)) }}
+                                </span>
+                            </div>
 
-                            <div class="space-y-4">
+                            <div class="max-h-[640px] overflow-y-auto overscroll-contain pr-1 space-y-3" style="scrollbar-gutter: stable;">
                                 @foreach($tournamentStats as $stat)
                                     @php
                                         $tGame = $stat->tournament->game;
@@ -249,10 +254,10 @@
                                         $tKda = $stat->matches_played > 0 ? round(($stat->kills + $stat->assists) / max(1, $stat->deaths), 2) : 0.00;
                                         $tWinRate = $stat->matches_played > 0 ? round(($stat->matches_won / $stat->matches_played) * 100, 1) : 0.0;
                                     @endphp
-                                    <div class="p-4 bg-slate-900/70 border border-slate-800/80 rounded-xl space-y-3">
-                                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800/60 pb-3">
-                                            <div class="space-y-1">
-                                                <div class="flex items-center gap-2">
+                                    <details class="group p-4 bg-slate-900/70 border border-slate-800/80 rounded-xl" @if($loop->first) open @endif>
+                                        <summary class="list-none cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                            <div class="space-y-1 min-w-0">
+                                                <div class="flex items-center gap-2 flex-wrap">
                                                     <span class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase bg-sky-500/10 text-sky-400 border border-sky-500/20">
                                                         {{ $tGame?->getShortName() ?? 'GAME' }}
                                                     </span>
@@ -269,7 +274,7 @@
                                                 </p>
                                             </div>
 
-                                            <div class="flex flex-wrap items-center gap-2 text-xs">
+                                            <div class="flex flex-wrap items-center gap-2 text-xs shrink-0">
                                                 @if($isBr)
                                                     <span class="bg-slate-800 px-2.5 py-1 rounded-md border border-slate-700 text-slate-300 font-mono">
                                                         Kills: {{ $stat->kills }}
@@ -293,11 +298,12 @@
                                                         {{ $stat->mvps }} MVPs
                                                     </span>
                                                 @endif
+                                                <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                                             </div>
-                                        </div>
+                                        </summary>
 
                                         <!-- Matches Inside Tournament -->
-                                        <div class="space-y-2 pl-2 border-l border-slate-800">
+                                        <div class="space-y-2 pl-2 border-l border-slate-800 mt-3 pt-3 border-t border-t-slate-800/60">
                                             @foreach($stat->matches as $mInfo)
                                                 @php
                                                     $match = $mInfo->match;
@@ -426,7 +432,7 @@
                                                 </div>
                                             @endforeach
                                         </div>
-                                    </div>
+                                    </details>
                                 @endforeach
                             </div>
                         </div>

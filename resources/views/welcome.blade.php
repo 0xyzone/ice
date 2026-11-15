@@ -20,7 +20,7 @@
              NAVIGATION BAR
              ================================================================= -->
         <header class="sticky top-4 z-50 px-4 sm:px-6 lg:px-8">
-            <div class="max-w-6xl mx-auto pro-card px-5 py-3.5 border border-slate-800/80 flex items-center justify-between shadow-lg">
+            <div class="max-w-6xl mx-auto pro-card bg-slate-950/85 backdrop-blur-xl px-5 py-3.5 border border-slate-800/90 flex items-center justify-between shadow-xl">
                 
                 <!-- Brand Identity -->
                 <a href="/" class="flex items-center gap-3 group">
@@ -177,37 +177,53 @@
                     <!-- Teams Cards Grid -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
                         @forelse($teams as $team)
-                            <div class="pro-card p-6 md:p-7 border border-slate-800/80 flex flex-col justify-between group transition-all">
-                                
-                                <div>
+                            @php
+                                $isWideSquad = $teams->count() === 1 || ($loop->last && $teams->count() % 2 === 1);
+                            @endphp
+                            <div class="icf-3d-tilt pro-card p-6 md:p-7 border border-slate-800/80 flex flex-col justify-between group transition-all {{ $isWideSquad ? 'lg:col-span-2' : '' }}">
+
+                                <div class="{{ $isWideSquad ? 'grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start' : '' }}">
                                     <!-- Card Header -->
-                                    <div class="flex items-start justify-between gap-4 mb-6">
-                                        <div class="flex items-center gap-4">
-                                            <div class="w-14 h-14 rounded-2xl bg-slate-900 border border-slate-800 p-2 flex items-center justify-center shrink-0">
-                                                @if($team->logo_image)
-                                                    <img src="{{ asset('storage/' . $team->logo_image) }}" alt="{{ $team->name }}" class="w-full h-full object-contain">
-                                                @else
-                                                    <span class="font-bold text-lg text-orange-400">{{ substr($team->name, 0, 2) }}</span>
-                                                @endif
+                                    <div class="{{ $isWideSquad ? 'lg:col-span-5 flex flex-col justify-between space-y-5' : '' }}">
+                                        <div class="flex items-start justify-between gap-4 {{ $isWideSquad ? '' : 'mb-6' }}">
+                                            <div class="flex items-center gap-4 min-w-0">
+                                                <div class="w-14 h-14 aspect-square rounded-2xl bg-slate-900 border border-slate-800 p-2 flex items-center justify-center shrink-0">
+                                                    @if($team->logo_image)
+                                                        <img src="{{ asset('storage/' . $team->logo_image) }}" alt="{{ $team->name }}" class="w-full h-full object-contain">
+                                                    @else
+                                                        <span class="font-bold text-lg text-orange-400">{{ substr($team->name, 0, 2) }}</span>
+                                                    @endif
+                                                </div>
+
+                                                <div class="min-w-0">
+                                                    <h3 class="font-bold text-lg sm:text-xl text-white group-hover:text-orange-300 transition-colors truncate">
+                                                        {{ $team->name }}
+                                                    </h3>
+                                                    <span class="text-xs text-slate-400 font-medium block mt-0.5">
+                                                        {{ $team->gameLabel }}
+                                                    </span>
+                                                </div>
                                             </div>
 
-                                            <div>
-                                                <h3 class="font-bold text-lg sm:text-xl text-white group-hover:text-orange-300 transition-colors">
-                                                    {{ $team->name }}
-                                                </h3>
-                                                <span class="text-xs text-slate-400 font-medium block mt-0.5">
-                                                    {{ $team->gameLabel }}
-                                                </span>
-                                            </div>
+                                            <span class="px-2.5 py-1 rounded-full badge-main text-xs font-semibold shrink-0">
+                                                {{ $team->short_name ?? 'PRO' }}
+                                            </span>
                                         </div>
 
-                                        <span class="px-2.5 py-1 rounded-full badge-main text-xs font-semibold">
-                                            {{ $team->short_name ?? 'PRO' }}
-                                        </span>
+                                        @if($isWideSquad)
+                                            <div class="p-4 rounded-xl bg-slate-950/40 border border-slate-800/60 flex items-center justify-between text-xs text-slate-400">
+                                                <span>Active Roster Athletes</span>
+                                                <span class="font-bold text-white">{{ $team->members->count() }}</span>
+                                            </div>
+
+                                            <a href="{{ route('team.profile', $team->id) }}" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-200 hover:text-white font-semibold text-xs transition-all block text-center">
+                                                View Division Dossier &rarr;
+                                            </a>
+                                        @endif
                                     </div>
 
                                     <!-- Member List -->
-                                    <div class="space-y-2.5 pt-2 border-t border-slate-800/60">
+                                    <div class="{{ $isWideSquad ? 'lg:col-span-7' : 'pt-2 border-t border-slate-800/60' }} space-y-2.5">
                                         <div class="flex items-center justify-between text-xs text-slate-400 font-medium pb-1">
                                             <span>Roster Lineup</span>
                                             <span>Role &bull; Status</span>
@@ -216,9 +232,9 @@
                                         <div class="space-y-2">
                                             @forelse($team->members as $member)
                                                 @if($member->user)
-                                                    <div class="flex items-center justify-between bg-slate-950/40 hover:bg-slate-800/60 border border-slate-800/60 hover:border-slate-700 px-3.5 py-2.5 rounded-xl transition-all text-xs">
+                                                    <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-950/40 hover:bg-slate-800/60 border border-slate-800/60 hover:border-slate-700 px-3.5 py-2.5 rounded-xl transition-all text-xs">
                                                         <div class="flex items-center gap-2.5 min-w-0">
-                                                            <div class="w-2 h-2 rounded-full {{ $member->is_main_roster ? 'bg-orange-500' : 'bg-slate-600' }}"></div>
+                                                            <div class="w-2 h-2 rounded-full shrink-0 {{ $member->is_main_roster ? 'bg-orange-500' : 'bg-slate-600' }}"></div>
                                                             <div class="truncate">
                                                                 <span class="font-semibold text-slate-200">
                                                                     {{ $member->user->name }}
@@ -229,7 +245,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="flex items-center gap-2 shrink-0 ml-3">
+                                                        <div class="flex items-center gap-2 shrink-0">
                                                             @if($member->is_main_roster)
                                                                 <span class="px-2 py-0.5 rounded badge-main text-[10px] font-semibold inline-flex items-center gap-1">
                                                                     ⚡ MAIN ROSTER
@@ -255,12 +271,14 @@
                                     </div>
                                 </div>
 
-                                <!-- Card Action -->
-                                <div class="pt-6 mt-6 border-t border-slate-800/60">
-                                    <a href="{{ route('team.profile', $team->id) }}" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-200 hover:text-white font-semibold text-xs transition-all block text-center">
-                                        View Division Dossier &rarr;
-                                    </a>
-                                </div>
+                                @unless($isWideSquad)
+                                    <!-- Card Action -->
+                                    <div class="pt-6 mt-6 border-t border-slate-800/60">
+                                        <a href="{{ route('team.profile', $team->id) }}" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-200 hover:text-white font-semibold text-xs transition-all block text-center">
+                                            View Division Dossier &rarr;
+                                        </a>
+                                    </div>
+                                @endunless
 
                             </div>
                         @empty
