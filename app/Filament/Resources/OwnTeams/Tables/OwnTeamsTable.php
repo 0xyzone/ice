@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\OwnTeams\Tables;
 
+use App\Enums\GameType;
 use App\Models\OwnTeam;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
@@ -9,6 +10,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use TinusG\FilamentHoverImageColumn\HoverImageColumn;
 
@@ -18,7 +20,10 @@ class OwnTeamsTable
     {
         return $table
             ->columns([
-                TextColumn::make('game.name'),
+                TextColumn::make('game')
+                    ->label('Game')
+                    ->badge()
+                    ->sortable(),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('email')
@@ -42,7 +47,9 @@ class OwnTeamsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('game')
+                    ->label('Game')
+                    ->options(GameType::class),
             ])
             ->recordActions([
                 EditAction::make(),

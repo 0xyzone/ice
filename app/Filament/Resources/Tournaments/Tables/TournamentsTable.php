@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Tournaments\Tables;
 
+use App\Enums\GameType;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -15,6 +16,10 @@ class TournamentsTable
     {
         return $table
             ->columns([
+                TextColumn::make('game')
+                    ->label('Game')
+                    ->badge()
+                    ->sortable(),
                 TextColumn::make('name')
                     ->label('Tournament Name')
                     ->searchable()
@@ -49,6 +54,10 @@ class TournamentsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('game')
+                    ->label('Game')
+                    ->options(GameType::class)
+                    ->native(false),
                 SelectFilter::make('status')
                     ->options([
                         'upcoming' => 'Upcoming',

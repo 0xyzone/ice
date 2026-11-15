@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\OwnTeams\Schemas;
 
+use App\Enums\GameType;
 use App\Models\OwnTeam;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -28,11 +29,10 @@ class OwnTeamForm
                                 Section::make('Team Information')
                                     ->description('Basic details about the team.')
                                     ->schema([
-                                        Select::make('game_id')
-                                            ->label('Game')
-                                            ->relationship('game', 'name')
-                                            ->searchable()
-                                            ->preload()
+                                        Select::make('game')
+                                            ->label('Game Title')
+                                            ->options(GameType::class)
+                                            ->native(false)
                                             ->required(),
                                         Select::make('gender')
                                             ->label('Gender Category')

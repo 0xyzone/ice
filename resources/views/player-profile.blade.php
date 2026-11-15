@@ -235,27 +235,50 @@
                             <div class="space-y-4">
                                 @foreach($tournamentStats as $stat)
                                     @php
+                                        $tGame = $stat->tournament->game;
+                                        $isBr = $stat->tournament->isBattleRoyale();
                                         $tKda = $stat->matches_played > 0 ? round(($stat->kills + $stat->assists) / max(1, $stat->deaths), 2) : 0.00;
                                         $tWinRate = $stat->matches_played > 0 ? round(($stat->matches_won / $stat->matches_played) * 100, 1) : 0.0;
                                     @endphp
                                     <div class="p-4 bg-slate-900/70 border border-slate-800/80 rounded-xl space-y-3">
                                         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800/60 pb-3">
-                                            <div>
-                                                <h4 class="font-bold text-sm text-white">
-                                                    {{ $stat->tournament->name }}
-                                                </h4>
-                                                <p class="text-xs text-slate-400 mt-0.5">
-                                                    {{ $stat->matches_played }} Matches &bull; {{ $stat->matches_won }} Won &bull; {{ $stat->matches_lost }} Lost
+                                            <div class="space-y-1">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                                                        {{ $tGame?->getShortName() ?? 'GAME' }}
+                                                    </span>
+                                                    <h4 class="font-bold text-sm text-white">
+                                                        {{ $stat->tournament->name }}
+                                                    </h4>
+                                                </div>
+                                                <p class="text-xs text-slate-400">
+                                                    @if($isBr)
+                                                        {{ $stat->matches_played }} Rounds &bull; {{ $stat->matches_won }} Wins (WWCD/Booyah) &bull; {{ $stat->total_points ?? 0 }} Total Pts
+                                                    @else
+                                                        {{ $stat->matches_played }} Matches &bull; {{ $stat->matches_won }} Won &bull; {{ $stat->matches_lost }} Lost
+                                                    @endif
                                                 </p>
                                             </div>
 
                                             <div class="flex flex-wrap items-center gap-2 text-xs">
-                                                <span class="bg-slate-800 px-2.5 py-1 rounded-md border border-slate-700 text-slate-300 font-mono">
-                                                    KDA: {{ $stat->kills }}/{{ $stat->deaths }}/{{ $stat->assists }} ({{ number_format($tKda, 2) }})
-                                                </span>
-                                                <span class="bg-slate-800 px-2.5 py-1 rounded-md border border-slate-700 text-sky-400 font-semibold">
-                                                    {{ $tWinRate }}% Win
-                                                </span>
+                                                @if($isBr)
+                                                    <span class="bg-slate-800 px-2.5 py-1 rounded-md border border-slate-700 text-slate-300 font-mono">
+                                                        Kills: {{ $stat->kills }}
+                                                    </span>
+                                                    <span class="bg-slate-800 px-2.5 py-1 rounded-md border border-slate-700 text-amber-400 font-mono">
+                                                        Dmg: {{ number_format($stat->damage ?? 0) }}
+                                                    </span>
+                                                    <span class="bg-slate-800 px-2.5 py-1 rounded-md border border-slate-700 text-emerald-400 font-semibold">
+                                                        {{ $stat->matches_won }} WWCD/Booyah
+                                                    </span>
+                                                @else
+                                                    <span class="bg-slate-800 px-2.5 py-1 rounded-md border border-slate-700 text-slate-300 font-mono">
+                                                        KDA: {{ $stat->kills }}/{{ $stat->deaths }}/{{ $stat->assists }} ({{ number_format($tKda, 2) }})
+                                                    </span>
+                                                    <span class="bg-slate-800 px-2.5 py-1 rounded-md border border-slate-700 text-sky-400 font-semibold">
+                                                        {{ $tWinRate }}% Win
+                                                    </span>
+                                                @endif
                                                 @if($stat->mvps > 0)
                                                     <span class="badge-captain px-2 py-0.5 rounded-md text-xs font-semibold">
                                                         {{ $stat->mvps }} MVPs
@@ -269,10 +292,18 @@
                                             @foreach($stat->matches as $mInfo)
                                                 @php
                                                     $match = $mInfo->match;
-                                                    $isWon = $match->our_score > $match->opponent_score;
-                                                    $isLost = $match->our_score < $match->opponent_score;
-                                                    $outcomeText = $isWon ? 'Won' : ($isLost ? 'Lost' : 'Draw');
-                                                    $outcomeBadge = $isWon ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20' : ($isLost ? 'bg-red-500/10 text-red-300 border-red-500/20' : 'bg-slate-800 text-slate-300 border-slate-700');
+                                                    if ($isBr) {
+                                                        $isWon = $match->is_winner || $match->placement === 1;
+                                                        $outcomeText = $isWon ? 'WWCD / Winner' : ($match->placement ? "#{$match->placement} Place" : 'Completed');
+                                                        $outcomeBadge = $isWon ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20' : 'bg-slate-800 text-slate-300 border-slate-700';
+                                                        $scoreDisplay = ($match->total_points ?? 0) . ' pts';
+                                                    } else {
+                                                        $isWon = $match->our_score > $match->opponent_score;
+                                                        $isLost = $match->our_score < $match->opponent_score;
+                                                        $outcomeText = $isWon ? 'Won' : ($isLost ? 'Lost' : 'Draw');
+                                                        $outcomeBadge = $isWon ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20' : ($isLost ? 'bg-red-500/10 text-red-300 border-red-500/20' : 'bg-slate-800 text-slate-300 border-slate-700');
+                                                        $scoreDisplay = "{$match->our_score}-{$match->opponent_score}";
+                                                    }
                                                 @endphp
                                                 <div class="bg-slate-950/40 border border-slate-800/60 rounded-lg p-3 space-y-2">
                                                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
@@ -280,9 +311,13 @@
                                                             @if($match->opponent_logo)
                                                                 <img src="{{ asset('storage/' . $match->opponent_logo) }}" alt="{{ $match->opponent_name }}" class="w-5 h-5 object-contain rounded bg-slate-900 border border-slate-800">
                                                             @else
-                                                                <div class="w-5 h-5 rounded bg-slate-900 border border-slate-800 flex items-center justify-center text-[9px] font-bold text-slate-400">VS</div>
+                                                                <div class="w-5 h-5 rounded bg-slate-900 border border-slate-800 flex items-center justify-center text-[9px] font-bold text-slate-400">
+                                                                    {{ $isBr ? 'BR' : 'VS' }}
+                                                                </div>
                                                             @endif
-                                                            <span class="font-semibold text-white">vs {{ $match->opponent_name }}</span>
+                                                            <span class="font-semibold text-white">
+                                                                {{ $isBr ? ($match->opponent_name ?: 'Lobby Round') : 'vs ' . $match->opponent_name }}
+                                                            </span>
                                                             @if($match->stage)
                                                                 <span class="text-slate-400 text-[11px]">({{ $match->stage }})</span>
                                                             @endif
@@ -291,7 +326,7 @@
                                                         <div class="flex items-center gap-2">
                                                             <span class="text-[11px] text-slate-400">{{ \Carbon\Carbon::parse($match->match_date)->format('M d, Y') }}</span>
                                                             <span class="px-2 py-0.5 border rounded text-[11px] font-semibold {{ $outcomeBadge }}">
-                                                                {{ $outcomeText }} ({{ $match->our_score }}-{{ $match->opponent_score }})
+                                                                {{ $outcomeText }} ({{ $scoreDisplay }})
                                                             </span>
                                                         </div>
                                                     </div>
@@ -302,32 +337,78 @@
                                                             @php
                                                                 $map = $sInfo->map;
                                                                 $pStat = $sInfo->player_stat;
-                                                                $mapWon = $map->result === 'won';
-                                                                $mapColor = $mapWon ? 'text-emerald-400' : ($map->result === 'lost' ? 'text-red-400' : 'text-slate-400');
+                                                                $mapWon = $map->result === 'won' || ($isBr && $map->placement === 1);
+                                                                $mapColor = $mapWon ? 'text-emerald-400' : 'text-slate-400';
                                                             @endphp
-                                                            <div class="py-1 px-2 rounded bg-slate-900/40 space-y-1">
+                                                            <div class="py-1.5 px-2 rounded bg-slate-900/40 space-y-1">
                                                                 <div class="flex items-center justify-between flex-wrap gap-2">
                                                                     <div class="flex items-center gap-2">
-                                                                        <span class="text-slate-400 font-medium">G{{ $map->game_number }}:</span>
-                                                                        <span class="{{ $mapColor }} font-semibold capitalize">{{ $map->result }}</span>
+                                                                        <span class="text-slate-400 font-medium">
+                                                                            {{ $isBr ? 'R' . $map->game_number . ($map->map_name ? ' (' . $map->map_name . ')' : '') : 'G' . $map->game_number }}:
+                                                                        </span>
+                                                                        <span class="{{ $mapColor }} font-semibold capitalize">
+                                                                            @if($isBr)
+                                                                                {{ $map->placement ? '#' . $map->placement . ' Place' : 'Completed' }}
+                                                                            @else
+                                                                                {{ $map->result }}
+                                                                            @endif
+                                                                        </span>
                                                                         @if($pStat->hero)
                                                                             <span class="text-slate-300 font-medium">({{ $pStat->hero }})</span>
                                                                         @endif
                                                                     </div>
                                                                     <div class="flex items-center gap-2 text-xs">
-                                                                        <span class="text-slate-400 font-mono">{{ $pStat->kills }}/{{ $pStat->deaths }}/{{ $pStat->assists }}</span>
+                                                                        @if($isBr)
+                                                                            <span class="text-slate-300 font-mono font-semibold">{{ $pStat->kills }} Kills</span>
+                                                                            @if($pStat->damage_dealt)
+                                                                                <span class="text-slate-400 font-mono text-[11px]">{{ number_format($pStat->damage_dealt) }} Dmg</span>
+                                                                            @endif
+                                                                            @if($pStat->formatted_survival_time)
+                                                                                <span class="text-slate-400 font-mono text-[11px]">⏱ {{ $pStat->formatted_survival_time }}</span>
+                                                                            @endif
+                                                                        @else
+                                                                            <span class="text-slate-400 font-mono">{{ $pStat->kills }}/{{ $pStat->deaths }}/{{ $pStat->assists }}</span>
+                                                                        @endif
                                                                         @if($pStat->is_mvp)
                                                                             <span class="badge-captain px-1.5 py-0.2 rounded text-[9px] font-bold">MVP</span>
                                                                         @endif
                                                                     </div>
                                                                 </div>
-                                                                @if(!empty($pStat->extra_stats) && is_array($pStat->extra_stats))
+
+                                                                @if($pStat->total_gold || $pStat->turret_damage || $pStat->knockdowns || $pStat->revives || $pStat->headshots || (!empty($pStat->extra_stats) && is_array($pStat->extra_stats)))
                                                                     <div class="flex items-center gap-2 flex-wrap text-[11px] text-slate-400 pt-0.5">
-                                                                        @foreach($pStat->extra_stats as $statKey => $statVal)
+                                                                        @if($pStat->total_gold)
                                                                             <span class="bg-slate-950/60 px-1.5 py-0.5 rounded border border-slate-800">
-                                                                                <span class="text-slate-400">{{ $statKey }}:</span> <strong class="text-slate-200">{{ $statVal }}</strong>
+                                                                                Gold: <strong class="text-amber-300">{{ number_format($pStat->total_gold) }}</strong>
                                                                             </span>
-                                                                        @endforeach
+                                                                        @endif
+                                                                        @if($pStat->turret_damage)
+                                                                            <span class="bg-slate-950/60 px-1.5 py-0.5 rounded border border-slate-800">
+                                                                                Push Dmg: <strong class="text-slate-200">{{ number_format($pStat->turret_damage) }}</strong>
+                                                                            </span>
+                                                                        @endif
+                                                                        @if($pStat->knockdowns)
+                                                                            <span class="bg-slate-950/60 px-1.5 py-0.5 rounded border border-slate-800">
+                                                                                Knocks: <strong class="text-slate-200">{{ $pStat->knockdowns }}</strong>
+                                                                            </span>
+                                                                        @endif
+                                                                        @if($pStat->revives)
+                                                                            <span class="bg-slate-950/60 px-1.5 py-0.5 rounded border border-slate-800">
+                                                                                Revives: <strong class="text-slate-200">{{ $pStat->revives }}</strong>
+                                                                            </span>
+                                                                        @endif
+                                                                        @if($pStat->headshots)
+                                                                            <span class="bg-slate-950/60 px-1.5 py-0.5 rounded border border-slate-800">
+                                                                                Headshots: <strong class="text-red-300">{{ $pStat->headshots }}</strong>
+                                                                            </span>
+                                                                        @endif
+                                                                        @if(!empty($pStat->extra_stats) && is_array($pStat->extra_stats))
+                                                                            @foreach($pStat->extra_stats as $statKey => $statVal)
+                                                                                <span class="bg-slate-950/60 px-1.5 py-0.5 rounded border border-slate-800">
+                                                                                    <span class="text-slate-400">{{ $statKey }}:</span> <strong class="text-slate-200">{{ $statVal }}</strong>
+                                                                                </span>
+                                                                            @endforeach
+                                                                        @endif
                                                                     </div>
                                                                 @endif
                                                             </div>
@@ -359,24 +440,49 @@
 
                     @forelse($player->gameInfos as $gameInfo)
                         <div class="pro-card p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-800/80">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center p-1.5 shrink-0">
-                                    @if($gameInfo->game->game_logo)
-                                        <img src="{{ asset('storage/' . $gameInfo->game->game_logo) }}" alt="{{ $gameInfo->game->name }}" class="w-full h-full object-contain">
-                                    @else
-                                        <span class="text-sky-400 font-bold text-lg">G</span>
-                                    @endif
+                            <div class="flex items-start gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center p-2 shrink-0">
+                                    <span class="text-sky-400 font-extrabold text-sm tracking-wider uppercase">
+                                        {{ $gameInfo->game?->getShortName() ?? 'GAME' }}
+                                    </span>
                                 </div>
 
-                                <div>
-                                    <h3 class="font-bold text-white text-base">
-                                        {{ $gameInfo->game->name }}
-                                    </h3>
-                                    <div class="flex flex-wrap items-center gap-2 mt-1 text-xs">
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <h3 class="font-bold text-white text-base">
+                                            {{ $gameInfo->gameLabel }}
+                                        </h3>
+                                        @if($gameInfo->roleLabel)
+                                            <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                                                {{ $gameInfo->roleLabel }}
+                                            </span>
+                                        @endif
+                                    </div>
+
+                                    <div class="flex flex-wrap items-center gap-2 text-xs">
                                         <span class="text-slate-300 font-medium">IGN: <strong class="text-white">{{ $gameInfo->in_game_username ?? 'Unspecified' }}</strong></span>
                                         <span class="text-slate-400">&bull;</span>
                                         <span class="text-slate-400 font-mono">ID: #{{ $gameInfo->in_game_id ?? 'N/A' }}</span>
+                                        @if($gameInfo->server_id)
+                                            <span class="text-slate-400">&bull;</span>
+                                            <span class="text-slate-400 font-mono">Zone: ({{ $gameInfo->server_id }})</span>
+                                        @endif
+                                        @if($gameInfo->device_type)
+                                            <span class="text-slate-400">&bull;</span>
+                                            <span class="text-slate-400">{{ $gameInfo->device_type }}</span>
+                                        @endif
                                     </div>
+
+                                    @if(!empty($gameInfo->main_heroes) && is_array($gameInfo->main_heroes))
+                                        <div class="flex items-center gap-1.5 flex-wrap pt-1 text-[11px]">
+                                            <span class="text-slate-400">Signature:</span>
+                                            @foreach($gameInfo->main_heroes as $heroName)
+                                                <span class="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300">
+                                                    {{ $heroName }}
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
 
@@ -429,7 +535,7 @@
                                         {{ $membership->team->name }}
                                     </h3>
                                     <p class="text-slate-400 text-xs font-medium mt-0.5">
-                                        {{ $membership->team->game->name }}
+                                        {{ $membership->team->gameLabel }}
                                     </p>
                                 </div>
                             </div>

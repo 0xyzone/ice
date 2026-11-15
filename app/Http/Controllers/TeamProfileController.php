@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\EsportsMatch;
@@ -11,7 +13,6 @@ class TeamProfileController extends Controller
     public function show(int $id): View
     {
         $team = OwnTeam::with([
-            'game',
             'members' => function ($query) {
                 $query->where('status', true)
                     ->orderByDesc('is_main_roster')
@@ -27,7 +28,6 @@ class TeamProfileController extends Controller
     public function showBySlug(string $slug): View
     {
         $team = OwnTeam::with([
-            'game',
             'members' => function ($query) {
                 $query->where('status', true)
                     ->orderByDesc('is_main_roster')
@@ -61,11 +61,17 @@ class TeamProfileController extends Controller
             }
 
             $played = $tournamentMatches->count();
-            $won = $tournamentMatches->filter(fn ($m) => $m->our_score > $m->opponent_score)->count();
-            $lost = $tournamentMatches->filter(fn ($m) => $m->our_score < $m->opponent_score)->count();
+            $isBr = $tournament->isBattleRoyale();
 
-            // points: sum of our_score from each match series/map
-            $points = $tournamentMatches->sum(fn ($m) => $m->series->sum('our_score'));
+            if ($isBr) {
+                $won = $tournamentMatches->filter(fn ($m) => $m->is_winner || $m->placement === 1)->count();
+                $lost = $played - $won;
+                $points = $tournamentMatches->sum(fn ($m) => $m->total_points ?? $m->series->sum('total_points'));
+            } else {
+                $won = $tournamentMatches->filter(fn ($m) => $m->our_score > $m->opponent_score)->count();
+                $lost = $tournamentMatches->filter(fn ($m) => $m->our_score < $m->opponent_score)->count();
+                $points = $tournamentMatches->sum(fn ($m) => $m->series->sum('our_score'));
+            }
 
             $totalPlayed += $played;
             $totalWon += $won;
@@ -73,14 +79,16 @@ class TeamProfileController extends Controller
             $totalPoints += $points;
 
             // Compute dynamic rank for this team in this tournament
-            // All matches in this tournament
             $allTournamentMatches = EsportsMatch::where('tournament_id', $tournament->id)
                 ->where('status', 'completed')
                 ->with('series')
                 ->get();
 
-            // Group by own_team_id and calculate points
-            $teamPoints = $allTournamentMatches->groupBy('own_team_id')->map(function ($tMatches) {
+            $teamPoints = $allTournamentMatches->groupBy('own_team_id')->map(function ($tMatches) use ($isBr) {
+                if ($isBr) {
+                    return $tMatches->sum(fn ($m) => $m->total_points ?? $m->series->sum('total_points'));
+                }
+
                 return $tMatches->sum(fn ($m) => $m->series->sum('our_score'));
             })->sortDesc();
 
@@ -115,7 +123,6 @@ class TeamProfileController extends Controller
             ];
         }
 
-        // Sort tournaments by start_date descending
         usort($tournaments, fn ($a, $b) => strcmp($b->start_date ?? '', $a->start_date ?? ''));
 
         $winRate = $totalPlayed > 0 ? round(($totalWon / $totalPlayed) * 100, 1) : 0.0;

@@ -59,7 +59,7 @@
 
                     <p class="text-slate-400 text-sm font-medium flex items-center justify-center md:justify-start gap-2">
                         <span class="text-orange-400">●</span>
-                        <span>{{ $team->game->name }} Division</span>
+                        <span>{{ $team->gameLabel }}</span>
                     </p>
 
                     <!-- Key Metadata Grid -->
@@ -302,9 +302,19 @@
                                         @foreach($tournament->matches as $match)
                                             @php
                                                 $matchWon = $match->our_score > $match->opponent_score;
-                                                $matchLost = $match->our_score < $match->opponent_score;
-                                                $matchResultText = $matchWon ? 'Victory' : ($matchLost ? 'Defeat' : 'Draw');
-                                                $matchResultBadge = $matchWon ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20' : ($matchLost ? 'bg-red-500/10 text-red-300 border-red-500/20' : 'bg-slate-800 text-slate-300 border-slate-700');
+                                                $isBr = $match->isBattleRoyale();
+                                                if ($isBr) {
+                                                    $matchWon = $match->is_winner || $match->placement === 1;
+                                                    $matchResultText = $matchWon ? 'WWCD / Winner' : ($match->placement ? "#{$match->placement} Place" : 'Completed');
+                                                    $matchResultBadge = $matchWon ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20' : 'bg-slate-800 text-slate-300 border-slate-700';
+                                                    $scoreText = ($match->total_points ?? 0) . ' pts';
+                                                } else {
+                                                    $matchWon = $match->our_score > $match->opponent_score;
+                                                    $matchLost = $match->our_score < $match->opponent_score;
+                                                    $matchResultText = $matchWon ? 'Victory' : ($matchLost ? 'Defeat' : 'Draw');
+                                                    $matchResultBadge = $matchWon ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20' : ($matchLost ? 'bg-red-500/10 text-red-300 border-red-500/20' : 'bg-slate-800 text-slate-300 border-slate-700');
+                                                    $scoreText = "{$match->our_score} - {$match->opponent_score}";
+                                                }
                                             @endphp
                                             <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-3 space-y-2">
                                                 
@@ -313,10 +323,14 @@
                                                         @if($match->opponent_logo)
                                                             <img src="/storage/{{ $match->opponent_logo }}" alt="{{ $match->opponent_name }}" class="w-6 h-6 object-contain rounded-md border border-slate-800 p-0.5 shrink-0 bg-slate-900">
                                                         @else
-                                                            <div class="w-6 h-6 rounded-md border border-slate-800 flex items-center justify-center bg-slate-900 text-[9px] font-bold text-slate-400 shrink-0">VS</div>
+                                                            <div class="w-6 h-6 rounded-md border border-slate-800 flex items-center justify-center bg-slate-900 text-[9px] font-bold text-slate-400 shrink-0">
+                                                                {{ $isBr ? 'BR' : 'VS' }}
+                                                            </div>
                                                         @endif
                                                         <div>
-                                                            <span class="font-semibold text-white block">VS {{ $match->opponent_name }}</span>
+                                                            <span class="font-semibold text-white block">
+                                                                {{ $isBr ? ($match->opponent_name ?: 'Lobby Round') : 'VS ' . $match->opponent_name }}
+                                                            </span>
                                                             @if($match->stage)
                                                                 <span class="text-[11px] text-slate-400">{{ $match->stage }}</span>
                                                             @endif
@@ -328,7 +342,7 @@
                                                             {{ $matchResultText }}
                                                         </span>
                                                         <span class="text-xs font-bold text-white px-2 py-0.5 bg-slate-800 border border-slate-700 rounded-md">
-                                                            {{ $match->our_score }} - {{ $match->opponent_score }}
+                                                            {{ $scoreText }}
                                                         </span>
                                                     </div>
                                                 </div>

@@ -19,17 +19,16 @@ class PlayerTeamsWidget extends BaseWidget
     {
         return $table
             ->query(
-                TeamMember::query()->where('user_id', Auth::id())->with('team.game')
+                TeamMember::query()->where('user_id', Auth::id())->with('team')
             )
             ->columns([
                 TextColumn::make('team.name')
                     ->label('Team Name')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('team.game.name')
+                TextColumn::make('team.game')
                     ->label('Game')
-                    ->badge()
-                    ->color('primary'),
+                    ->badge(),
                 TextColumn::make('role')
                     ->label('My Role')
                     ->badge()

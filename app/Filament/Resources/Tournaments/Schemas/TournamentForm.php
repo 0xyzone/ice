@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Tournaments\Schemas;
 
+use App\Enums\GameType;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -28,6 +29,13 @@ class TournamentForm
                             ->columnSpan(2)
                             ->columns(1)
                             ->schema([
+                                Select::make('game')
+                                    ->label('Game Title')
+                                    ->prefixIcon('heroicon-m-puzzle-piece')
+                                    ->options(GameType::class)
+                                    ->required()
+                                    ->native(false)
+                                    ->default(GameType::Mlbb->value),
                                 TextInput::make('name')
                                     ->prefixIcon('heroicon-m-ticket')
                                     ->required()

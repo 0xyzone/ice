@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Game;
+use App\Enums\GameType;
 use App\Models\OwnTeam;
 use App\Models\TeamMember;
 use App\Models\User;
@@ -15,12 +15,11 @@ class TeamRosterTest extends TestCase
 
     public function test_team_member_is_main_roster_scopes_and_helpers(): void
     {
-        $game = Game::create(['name' => 'PUBG Mobile']);
         $team = OwnTeam::create([
             'name' => 'Alpha Squad',
             'slug' => 'alpha-squad',
             'status' => true,
-            'game_id' => $game->id,
+            'game' => GameType::PubgMobile,
         ]);
 
         $userStarter = User::factory()->create(['name' => 'Starter One', 'username' => 'starter1']);
@@ -58,12 +57,11 @@ class TeamRosterTest extends TestCase
 
     public function test_team_profile_displays_main_roster_and_reserve_sections(): void
     {
-        $game = Game::create(['name' => 'Mobile Legends']);
         $team = OwnTeam::create([
             'name' => 'Ice Tigers',
             'slug' => 'ice-tigers',
             'status' => true,
-            'game_id' => $game->id,
+            'game' => GameType::Mlbb,
         ]);
 
         $starter = User::factory()->create(['name' => 'Apex Striker', 'username' => 'apex_striker']);
@@ -100,12 +98,11 @@ class TeamRosterTest extends TestCase
 
     public function test_homepage_shows_differentiated_main_and_reserve_badges(): void
     {
-        $game = Game::create(['name' => 'Valorant']);
         $team = OwnTeam::create([
             'name' => 'Cyber Wolves',
             'slug' => 'cyber-wolves',
             'status' => true,
-            'game_id' => $game->id,
+            'game' => GameType::FreeFire,
         ]);
 
         $starter = User::factory()->create(['name' => 'Ghost Runner', 'username' => 'ghost_runner']);
@@ -142,12 +139,11 @@ class TeamRosterTest extends TestCase
 
     public function test_player_profile_shows_lineup_status_badge(): void
     {
-        $game = Game::create(['name' => 'Dota 2']);
         $team = OwnTeam::create([
             'name' => 'Viper Core',
             'slug' => 'viper-core',
             'status' => true,
-            'game_id' => $game->id,
+            'game' => GameType::Mlbb,
         ]);
 
         $user = User::factory()->create(['name' => 'Roster Hero', 'username' => 'roster_hero']);

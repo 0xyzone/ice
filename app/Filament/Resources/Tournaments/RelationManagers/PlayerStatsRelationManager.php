@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Tournaments\RelationManagers;
 
+use App\Models\Tournament;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -18,10 +21,14 @@ class PlayerStatsRelationManager extends RelationManager
 {
     protected static string $relationship = 'playerStats';
 
-    protected static ?string $title = 'Player Stats';
+    protected static ?string $title = 'Player Tournament Stats';
 
     public function form(Schema $schema): Schema
     {
+        /** @var Tournament $tournament */
+        $tournament = $this->ownerRecord;
+        $isBr = $tournament?->isBattleRoyale() ?? false;
+
         return $schema
             ->components([
                 Select::make('user_id')
@@ -31,12 +38,12 @@ class PlayerStatsRelationManager extends RelationManager
                     ->preload()
                     ->required(),
                 TextInput::make('matches_played')
-                    ->label('Matches Played')
+                    ->label($isBr ? 'Matches / Rounds Played' : 'Matches Played')
                     ->numeric()
                     ->default(0)
                     ->required(),
                 TextInput::make('matches_won')
-                    ->label('Matches Won')
+                    ->label($isBr ? 'Wins (#1 WWCD / Booyah)' : 'Matches Won')
                     ->numeric()
                     ->default(0)
                     ->required(),
@@ -44,24 +51,43 @@ class PlayerStatsRelationManager extends RelationManager
                     ->label('Matches Lost')
                     ->numeric()
                     ->default(0)
-                    ->required(),
+                    ->visible(! $isBr)
+                    ->required(! $isBr),
                 TextInput::make('kills')
-                    ->label('Kills')
+                    ->label($isBr ? 'Total Eliminations / Kills' : 'Total Kills')
                     ->numeric()
                     ->default(0)
                     ->required(),
                 TextInput::make('deaths')
-                    ->label('Deaths')
+                    ->label('Total Deaths')
                     ->numeric()
                     ->default(0)
-                    ->required(),
+                    ->visible(! $isBr)
+                    ->required(! $isBr),
                 TextInput::make('assists')
-                    ->label('Assists')
+                    ->label('Total Assists')
                     ->numeric()
                     ->default(0)
                     ->required(),
+                TextInput::make('total_damage')
+                    ->label('Total Damage Dealt')
+                    ->numeric()
+                    ->placeholder('e.g. 15400')
+                    ->nullable(),
+                TextInput::make('total_points')
+                    ->label('Total Points Accumulated')
+                    ->numeric()
+                    ->placeholder('e.g. 120')
+                    ->visible($isBr)
+                    ->nullable(),
+                TextInput::make('avg_survival_time')
+                    ->label('Avg Survival Time (Seconds)')
+                    ->numeric()
+                    ->placeholder('e.g. 1100')
+                    ->visible($isBr)
+                    ->nullable(),
                 TextInput::make('mvps')
-                    ->label('MVPs')
+                    ->label('MVP Awards')
                     ->numeric()
                     ->default(0)
                     ->required(),
@@ -81,10 +107,7 @@ class PlayerStatsRelationManager extends RelationManager
                     ->label('Played')
                     ->sortable(),
                 TextColumn::make('matches_won')
-                    ->label('Won')
-                    ->sortable(),
-                TextColumn::make('matches_lost')
-                    ->label('Lost')
+                    ->label('Won / Wins')
                     ->sortable(),
                 TextColumn::make('kills')
                     ->label('Kills')
@@ -95,12 +118,17 @@ class PlayerStatsRelationManager extends RelationManager
                 TextColumn::make('assists')
                     ->label('Assists')
                     ->sortable(),
+                TextColumn::make('total_damage')
+                    ->label('Damage')
+                    ->placeholder('-')
+                    ->sortable(),
+                TextColumn::make('total_points')
+                    ->label('Pts')
+                    ->placeholder('-')
+                    ->sortable(),
                 TextColumn::make('mvps')
                     ->label('MVPs')
                     ->sortable(),
-            ])
-            ->filters([
-                //
             ])
             ->headerActions([
                 CreateAction::make(),
@@ -109,7 +137,7 @@ class PlayerStatsRelationManager extends RelationManager
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->toolbarActions([
+            ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),

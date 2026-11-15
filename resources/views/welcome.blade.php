@@ -193,7 +193,7 @@
                                                     {{ $team->name }}
                                                 </h3>
                                                 <span class="text-xs text-slate-400 font-medium block mt-0.5">
-                                                    {{ $team->game->name ?? 'Esports Division' }}
+                                                    {{ $team->gameLabel }}
                                                 </span>
                                             </div>
                                         </div>

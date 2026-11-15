@@ -141,3 +141,5 @@ storage/app/public
 vendor/
 vendor
 /public/build
+public/fonts-manifest.dev.json
+.phpunit.result.cache

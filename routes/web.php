@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\DB;
 
 Route::get('/', function () {
     $teams = OwnTeam::with([
-        'game',
         'members' => function ($query) {
             $query->where('status', true)
                 ->orderByDesc('is_main_roster')

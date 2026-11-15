@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Enums\GameType;
 use App\Models\EsportsMatch;
-use App\Models\Game;
 use App\Models\MatchSeries;
 use App\Models\OwnTeam;
 use App\Models\PlayerDetail;
@@ -47,15 +47,11 @@ class ProfileTest extends TestCase
 
     public function test_team_profile_routes_work_correctly(): void
     {
-        $game = Game::create([
-            'name' => 'PUBG Mobile',
-        ]);
-
         $team = OwnTeam::create([
             'name' => 'Ice Cream Gaming',
             'slug' => 'ice-cream-gaming',
             'status' => true,
-            'game_id' => $game->id,
+            'game' => GameType::PubgMobile,
         ]);
 
         // Test route by ID
@@ -71,21 +67,18 @@ class ProfileTest extends TestCase
 
     public function test_team_profile_shows_correct_dynamic_statistics(): void
     {
-        $game = Game::create([
-            'name' => 'PUBG Mobile',
-        ]);
-
         $team = OwnTeam::create([
             'name' => 'Ice Cream Gaming',
             'slug' => 'ice-cream-gaming',
             'status' => true,
-            'game_id' => $game->id,
+            'game' => GameType::Mlbb,
         ]);
 
         $tournament = Tournament::create([
             'name' => 'Vidanta Champions League',
             'prize_pool' => '50000',
             'status' => 'ongoing',
+            'game' => GameType::Mlbb,
         ]);
 
         // Match 1: Won (BO3, we won 2-1)

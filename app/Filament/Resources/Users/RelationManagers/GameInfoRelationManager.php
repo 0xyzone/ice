@@ -1,16 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Users\RelationManagers;
 
+use App\Filament\App\Resources\GameInfos\Schemas\GameInfoForm;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\Card;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
@@ -27,27 +27,7 @@ class GameInfoRelationManager extends RelationManager
 
     public function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                Hidden::make('user_id')
-                    ->default($this->ownerRecord->id),
-                TextInput::make('in_game_id')
-                    ->label('In‑Game ID'),
-                TextInput::make('in_game_username')
-                    ->label('In‑Game Username'),
-                TextInput::make('server_id')
-                    ->label('Server ID'),
-                FileUpload::make('profile_image')
-                    ->label('Profile Image URL')
-                    ->image()
-                    ->optimize('webp')
-                    ->downloadable()
-                    ->disk('public')
-                    ->directory('game-infos/profile')
-                    ->visibility('public')
-                    ->previewable(),
-                // status boolean toggle could be added here if needed
-            ]);
+        return GameInfoForm::configure($schema, $this->ownerRecord->id);
     }
 
     /**
@@ -60,12 +40,22 @@ class GameInfoRelationManager extends RelationManager
                 Card::make()
                     ->columns(2)
                     ->schema([
+                        TextEntry::make('game')
+                            ->label('Game')
+                            ->badge(),
+                        TextEntry::make('roleLabel')
+                            ->label('Role')
+                            ->badge(),
                         TextEntry::make('in_game_id')
                             ->label('In‑Game ID'),
                         TextEntry::make('in_game_username')
                             ->label('In‑Game Username'),
                         TextEntry::make('server_id')
-                            ->label('Server ID'),
+                            ->label('Server ID')
+                            ->placeholder('-'),
+                        TextEntry::make('device_type')
+                            ->label('Device')
+                            ->placeholder('-'),
                         ImageEntry::make('profile_image')
                             ->label('Profile Image'),
                         TextEntry::make('status')
@@ -81,18 +71,28 @@ class GameInfoRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('in_game_username')
             ->columns([
-                TextColumn::make('in_game_id'),
-                TextColumn::make('in_game_username'),
-                TextColumn::make('server_id'),
+                TextColumn::make('game')
+                    ->badge()
+                    ->sortable(),
+                TextColumn::make('in_game_username')
+                    ->label('IGN')
+                    ->searchable(),
+                TextColumn::make('in_game_id')
+                    ->label('ID / UID')
+                    ->searchable(),
+                TextColumn::make('roleLabel')
+                    ->label('Role')
+                    ->badge()
+                    ->placeholder('-'),
                 HoverImageColumn::make('profile_image'),
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn ($state) => $state ? 'success' : 'danger'),
             ])
             ->headerActions([
-                // CreateAction::make(),
+                CreateAction::make(),
             ])
-            ->actions([
+            ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +18,10 @@ class MatchSeries extends Model
         'map_name',
         'result',
         'win_condition',
+        'placement',
+        'placement_points',
+        'kill_points',
+        'total_points',
         'our_score',
         'opponent_score',
         'did_we_win',
@@ -27,6 +33,10 @@ class MatchSeries extends Model
             'game_number' => 'integer',
             'our_score' => 'integer',
             'opponent_score' => 'integer',
+            'placement' => 'integer',
+            'placement_points' => 'integer',
+            'kill_points' => 'integer',
+            'total_points' => 'integer',
         ];
     }
 
@@ -36,8 +46,10 @@ class MatchSeries extends Model
             // If `did_we_win` virtual attribute is present (from form toggle), use it explicitly
             if (! is_null($series->did_we_win)) {
                 $series->result = $series->did_we_win ? 'won' : 'lost';
-                // Remove the virtual attribute so it doesn't try to map to a column
                 unset($series->did_we_win);
+            } elseif ($series->placement !== null) {
+                // For Battle Royale, 1st place is considered won / WWCD / Booyah
+                $series->result = $series->placement === 1 ? 'won' : 'lost';
             } else {
                 // Fallback: auto-determine from scores
                 if ($series->our_score > $series->opponent_score) {
@@ -50,13 +62,13 @@ class MatchSeries extends Model
             }
         });
 
-        static::saved(function (MatchSeries $series) {
+        static::saved(function (MatchSeries $series): void {
             if ($match = $series->match) {
                 $match->recalculateScores();
             }
         });
 
-        static::deleted(function (MatchSeries $series) {
+        static::deleted(function (MatchSeries $series): void {
             if ($match = $series->match) {
                 $match->recalculateScores();
             }

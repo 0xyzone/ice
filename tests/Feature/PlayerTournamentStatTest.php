@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Enums\GameType;
 use App\Models\EsportsMatch;
-use App\Models\Game;
 use App\Models\MatchSeries;
 use App\Models\OwnTeam;
 use App\Models\PlayerMatchStat;
@@ -23,27 +23,25 @@ class PlayerTournamentStatTest extends TestCase
             'username' => 'sumin_shrestha',
         ]);
 
-        $game = Game::create([
-            'name' => 'PUBG Mobile',
-        ]);
-
         $team = OwnTeam::create([
             'name' => 'Ice Cream Gaming',
             'slug' => 'ice-cream-gaming',
             'status' => true,
-            'game_id' => $game->id,
+            'game' => GameType::PubgMobile,
         ]);
 
         $tournament1 = Tournament::create([
             'name' => 'Cyber Cup 2026',
             'prize_pool' => '5000',
             'status' => 'completed',
+            'game' => GameType::PubgMobile,
         ]);
 
         $tournament2 = Tournament::create([
             'name' => 'Neon Invitational',
             'prize_pool' => '10000',
             'status' => 'ongoing',
+            'game' => GameType::PubgMobile,
         ]);
 
         // Create match for Tournament 1
@@ -191,21 +189,18 @@ class PlayerTournamentStatTest extends TestCase
             'username' => 'janedoe',
         ]);
 
-        $game = Game::create([
-            'name' => 'PUBG Mobile',
-        ]);
-
         $team = OwnTeam::create([
             'name' => 'Ice Cream Gaming',
             'slug' => 'ice-cream-gaming',
             'status' => true,
-            'game_id' => $game->id,
+            'game' => GameType::PubgMobile,
         ]);
 
         $tournament = Tournament::create([
             'name' => 'Cyber Cup 2026',
             'prize_pool' => '5000',
             'status' => 'completed',
+            'game' => GameType::PubgMobile,
         ]);
 
         // Create match with associated tournament_id
@@ -254,14 +249,14 @@ class PlayerTournamentStatTest extends TestCase
         $tournament = Tournament::create([
             'name' => 'Auto Score Tournament',
             'status' => 'ongoing',
+            'game' => GameType::Mlbb,
         ]);
 
-        $game = Game::create(['name' => 'Mobile Legends']);
         $team = OwnTeam::create([
             'name' => 'MLBB Team',
             'slug' => 'mlbb-team',
             'status' => true,
-            'game_id' => $game->id,
+            'game' => GameType::Mlbb,
         ]);
 
         $match = EsportsMatch::create([

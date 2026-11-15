@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -12,8 +14,8 @@ class PlayerProfileController extends Controller
         $player = User::with([
             'socials',
             'player',
-            'teamMemberships.team.game',
-            'gameInfos.game',
+            'teamMemberships.team',
+            'gameInfos',
             'galleries',
             'matchStats.matchSeries.match.tournament',
         ])->findOrFail($id);
@@ -26,8 +28,8 @@ class PlayerProfileController extends Controller
         $player = User::with([
             'socials',
             'player',
-            'teamMemberships.team.game',
-            'gameInfos.game',
+            'teamMemberships.team',
+            'gameInfos',
             'galleries',
             'matchStats.matchSeries.match.tournament',
         ])->where('username', $username)->firstOrFail();
@@ -44,6 +46,7 @@ class PlayerProfileController extends Controller
         $totalDeaths = 0;
         $totalAssists = 0;
         $totalMvps = 0;
+        $totalDamage = 0;
 
         $tournamentStats = [];
 
@@ -68,6 +71,7 @@ class PlayerProfileController extends Controller
             $totalKills += $stat->kills;
             $totalDeaths += $stat->deaths;
             $totalAssists += $stat->assists;
+            $totalDamage += ($stat->damage_dealt ?? 0);
             if ($stat->is_mvp) {
                 $totalMvps++;
             }
@@ -85,6 +89,8 @@ class PlayerProfileController extends Controller
                         'deaths' => 0,
                         'assists' => 0,
                         'mvps' => 0,
+                        'damage' => 0,
+                        'total_points' => 0,
                         'matches' => [],
                     ];
                 }
@@ -99,6 +105,10 @@ class PlayerProfileController extends Controller
                 $tStat->kills += $stat->kills;
                 $tStat->deaths += $stat->deaths;
                 $tStat->assists += $stat->assists;
+                $tStat->damage += ($stat->damage_dealt ?? 0);
+                if ($series->total_points !== null) {
+                    $tStat->total_points += $series->total_points;
+                }
                 if ($stat->is_mvp) {
                     $tStat->mvps++;
                 }
@@ -131,6 +141,7 @@ class PlayerProfileController extends Controller
             'totalDeaths',
             'totalAssists',
             'totalMvps',
+            'totalDamage',
             'kda',
             'tournamentStats'
         ));
