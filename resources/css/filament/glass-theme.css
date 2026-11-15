@@ -149,7 +149,6 @@
 .fi-section,
 .fi-wi-stats-overview-stat,
 .fi-wi-chart,
-.fi-fo-tabs,
 .fi-in-section {
     background: var(--glass-bg) !important;
     backdrop-filter: var(--glass-blur) !important;
@@ -290,12 +289,53 @@
 }
 
 /* ── Tabs & Pagination ──────────────────────────────────────────────────── */
+.fi-sc-tabs,
+.fi-fo-tabs,
+.fi-sc-tabs-tab {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+.fi-sc-tabs-tab {
+    padding: 0 !important;
+}
+
 .fi-tabs {
-    background: var(--glass-bg) !important;
+    background: var(--glass-bg-subtle) !important;
     backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
     border: 1px solid var(--glass-border) !important;
     border-radius: 1rem !important;
     padding: 0.35rem !important;
+    margin-bottom: 1rem !important;
+    box-shadow: var(--glass-shadow) !important;
+}
+
+.fi-tabs-item-active {
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.18), rgba(245, 158, 11, 0.14)) !important;
+    border: 1px solid rgba(249, 115, 22, 0.32) !important;
+    border-radius: 0.75rem !important;
+}
+
+/* ── Primary & Save Button Contrast ─────────────────────────────────────── */
+.fi-btn.fi-color-primary:not(.fi-outlined) {
+    background: linear-gradient(135deg, #ea580c, #f97316) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    box-shadow: 0 4px 14px -2px rgba(234, 88, 12, 0.45) !important;
+}
+
+.fi-btn.fi-color-primary:not(.fi-outlined):hover {
+    background: linear-gradient(135deg, #c2410c, #ea580c) !important;
+    color: #ffffff !important;
+}
+
+.fi-btn.fi-color-primary:not(.fi-outlined) .fi-btn-label,
+.fi-btn.fi-color-primary:not(.fi-outlined) svg {
+    color: #ffffff !important;
 }
 
 .fi-pagination {
