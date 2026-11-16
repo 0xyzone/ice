@@ -149,7 +149,7 @@ function initHeroCrestCanvases() {
 
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 50);
-        camera.position.set(0, 0.3, 5.4);
+        camera.position.set(0, 0, 6.6);
 
         const ambient = new THREE.AmbientLight(0xffffff, 0.75);
         scene.add(ambient);
